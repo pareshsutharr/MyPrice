@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import DashboardLayout from '@layout/DashboardLayout.jsx'
 import Dashboard from '@pages/Dashboard.jsx'
 import Expenses from '@pages/Expenses.jsx'
+import Income from '@pages/Income.jsx'
 import Loans from '@pages/Loans.jsx'
 import MutualFunds from '@pages/MutualFunds.jsx'
 import Stocks from '@pages/Stocks.jsx'
@@ -32,6 +33,7 @@ const App = () => {
       <Route element={<DashboardLayout />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/expenses" element={<Expenses />} />
+        <Route path="/income" element={<Income />} />
         <Route path="/loans" element={<Loans />} />
         <Route path="/mutual-funds" element={<MutualFunds />} />
         <Route path="/stocks" element={<Stocks />} />

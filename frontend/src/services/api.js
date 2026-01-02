@@ -47,6 +47,8 @@ export const api = {
 
   getIncome: () => safeRequest(() => client.get('/income'), mockIncome),
   createIncome: (payload) => safeRequest(() => client.post('/income', payload), payload),
+  updateIncome: (id, payload) => safeRequest(() => client.put(`/income/${id}`, payload), payload),
+  deleteIncome: (id) => safeRequest(() => client.delete(`/income/${id}`), { success: true }),
 
   getLoans: () =>
     safeRequest(() => client.get('/loans'), {

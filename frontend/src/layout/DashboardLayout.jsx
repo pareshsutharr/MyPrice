@@ -8,6 +8,7 @@ import {
   LineChart,
   CandlestickChart,
   Coins,
+  PiggyBank,
   History as HistoryIcon,
   Settings as SettingsIcon,
   AlertCircle,
@@ -19,6 +20,7 @@ import FloatingActionButton from '@components/FloatingActionButton.jsx'
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/expenses', label: 'Expenses', icon: CalendarRange },
+  { to: '/income', label: 'Income', icon: PiggyBank },
   { to: '/loans', label: 'Loans & EMI', icon: WalletCards },
   { to: '/mutual-funds', label: 'Mutual Funds', icon: LineChart },
   { to: '/stocks', label: 'Stocks', icon: CandlestickChart },

@@ -1,14 +1,31 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-const IncomeForm = ({ onSubmit, onClose }) => {
-  const [form, setForm] = useState({
-    amount: '',
-    category: 'salary',
-    date: new Date().toISOString().split('T')[0],
-    note: '',
-  })
+const initialState = () => ({
+  amount: '',
+  category: 'salary',
+  date: new Date().toISOString().split('T')[0],
+  note: '',
+})
+
+const IncomeForm = ({ onSubmit, defaultValues, onCancel }) => {
+  const [form, setForm] = useState(() => initialState())
   const [formError, setFormError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+
+  const isEditing = useMemo(() => Boolean(defaultValues?._id), [defaultValues])
+
+  useEffect(() => {
+    if (defaultValues?._id) {
+      setForm({
+        amount: defaultValues.amount ?? '',
+        category: defaultValues.category ?? 'salary',
+        date: defaultValues.date ? new Date(defaultValues.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        note: defaultValues.note ?? '',
+      })
+    } else {
+      setForm(initialState())
+    }
+  }, [defaultValues])
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -35,13 +52,10 @@ const IncomeForm = ({ onSubmit, onClose }) => {
         amount,
         date: date.toISOString(),
       })
-      onClose?.()
-      setForm({
-        amount: '',
-        category: 'salary',
-        date: new Date().toISOString().split('T')[0],
-        note: '',
-      })
+      if (isEditing) {
+        onCancel?.()
+      }
+      setForm(initialState())
     } catch (error) {
       setFormError(error?.response?.data?.message ?? 'Unable to save income entry.')
     } finally {
@@ -96,9 +110,16 @@ const IncomeForm = ({ onSubmit, onClose }) => {
         />
       </div>
       {formError && <p className="text-sm text-rose-500">{formError}</p>}
-      <button type="submit" className="btn-primary w-full" disabled={submitting}>
-        {submitting ? 'Saving…' : 'Save Income'}
-      </button>
+      <div className="flex gap-3">
+        {isEditing && (
+          <button type="button" className="btn-secondary flex-1" onClick={onCancel}>
+            Cancel
+          </button>
+        )}
+        <button type="submit" className="btn-primary flex-1" disabled={submitting}>
+          {submitting ? 'Saving…' : isEditing ? 'Update Income' : 'Save Income'}
+        </button>
+      </div>
     </form>
   )
 }

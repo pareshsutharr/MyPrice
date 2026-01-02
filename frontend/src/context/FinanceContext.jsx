@@ -130,6 +130,24 @@ export const FinanceProvider = ({ children }) => {
     [withAuthGuard, fetchAll],
   )
 
+  const updateIncome = useCallback(
+    (id, payload) =>
+      withAuthGuard(async () => {
+        await api.updateIncome(id, payload)
+        await fetchAll()
+      }),
+    [withAuthGuard, fetchAll],
+  )
+
+  const deleteIncome = useCallback(
+    (id) =>
+      withAuthGuard(async () => {
+        await api.deleteIncome(id)
+        await fetchAll()
+      }),
+    [withAuthGuard, fetchAll],
+  )
+
   const addLoan = useCallback(
     (payload) =>
       withAuthGuard(async () => {
@@ -213,6 +231,8 @@ export const FinanceProvider = ({ children }) => {
         updateExpense,
         deleteExpense,
         addIncome,
+        updateIncome,
+        deleteIncome,
         addLoan,
         addInvestment,
         updateInvestment,
@@ -237,6 +257,8 @@ export const FinanceProvider = ({ children }) => {
       updateExpense,
       deleteExpense,
       addIncome,
+      updateIncome,
+      deleteIncome,
       addLoan,
       addInvestment,
       updateInvestment,
