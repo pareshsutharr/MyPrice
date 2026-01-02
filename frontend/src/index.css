@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: theme('fontFamily.body');
+  background-color: #f5f6fb;
+  color: #0f172a;
+  margin: 0;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.glass-card {
+  @apply bg-surface rounded-2xl border border-borderLight shadow-glow;
+}
+
+.btn-primary {
+  @apply bg-accentDark text-white px-5 py-2 rounded-xl font-semibold shadow-glow transition hover:bg-black active:scale-95;
+}
+
+.btn-secondary {
+  @apply bg-white border border-borderLight text-accentDark px-5 py-2 rounded-xl font-semibold transition hover:bg-surfaceMuted;
+}
