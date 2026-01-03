@@ -1,0 +1,19 @@
+﻿.reminder-card {
+  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 flex justify-between items-center;
+}
+
+.reminder-card__label {
+  @apply text-xs text-slate-500;
+}
+
+.reminder-card__title {
+  @apply text-lg font-display text-slate-900;
+}
+
+.reminder-card__meta {
+  @apply text-sm text-slate-500;
+}
+
+.reminder-card__amount {
+  @apply text-accentBlue font-semibold;
+}

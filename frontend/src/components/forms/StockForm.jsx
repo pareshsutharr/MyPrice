@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react'
+import { useSettings } from '@context/SettingsContext.jsx'
+import { useCurrencySymbol } from '@hooks/useCurrencyFormatter.js'
+import './StockForm.css'
 
 const DEFAULT_PLATFORMS = ['Angel One', 'Groww', 'Zerodha', 'Upstox', 'ICICI Direct', 'Other']
 
@@ -31,6 +34,8 @@ const StockForm = ({ defaultValues, onSubmit, onCancel }) => {
   const [form, setForm] = useState(() => initialState(defaultValues))
   const [formError, setFormError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const { dateFormat } = useSettings()
+  const currencySymbol = useCurrencySymbol()
 
   useEffect(() => {
     setForm(initialState(defaultValues))
@@ -101,50 +106,30 @@ const StockForm = ({ defaultValues, onSubmit, onCancel }) => {
   const isEditing = Boolean(defaultValues?._id)
 
   return (
-    <form onSubmit={handleSubmit} className="glass-card p-4 space-y-4">
-      <div>
-        <label className="text-sm text-slate-500">Stock name</label>
+    <form onSubmit={handleSubmit} className="stock-form">
+      <div className="stock-form__field">
+        <label>Stock name</label>
         <input
           type="text"
           name="stockName"
           value={form.stockName}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
           placeholder="e.g. Reliance Industries"
           required
         />
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Ticker / symbol</label>
-        <input
-          type="text"
-          name="symbol"
-          value={form.symbol}
-          onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
-          placeholder="RELIANCE"
-        />
+      <div className="stock-form__field">
+        <label>Ticker / symbol</label>
+        <input type="text" name="symbol" value={form.symbol} onChange={handleChange} placeholder="RELIANCE" />
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm text-slate-500">Broker</label>
-          <input
-            type="text"
-            name="broker"
-            value={form.broker}
-            onChange={handleChange}
-            className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
-            placeholder="Angel One"
-          />
+      <div className="stock-form__grid">
+        <div className="stock-form__field">
+          <label>Broker</label>
+          <input type="text" name="broker" value={form.broker} onChange={handleChange} placeholder="Angel One" />
         </div>
-        <div>
-          <label className="text-sm text-slate-500">Platform</label>
-          <select
-            name="platform"
-            value={form.platform}
-            onChange={handleChange}
-            className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
-          >
+        <div className="stock-form__field">
+          <label>Platform</label>
+          <select name="platform" value={form.platform} onChange={handleChange}>
             {DEFAULT_PLATFORMS.map((platform) => (
               <option key={platform} value={platform}>
                 {platform}
@@ -153,78 +138,69 @@ const StockForm = ({ defaultValues, onSubmit, onCancel }) => {
           </select>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm text-slate-500">Quantity</label>
+      <div className="stock-form__grid">
+        <div className="stock-form__field">
+          <label>Quantity</label>
           <input
             type="number"
             name="quantity"
             value={form.quantity}
             onChange={handleChange}
-            className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
             min="0"
             step="1"
             required
           />
         </div>
-        <div>
-          <label className="text-sm text-slate-500">Avg buy price (₹)</label>
+        <div className="stock-form__field">
+          <label>{`Avg buy price (${currencySymbol})`}</label>
           <input
             type="number"
             name="avgBuyPrice"
             value={form.avgBuyPrice}
             onChange={handleChange}
-            className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
             min="0"
             step="0.01"
             required
           />
         </div>
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Current price (₹)</label>
+      <div className="stock-form__field">
+        <label>{`Current price (${currencySymbol})`}</label>
         <input
           type="number"
           name="currentPrice"
           value={form.currentPrice}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
           min="0"
           step="0.01"
           required
         />
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Last updated on</label>
+      <div className="stock-form__field">
+        <label>{`Last updated on (${dateFormat})`}</label>
         <input
           type="date"
           name="lastUpdated"
           value={form.lastUpdated}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
           required
+          placeholder={dateFormat}
+          title={`Use ${dateFormat} format`}
         />
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Notes</label>
-        <textarea
-          name="notes"
-          value={form.notes}
-          onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
-          rows={3}
-          placeholder="Brokerage, goal, etc."
-        />
+      <div className="stock-form__field">
+        <label>Notes</label>
+        <textarea name="notes" value={form.notes} onChange={handleChange} rows={3} placeholder="Brokerage, goal, etc." />
       </div>
-      {formError && <p className="text-sm text-rose-500">{formError}</p>}
-      <div className="flex gap-3">
+      {formError && <p className="stock-form__error">{formError}</p>}
+      <div className="stock-form__actions">
         {isEditing && (
           <button type="button" className="btn-secondary flex-1" onClick={onCancel}>
             Cancel
           </button>
         )}
         <button type="submit" className="btn-primary flex-1" disabled={submitting}>
-          {submitting ? 'Saving…' : isEditing ? 'Update Stock' : 'Save Stock'}
+          {submitting ? 'Saving...' : isEditing ? 'Update Stock' : 'Save Stock'}
         </button>
       </div>
     </form>

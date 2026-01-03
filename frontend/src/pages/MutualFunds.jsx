@@ -1,17 +1,17 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { Wallet, TrendingUp, PiggyBank, Layers3 } from 'lucide-react'
 import InvestmentForm from '@components/forms/InvestmentForm.jsx'
 import InvestmentCard from '@components/InvestmentCard.jsx'
 import StatementUploader from '@components/StatementUploader.jsx'
 import StatCard from '@components/StatCard.jsx'
 import { useFinance } from '@context/FinanceContext.jsx'
-
-const formatCurrency = (value = 0) => `₹ ${Number(value).toLocaleString()}`
+import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
 
 const MutualFunds = () => {
   const { investments = [], actions } = useFinance()
   const [editing, setEditing] = useState(null)
   const [selectedBroker, setSelectedBroker] = useState('all')
+  const formatCurrency = useCurrencyFormatter()
 
   const mutualFunds = useMemo(
     () => investments.filter((investment) => investment.metadata?.assetType !== 'stock'),
@@ -40,8 +40,7 @@ const MutualFunds = () => {
         map[brokerName].totalInvested += holding.amountInvested ?? 0
         map[brokerName].currentValue += holding.currentValue ?? 0
         map[brokerName].holdings += 1
-        map[brokerName].totalGain =
-          map[brokerName].currentValue - map[brokerName].totalInvested
+        map[brokerName].totalGain = map[brokerName].currentValue - map[brokerName].totalInvested
       })
       return map
     }, {})

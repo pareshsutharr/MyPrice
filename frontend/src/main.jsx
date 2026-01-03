@@ -7,6 +7,7 @@ import './index.css'
 import App from './App.jsx'
 import { FinanceProvider } from '@context/FinanceContext.jsx'
 import { AuthProvider } from '@context/AuthContext.jsx'
+import { SettingsProvider } from '@context/SettingsContext.jsx'
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
@@ -17,9 +18,11 @@ createRoot(document.getElementById('root')).render(
     <GoogleOAuthProvider clientId={googleClientId}>
       <BrowserRouter>
         <AuthProvider>
-          <FinanceProvider>
-            <App />
-          </FinanceProvider>
+          <SettingsProvider>
+            <FinanceProvider>
+              <App />
+            </FinanceProvider>
+          </SettingsProvider>
         </AuthProvider>
       </BrowserRouter>
     </GoogleOAuthProvider>

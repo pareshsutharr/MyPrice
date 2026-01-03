@@ -1,0 +1,63 @@
+﻿.loan-card {
+  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 space-y-3;
+}
+
+.loan-card__header {
+  @apply flex items-center justify-between;
+}
+
+.loan-card__lender {
+  @apply text-sm text-slate-500;
+}
+
+.loan-card__principal {
+  @apply text-xl font-display text-slate-900;
+}
+
+.loan-card__status {
+  @apply px-3 py-1 rounded-full text-xs;
+}
+
+.loan-card__status--active {
+  @apply bg-emerald-100 text-emerald-700;
+}
+
+.loan-card__status--completed {
+  @apply bg-purple-100 text-purple-700;
+}
+
+.loan-card__emi {
+  @apply text-sm text-slate-500;
+}
+
+.loan-card__interest {
+  @apply text-sm text-slate-500;
+}
+
+.loan-card__progress-bar {
+  @apply w-full bg-slate-100 rounded-full h-2;
+}
+
+.loan-card__progress-bar div {
+  @apply bg-gradient-to-r from-accentBlue to-accentPurple h-2 rounded-full;
+}
+
+.loan-card__remaining {
+  @apply text-xs text-slate-500;
+}
+
+.loan-card__other-charges {
+  @apply text-sm text-slate-500;
+}
+
+.loan-card__payment-meta {
+  @apply rounded-2xl bg-slate-50 p-3 space-y-1 text-sm text-slate-600;
+}
+
+.loan-card__undo-btn {
+  @apply text-xs text-rose-500 hover:underline disabled:opacity-50;
+}
+
+.loan-card__pay-btn {
+  @apply w-full;
+}

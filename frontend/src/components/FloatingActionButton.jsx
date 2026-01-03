@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
+import './FloatingActionButton.css'
 
 const FloatingActionButton = ({ to = '/expenses', label = 'Add Expense' }) => (
   <Link
     to={to}
-    className="lg:hidden fixed bottom-20 right-6 bg-accentDark text-white rounded-full shadow-glow px-5 py-3 font-semibold z-40"
+    className="floating-action-button"
   >
     {label}
   </Link>

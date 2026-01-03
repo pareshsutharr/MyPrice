@@ -1,25 +1,39 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useSettings } from '@context/SettingsContext.jsx'
+import { useCurrencySymbol } from '@hooks/useCurrencyFormatter.js'
+import './IncomeForm.css'
 
 const initialState = () => ({
   amount: '',
   category: 'salary',
+  customCategory: '',
   date: new Date().toISOString().split('T')[0],
   note: '',
 })
+
+const BUILTIN_CATEGORIES = ['salary', 'freelance', 'others']
 
 const IncomeForm = ({ onSubmit, defaultValues, onCancel }) => {
   const [form, setForm] = useState(() => initialState())
   const [formError, setFormError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const { dateFormat } = useSettings()
+  const currencySymbol = useCurrencySymbol()
 
   const isEditing = useMemo(() => Boolean(defaultValues?._id), [defaultValues])
 
   useEffect(() => {
     if (defaultValues?._id) {
+      const baseDate = defaultValues.date
+        ? new Date(defaultValues.date).toISOString().split('T')[0]
+        : new Date().toISOString().split('T')[0]
+      const incomingCategory = defaultValues.category ?? 'salary'
+      const isKnownCategory = BUILTIN_CATEGORIES.includes(incomingCategory)
       setForm({
         amount: defaultValues.amount ?? '',
-        category: defaultValues.category ?? 'salary',
-        date: defaultValues.date ? new Date(defaultValues.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        category: isKnownCategory ? incomingCategory : 'others',
+        customCategory: isKnownCategory && incomingCategory !== 'others' ? '' : incomingCategory ?? '',
+        date: baseDate,
         note: defaultValues.note ?? '',
       })
     } else {
@@ -29,7 +43,16 @@ const IncomeForm = ({ onSubmit, defaultValues, onCancel }) => {
 
   const handleChange = (event) => {
     const { name, value } = event.target
-    setForm((prev) => ({ ...prev, [name]: value }))
+    setForm((prev) => {
+      if (name === 'category') {
+        return {
+          ...prev,
+          category: value,
+          customCategory: value === 'others' ? prev.customCategory : '',
+        }
+      }
+      return { ...prev, [name]: value }
+    })
   }
 
   const handleSubmit = async (event) => {
@@ -45,12 +68,21 @@ const IncomeForm = ({ onSubmit, defaultValues, onCancel }) => {
       setFormError('Select a valid date.')
       return
     }
+    if (form.category === 'others' && !form.customCategory.trim()) {
+      setFormError('Enter a custom category name.')
+      return
+    }
+    const payloadCategory =
+      form.category === 'others' && form.customCategory.trim()
+        ? form.customCategory.trim()
+        : form.category
     setSubmitting(true)
     try {
       await onSubmit({
-        ...form,
         amount,
+        category: payloadCategory,
         date: date.toISOString(),
+        note: form.note,
       })
       if (isEditing) {
         onCancel?.()
@@ -64,60 +96,64 @@ const IncomeForm = ({ onSubmit, defaultValues, onCancel }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 text-left">
-      <div>
-        <label className="text-sm text-slate-500">Amount</label>
+    <form onSubmit={handleSubmit} className="income-form">
+      <div className="income-form__field">
+        <label>{`Amount (${currencySymbol})`}</label>
         <input
           type="number"
           name="amount"
           value={form.amount}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
+          inputMode="decimal"
+          step="0.01"
+          min="0"
           required
         />
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Category</label>
-        <select
-          name="category"
-          value={form.category}
-          onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2 capitalize"
-        >
+      <div className="income-form__field">
+        <label>Category</label>
+        <select name="category" value={form.category} onChange={handleChange}>
           <option value="salary">Salary</option>
           <option value="freelance">Freelance</option>
           <option value="others">Others</option>
         </select>
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Date</label>
+      {form.category === 'others' && (
+        <div className="income-form__field">
+          <label>Custom category</label>
+          <input
+            type="text"
+            name="customCategory"
+            value={form.customCategory}
+            onChange={handleChange}
+            placeholder="Enter category name"
+          />
+        </div>
+      )}
+      <div className="income-form__field">
+        <label>{`Date (${dateFormat})`}</label>
         <input
           type="date"
           name="date"
           value={form.date}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
+          placeholder={dateFormat}
+          title={`Use ${dateFormat} format`}
         />
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Note</label>
-        <textarea
-          name="note"
-          value={form.note}
-          onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
-          rows={3}
-        />
+      <div className="income-form__field">
+        <label>Note</label>
+        <textarea name="note" value={form.note} onChange={handleChange} rows={3} />
       </div>
-      {formError && <p className="text-sm text-rose-500">{formError}</p>}
-      <div className="flex gap-3">
+      {formError && <p className="income-form__error">{formError}</p>}
+      <div className="income-form__actions">
         {isEditing && (
-          <button type="button" className="btn-secondary flex-1" onClick={onCancel}>
+          <button type="button" className="income-form__cancel btn-secondary" onClick={onCancel}>
             Cancel
           </button>
         )}
-        <button type="submit" className="btn-primary flex-1" disabled={submitting}>
-          {submitting ? 'Saving…' : isEditing ? 'Update Income' : 'Save Income'}
+        <button type="submit" className="income-form__submit btn-primary" disabled={submitting}>
+          {submitting ? 'Saving...' : isEditing ? 'Update Income' : 'Save Income'}
         </button>
       </div>
     </form>

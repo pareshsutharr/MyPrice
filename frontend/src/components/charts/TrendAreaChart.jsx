@@ -1,4 +1,4 @@
-import {
+﻿import {
   Area,
   AreaChart,
   ResponsiveContainer,
@@ -6,13 +6,14 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import './TrendAreaChart.css'
 
 const TrendAreaChart = ({ data = [] }) => (
-  <div className="glass-card p-4 h-64 min-w-0">
-    <div className="flex items-center justify-between mb-4">
+  <div className="trend-area-chart">
+    <div className="trend-area-chart__header">
       <div>
-        <p className="text-sm text-slate-500">Monthly trend</p>
-        <p className="text-xl font-semibold font-display text-slate-900">Spending pulse</p>
+        <p>Monthly trend</p>
+        <p className="trend-area-chart__title">Spending pulse</p>
       </div>
     </div>
     <ResponsiveContainer width="100%" height="100%">

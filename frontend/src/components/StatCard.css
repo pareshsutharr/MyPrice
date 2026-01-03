@@ -1,0 +1,31 @@
+﻿.stat-card {
+  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 flex flex-col gap-2;
+}
+
+.stat-card__header {
+  @apply flex items-center gap-3;
+}
+
+.stat-card__icon {
+  @apply p-3 rounded-2xl bg-gradient-to-tr text-white shadow-glow;
+}
+
+.stat-card__icon-graphic {
+  @apply h-6 w-6;
+}
+
+.stat-card__currency {
+  @apply text-xl font-semibold;
+}
+
+.stat-card__label {
+  @apply text-sm text-slate-500;
+}
+
+.stat-card__value {
+  @apply text-2xl font-semibold font-display text-slate-900;
+}
+
+.stat-card__description {
+  @apply text-xs text-slate-500;
+}

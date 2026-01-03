@@ -1,0 +1,15 @@
+﻿.expenses-bar-chart {
+  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 h-72 min-w-0;
+}
+
+.expenses-bar-chart__header {
+  @apply flex items-center justify-between mb-4;
+}
+
+.expenses-bar-chart__header p {
+  @apply text-sm text-slate-500;
+}
+
+.expenses-bar-chart__header h3 {
+  @apply text-xl font-display text-slate-900;
+}

@@ -1,4 +1,5 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
+import './StatementUploader.css'
 
 const StatementUploader = ({ onImport }) => {
   const [broker, setBroker] = useState('Angel One')
@@ -9,14 +10,6 @@ const StatementUploader = ({ onImport }) => {
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [skipped, setSkipped] = useState([])
-
-  const reset = () => {
-    setFile(null)
-    setError('')
-    setStatus('')
-    setProgress(0)
-    setSkipped([])
-  }
 
   const handleFileChange = (event) => {
     const selected = event.target.files?.[0]
@@ -68,61 +61,39 @@ const StatementUploader = ({ onImport }) => {
   }
 
   return (
-    <div className="glass-card p-4 space-y-4">
-      <div>
-        <h3 className="text-xl font-display">Upload statement</h3>
-        <p className="text-sm text-slate-500">
-          Drop your Angel One / Groww holdings XLSX/CSV, we’ll auto-merge schemes without
-          duplicates.
+    <div className="statement-uploader">
+      <div className="statement-uploader__intro">
+        <h3>Upload statement</h3>
+        <p>
+          Drop your Angel One / Groww holdings XLSX/CSV, we’ll auto-merge schemes without duplicates.
         </p>
       </div>
-      <div className="grid md:grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm text-slate-500">Broker</label>
-          <select
-            className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
-            value={broker}
-            onChange={(event) => setBroker(event.target.value)}
-          >
+      <div className="statement-uploader__grid">
+        <div className="statement-uploader__field">
+          <label>Broker</label>
+          <select value={broker} onChange={(event) => setBroker(event.target.value)}>
             <option value="Angel One">Angel One</option>
             <option value="Groww">Groww</option>
             <option value="External">External</option>
           </select>
         </div>
-        <div>
-          <label className="text-sm text-slate-500">Statement date</label>
-          <input
-            type="date"
-            className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
-            value={statementDate}
-            onChange={(event) => setStatementDate(event.target.value)}
-          />
+        <div className="statement-uploader__field">
+          <label>Statement date</label>
+          <input type="date" value={statementDate} onChange={(event) => setStatementDate(event.target.value)} />
         </div>
       </div>
-      <label className="flex flex-col items-center justify-center border-2 border-dashed border-borderLight rounded-xl p-6 text-sm text-slate-500 cursor-pointer">
-        <input
-          type="file"
-          accept=".csv,.xls,.xlsx"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-        {file ? (
-          <span className="text-slate-900">{file.name}</span>
-        ) : (
-          <span>Drop CSV/XLSX or click to browse</span>
-        )}
+      <label className="statement-uploader__dropzone">
+        <input type="file" accept=".csv,.xls,.xlsx" className="statement-uploader__file-input" onChange={handleFileChange} />
+        {file ? <span className="statement-uploader__file-name">{file.name}</span> : <span>Drop CSV/XLSX or click to browse</span>}
       </label>
       {loading && (
-        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-          <div
-            className="h-2 bg-gradient-to-r from-accentBlue to-accentPurple transition-all duration-500"
-            style={{ width: `${progress}%` }}
-          />
+        <div className="statement-uploader__progress">
+          <div style={{ width: `${progress}%` }} />
         </div>
       )}
-      {error && <p className="text-sm text-rose-500">{error}</p>}
+      {error && <p className="statement-uploader__error">{error}</p>}
       {skipped.length > 0 && (
-        <div className="bg-rose-50 text-rose-600 text-left text-sm p-3 rounded-xl space-y-1 max-h-40 overflow-auto">
+        <div className="statement-uploader__skipped">
           {skipped.map((row) => (
             <p key={`${row.schemeName}-${row.message}`}>
               {row.schemeName}: {row.message}
@@ -130,17 +101,16 @@ const StatementUploader = ({ onImport }) => {
           ))}
         </div>
       )}
-      {status && !error && <p className="text-sm text-emerald-600">{status}</p>}
+      {status && !error && <p className="statement-uploader__status">{status}</p>}
       <button
         type="button"
-        className="btn-primary w-full"
+        className="statement-uploader__submit btn-primary"
         onClick={handleImport}
         disabled={!file || loading}
       >
         {loading ? 'Importing...' : 'Import holdings'}
       </button>
     </div>
-  )
-}
+  )}
 
 export default StatementUploader

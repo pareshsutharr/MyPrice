@@ -1,13 +1,13 @@
-const formatCurrency = (value = 0) => `₹ ${Number(value).toLocaleString()}`
+﻿import clsx from 'clsx'
+import { useDateFormatter } from '@hooks/useDateFormatter.js'
+import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
+import './InvestmentCard.css'
 
-const formatDate = (dateValue) => {
-  if (!dateValue) return '—'
-  const date = new Date(dateValue)
-  if (Number.isNaN(date.getTime())) return '—'
-  return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
-}
+const FALLBACK_TEXT = '--'
 
 const InvestmentCard = ({ investment, onEdit, onDelete }) => {
+  const formatDate = useDateFormatter()
+  const formatCurrency = useCurrencyFormatter()
   const gain = (investment.gain ?? investment.currentValue - investment.amountInvested) || 0
   const gainPercent =
     investment.gainPercent ??
@@ -19,45 +19,42 @@ const InvestmentCard = ({ investment, onEdit, onDelete }) => {
       : [investment.broker ?? investment.platform ?? 'Manual']
 
   return (
-    <div className="glass-card p-4 space-y-3">
-      <div className="flex items-start justify-between gap-3">
+    <div className="investment-card">
+      <div className="investment-card__header">
         <div>
-          <p className="text-xs uppercase tracking-wide text-slate-500">
-            {brokerBadges.join(' · ')}
-          </p>
-          <h3 className="text-lg font-display text-slate-900">{investment.schemeName}</h3>
+          <p className="investment-card__brokers">{brokerBadges.join(' · ')}</p>
+          <h3 className="investment-card__title">{investment.schemeName}</h3>
         </div>
-        <div className={`text-right font-semibold ${gainPositive ? 'text-emerald-600' : 'text-rose-500'}`}>
-          {gainPositive ? '▲' : '▼'} {formatCurrency(Math.abs(gain))}
-          <span className="block text-xs text-slate-500">{gainPercent.toFixed(2)}%</span>
+        <div
+          className={clsx('investment-card__gain', {
+            'investment-card__gain--positive': gainPositive,
+            'investment-card__gain--negative': !gainPositive,
+          })}
+        >
+          {gainPositive ? '+' : '-'} {formatCurrency(Math.abs(gain))}
+          <span className="investment-card__gain-percent">{gainPercent.toFixed(2)}%</span>
         </div>
       </div>
-      <div className="text-sm text-slate-500 space-y-1">
+      <div className="investment-card__metrics">
         <p>
-          Invested:{' '}
-          <span className="font-medium text-slate-900">
-            {formatCurrency(investment.amountInvested ?? 0)}
-          </span>
+          Invested <span>{formatCurrency(investment.amountInvested ?? 0)}</span>
         </p>
         <p>
-          Current:{' '}
-          <span className="font-medium text-slate-900">
-            {formatCurrency(investment.currentValue ?? 0)}
-          </span>
+          Current <span>{formatCurrency(investment.currentValue ?? 0)}</span>
         </p>
       </div>
-      <div className="flex items-center justify-between text-xs text-slate-500">
-        <span>Updated {formatDate(investment.lastUpdated)}</span>
-        <div className="space-x-2">
+      <div className="investment-card__footer">
+        <span>Updated {formatDate(investment.lastUpdated, { fallback: FALLBACK_TEXT })}</span>
+        <div className="investment-card__actions">
           {onEdit && (
-            <button type="button" className="btn-secondary !py-1 !px-3 text-xs" onClick={() => onEdit(investment)}>
+            <button type="button" className="investment-card__action-btn btn-secondary" onClick={() => onEdit(investment)}>
               Edit
             </button>
           )}
           {onDelete && (
             <button
               type="button"
-              className="btn-secondary !py-1 !px-3 text-xs border border-red-200 text-red-500 hover:bg-red-50"
+              className="investment-card__delete-btn btn-secondary"
               onClick={() => onDelete(investment._id)}
             >
               Delete
@@ -65,9 +62,7 @@ const InvestmentCard = ({ investment, onEdit, onDelete }) => {
           )}
         </div>
       </div>
-      {investment.notes && (
-        <p className="text-xs text-slate-500">{investment.notes}</p>
-      )}
+      {investment.notes && <p className="investment-card__notes">{investment.notes}</p>}
     </div>
   )
 }

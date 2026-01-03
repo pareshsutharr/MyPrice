@@ -1,0 +1,52 @@
+﻿.income-table {
+  @apply bg-surface rounded-2xl border border-borderLight shadow-glow overflow-auto;
+}
+
+.income-table table {
+  @apply w-full text-left;
+}
+
+.income-table thead {
+  @apply text-sm uppercase text-slate-500;
+}
+
+.income-table th {
+  @apply px-4 py-3;
+}
+
+.income-table__th-amount,
+.income-table__th-actions {
+  @apply text-right;
+}
+
+.income-table tbody tr {
+  @apply border-t border-borderLight text-sm;
+}
+
+.income-table td {
+  @apply px-4 py-3;
+}
+
+.income-table__category {
+  @apply capitalize;
+}
+
+.income-table__amount {
+  @apply text-right font-semibold text-emerald-600;
+}
+
+.income-table__actions {
+  @apply text-right space-x-2;
+}
+
+.income-table__action-btn {
+  @apply !py-1 !px-3 text-xs;
+}
+
+.income-table__delete-btn {
+  @apply !py-1 !px-3 text-xs border border-red-200 text-red-500 hover:bg-red-50;
+}
+
+.income-table__empty {
+  @apply text-center py-8 text-slate-500 text-sm;
+}

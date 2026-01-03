@@ -1,0 +1,30 @@
+.income-form {
+  @apply space-y-4 text-left;
+}
+
+.income-form__field label {
+  @apply text-sm text-slate-500;
+}
+
+.income-form__field input,
+.income-form__field select,
+.income-form__field textarea {
+  @apply w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+}
+
+.income-form__field select {
+  @apply capitalize;
+}
+
+.income-form__error {
+  @apply text-sm text-rose-500;
+}
+
+.income-form__actions {
+  @apply flex gap-3;
+}
+
+.income-form__cancel,
+.income-form__submit {
+  @apply flex-1;
+}

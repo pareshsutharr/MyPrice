@@ -1,0 +1,29 @@
+﻿.stock-form {
+  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 space-y-4;
+}
+
+.stock-form__grid {
+  @apply grid grid-cols-2 gap-4;
+}
+
+.stock-form__field label {
+  @apply text-sm text-slate-500;
+}
+
+.stock-form__field input,
+.stock-form__field select,
+.stock-form__field textarea {
+  @apply w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+}
+
+.stock-form__field select {
+  @apply capitalize;
+}
+
+.stock-form__error {
+  @apply text-sm text-rose-500;
+}
+
+.stock-form__actions {
+  @apply flex gap-3;
+}

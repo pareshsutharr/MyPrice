@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+﻿import { useMemo } from 'react'
 import {
   PiggyBank,
   Wallet,
@@ -9,11 +9,15 @@ import {
 } from 'lucide-react'
 import { useFinance } from '@context/FinanceContext.jsx'
 import StatCard from '@components/StatCard.jsx'
+import { useDateFormatter } from '@hooks/useDateFormatter.js'
+import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
 
-const formatCurrency = (value = 0) => `₹ ${Number(value).toLocaleString()}`
+const EMPTY_VALUE = '--'
 
 const NetWorth = () => {
   const { stats, investments = [], loans, history } = useFinance()
+  const formatDate = useDateFormatter()
+  const formatCurrency = useCurrencyFormatter()
 
   const { totals = {} } = stats ?? {}
   const cashBalance = totals.balance ?? 0
@@ -48,11 +52,20 @@ const NetWorth = () => {
 
   const netWorth = cashBalance + mutualFundValue + stockValue - outstandingLoans
 
+  const formatDateTime = (value) => {
+    if (!value) return EMPTY_VALUE
+    const parsed = new Date(value)
+    if (Number.isNaN(parsed.getTime())) return EMPTY_VALUE
+    const datePart = formatDate(parsed, { fallback: EMPTY_VALUE })
+    const timePart = parsed.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+    return `${datePart} · ${timePart}`
+  }
+
   const cards = [
     {
       label: 'Net worth',
       value: formatCurrency(netWorth),
-      description: 'Cash + investments − liabilities',
+      description: 'Cash + investments - liabilities',
       icon: PiggyBank,
     },
     {
@@ -65,9 +78,7 @@ const NetWorth = () => {
     {
       label: 'Investments market value',
       value: formatCurrency(mutualFundValue + stockValue),
-      description: `Mutual funds ₹${Number(mutualFundValue).toLocaleString()} · stocks ₹${Number(
-        stockValue,
-      ).toLocaleString()}`,
+      description: `Mutual funds ${formatCurrency(mutualFundValue)} · stocks ${formatCurrency(stockValue)}`,
       icon: LineChart,
       accent: 'from-emerald-500 to-lime-400',
     },
@@ -133,9 +144,7 @@ const NetWorth = () => {
           </div>
           <div className="text-sm text-slate-500">
             <p>Invested capital</p>
-            <p className="text-xl font-semibold text-slate-900">
-              {formatCurrency(investmentsInvested)}
-            </p>
+            <p className="text-xl font-semibold text-slate-900">{formatCurrency(investmentsInvested)}</p>
           </div>
         </div>
       </div>
@@ -155,12 +164,7 @@ const NetWorth = () => {
                   <p className="font-medium text-slate-800">
                     {entry.note || entry.category || entry.type}
                   </p>
-                  <p className="text-xs text-slate-500">
-                    {new Date(entry.date).toLocaleString('en-IN', {
-                      dateStyle: 'medium',
-                      timeStyle: 'short',
-                    })}
-                  </p>
+                  <p className="text-xs text-slate-500">{formatDateTime(entry.date)}</p>
                 </div>
                 <span
                   className={`font-semibold text-sm ${

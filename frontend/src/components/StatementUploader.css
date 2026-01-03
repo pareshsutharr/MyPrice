@@ -1,0 +1,60 @@
+﻿.statement-uploader {
+  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 space-y-4;
+}
+
+.statement-uploader__intro h3 {
+  @apply text-xl font-display;
+}
+
+.statement-uploader__intro p {
+  @apply text-sm text-slate-500;
+}
+
+.statement-uploader__grid {
+  @apply grid md:grid-cols-2 gap-4;
+}
+
+.statement-uploader__field label {
+  @apply text-sm text-slate-500;
+}
+
+.statement-uploader__field select,
+.statement-uploader__field input {
+  @apply w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+}
+
+.statement-uploader__dropzone {
+  @apply flex flex-col items-center justify-center border-2 border-dashed border-borderLight rounded-xl p-6 text-sm text-slate-500 cursor-pointer;
+}
+
+.statement-uploader__file-input {
+  @apply hidden;
+}
+
+.statement-uploader__file-name {
+  @apply text-slate-900;
+}
+
+.statement-uploader__progress {
+  @apply w-full bg-slate-100 h-2 rounded-full overflow-hidden;
+}
+
+.statement-uploader__progress div {
+  @apply h-2 bg-gradient-to-r from-accentBlue to-accentPurple transition-all duration-500;
+}
+
+.statement-uploader__error {
+  @apply text-sm text-rose-500;
+}
+
+.statement-uploader__skipped {
+  @apply bg-rose-50 text-rose-600 text-left text-sm p-3 rounded-xl space-y-1 max-h-40 overflow-auto;
+}
+
+.statement-uploader__status {
+  @apply text-sm text-emerald-600;
+}
+
+.statement-uploader__submit {
+  @apply w-full;
+}

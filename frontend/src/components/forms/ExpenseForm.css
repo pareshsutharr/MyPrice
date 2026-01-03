@@ -1,0 +1,25 @@
+﻿.expense-form {
+  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 space-y-4;
+}
+
+.expense-form__field label {
+  @apply text-sm text-slate-500;
+}
+
+.expense-form__field input,
+.expense-form__field select,
+.expense-form__field textarea {
+  @apply w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+}
+
+.expense-form__field select {
+  @apply capitalize;
+}
+
+.expense-form__error {
+  @apply text-sm text-rose-500;
+}
+
+.expense-form__submit {
+  @apply w-full;
+}

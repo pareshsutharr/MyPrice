@@ -23,7 +23,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-surfaceMuted px-4">
       <div className="glass-card max-w-md w-full p-8 text-center space-y-6">
         <div>
-          <h1 className="text-3xl font-display text-slate-900">Welcome to MyPrice</h1>
+          <h1 className="text-3xl font-display text-slate-900">Welcome to MoneyXP</h1>
           <p className="text-slate-500 mt-2">Sign in with Google to sync your personal finance data.</p>
         </div>
         <div className="flex justify-center">

@@ -1,57 +1,61 @@
-const formatDate = (value) => {
-  if (!value) return '—'
-  return new Date(value).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })
-}
+﻿import { useDateFormatter } from '@hooks/useDateFormatter.js'
+import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
+import './IncomeTable.css'
 
-const IncomeTable = ({ incomes = [], onEdit, onDelete }) => (
-  <div className="glass-card overflow-auto">
-    <table className="w-full text-left">
-      <thead className="text-sm uppercase text-slate-500">
-        <tr>
-          <th className="px-4 py-3">Date</th>
-          <th className="px-4 py-3">Category</th>
-          <th className="px-4 py-3">Note</th>
-          <th className="px-4 py-3 text-right">Amount</th>
-          <th className="px-4 py-3 text-right">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {incomes.map((entry) => (
-          <tr key={entry._id} className="border-t border-borderLight text-sm">
-            <td className="px-4 py-3">{formatDate(entry.date)}</td>
-            <td className="px-4 py-3 capitalize">{entry.category}</td>
-            <td className="px-4 py-3">{entry.note || '—'}</td>
-            <td className="px-4 py-3 text-right font-semibold text-emerald-600">
-              ₹ {Number(entry.amount ?? 0).toLocaleString()}
-            </td>
-            <td className="px-4 py-3 text-right space-x-2">
-              {onEdit && (
-                <button
-                  type="button"
-                  className="btn-secondary !py-1 !px-3 text-xs"
-                  onClick={() => onEdit(entry)}
-                >
-                  Edit
-                </button>
-              )}
-              {onDelete && (
-                <button
-                  type="button"
-                  className="btn-secondary !py-1 !px-3 text-xs border border-red-200 text-red-500 hover:bg-red-50"
-                  onClick={() => onDelete(entry._id)}
-                >
-                  Delete
-                </button>
-              )}
-            </td>
+const EMPTY_PLACEHOLDER = '--'
+
+const IncomeTable = ({ incomes = [], onEdit, onDelete }) => {
+  const formatDate = useDateFormatter()
+  const formatCurrency = useCurrencyFormatter()
+
+  return (
+    <div className="income-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Note</th>
+            <th className="income-table__th-amount">Amount</th>
+            <th className="income-table__th-actions">Actions</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
-    {incomes.length === 0 && (
-      <p className="text-center py-8 text-slate-500 text-sm">No income recorded yet.</p>
-    )}
-  </div>
-)
+        </thead>
+        <tbody>
+          {incomes.map((entry) => (
+            <tr key={entry._id}>
+              <td>{formatDate(entry.date, { fallback: EMPTY_PLACEHOLDER })}</td>
+              <td className="income-table__category">{entry.category}</td>
+              <td>{entry.note || EMPTY_PLACEHOLDER}</td>
+              <td className="income-table__amount">{formatCurrency(entry.amount)}</td>
+              <td className="income-table__actions">
+                {onEdit && (
+                  <button
+                    type="button"
+                    className="income-table__action-btn btn-secondary"
+                    onClick={() => onEdit(entry)}
+                  >
+                    Edit
+                  </button>
+                )}
+                {onDelete && (
+                  <button
+                    type="button"
+                    className="income-table__delete-btn btn-secondary"
+                    onClick={() => onDelete(entry._id)}
+                  >
+                    Delete
+                  </button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {incomes.length === 0 && (
+        <p className="income-table__empty">No income recorded yet.</p>
+      )}
+    </div>
+  )
+}
 
 export default IncomeTable

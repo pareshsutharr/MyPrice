@@ -1,11 +1,12 @@
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
+﻿import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
+import './CategoryPieChart.css'
 
 const CategoryPieChart = ({ data }) => (
-  <div className="glass-card p-4 h-72 min-w-0">
-    <div className="flex items-center justify-between mb-4">
+  <div className="category-pie-chart">
+    <div className="category-pie-chart__header">
       <div>
-        <p className="text-sm text-slate-500">Distribution</p>
-        <h3 className="text-xl font-display text-slate-900">Category split</h3>
+        <p>Distribution</p>
+        <h3>Category split</h3>
       </div>
     </div>
     <ResponsiveContainer width="100%" height="100%">

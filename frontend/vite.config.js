@@ -15,8 +15,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/icon-192.png', 'icons/icon-512.png'],
       manifest: {
-        name: 'Finance Tracker PWA',
-        short_name: 'MyPrice',
+        name: 'MoneyXP',
+        short_name: 'MoneyXP',
         description: 'Modern finance tracker with analytics and EMI reminders.',
         start_url: '/',
         display: 'standalone',
@@ -68,6 +68,7 @@ export default defineConfig({
       '@data': path.resolve(__dirname, './src/data'),
       '@layout': path.resolve(__dirname, './src/layout'),
       '@shared': path.resolve(__dirname, '../shared'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
     },
   },
   server: {

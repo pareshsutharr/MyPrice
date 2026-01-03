@@ -1,44 +1,42 @@
-import { useEffect, useState } from 'react'
-import { CATEGORY_MAP, DEFAULT_CURRENCY } from '@shared/constants.js'
+import { useState } from 'react'
+import { DATE_FORMATS, useSettings } from '@context/SettingsContext.jsx'
+
+const DATE_FORMAT_OPTIONS = DATE_FORMATS.map((format) => ({
+  value: format,
+  label:
+    format === 'DD/MM/YYYY'
+      ? 'DD/MM/YYYY (31/01/2026)'
+      : format === 'MM/DD/YYYY'
+        ? 'MM/DD/YYYY (01/31/2026)'
+        : 'YYYY-MM-DD (2026-01-31)',
+}))
 
 const Settings = () => {
-  const [currency, setCurrency] = useState(DEFAULT_CURRENCY)
-  const [categories, setCategories] = useState(CATEGORY_MAP)
+  const { currency, categories, dateFormat, setCurrency, addCategory, removeCategory, setDateFormat } =
+    useSettings()
   const [newCategory, setNewCategory] = useState({ label: '', color: '#4f9cff', icon: '✨' })
 
-  useEffect(() => {
-    const stored = localStorage.getItem('myprice-settings')
-    if (stored) {
-      const parsed = JSON.parse(stored)
-      setCurrency(parsed.currency ?? DEFAULT_CURRENCY)
-      setCategories(parsed.categories ?? CATEGORY_MAP)
-    }
-  }, [])
-
-  const persist = (nextState) => {
-    localStorage.setItem('myprice-settings', JSON.stringify(nextState))
-  }
-
   const handleCurrencyChange = (event) => {
-    const next = event.target.value
-    setCurrency(next)
-    persist({ currency: next, categories })
+    setCurrency(event.target.value)
   }
 
   const handleAddCategory = () => {
-    const nextCategories = [
-      ...categories,
-      { ...newCategory, id: newCategory.label.toLowerCase() || `cat-${categories.length}` },
-    ]
-    setCategories(nextCategories)
-    persist({ currency, categories: nextCategories })
+    if (!newCategory.label.trim()) return
+    const label = newCategory.label.trim()
+    addCategory({
+      ...newCategory,
+      label,
+      id: label.toLowerCase().replace(/\s+/g, '-') || `cat-${categories.length}`,
+    })
     setNewCategory({ label: '', color: '#4f9cff', icon: '✨' })
   }
 
   const handleRemove = (id) => {
-    const nextCategories = categories.filter((category) => category.id !== id)
-    setCategories(nextCategories)
-    persist({ currency, categories: nextCategories })
+    removeCategory(id)
+  }
+
+  const handleDateFormatChange = (event) => {
+    setDateFormat(event.target.value)
   }
 
   return (
@@ -52,6 +50,24 @@ const Settings = () => {
           onChange={handleCurrencyChange}
           className="w-32 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2 text-center text-xl"
         />
+      </section>
+
+      <section className="glass-card p-6 space-y-4">
+        <h2 className="text-2xl font-display">Date format</h2>
+        <p className="text-sm text-slate-500">
+          Choose how dates should appear everywhere in the dashboard.
+        </p>
+        <select
+          className="w-full md:w-72 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
+          value={dateFormat}
+          onChange={handleDateFormatChange}
+        >
+          {DATE_FORMAT_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </section>
 
       <section className="glass-card p-6 space-y-4">

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+﻿import { useState } from 'react'
+import { NavLink, Outlet, Link } from 'react-router-dom'
 import {
   LayoutDashboard,
   CalendarRange,
@@ -16,6 +16,7 @@ import {
 import { useFinance } from '@context/FinanceContext.jsx'
 import { useAuth } from '@context/AuthContext.jsx'
 import FloatingActionButton from '@components/FloatingActionButton.jsx'
+import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -38,20 +39,22 @@ const DashboardLayout = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const primaryMobileNav = navItems.filter((item) => primaryMobileRoutes.includes(item.to))
   const extraMobileNav = navItems.filter((item) => !primaryMobileRoutes.includes(item.to))
+  const formatCurrency = useCurrencyFormatter()
 
   return (
     <div className="min-h-screen bg-surfaceMuted text-slate-900">
       <div className="hidden lg:flex fixed inset-y-0 left-0 w-64 border-r border-borderLight bg-white p-6 flex-col gap-8">
         <div>
-          <h1 className="font-display text-2xl text-slate-900">MyPrice</h1>
-          <p className="text-slate-500 text-sm">Finance tracker PWA</p>
+          <Link to="/" className="inline-flex" aria-label="MoneyXP Dashboard">
+            <img src="/assets/moneyxp_logo.png" alt="MoneyXP" className="h-12 md:h-14 w-auto" />
+          </Link>
         </div>
         <nav className="space-y-2">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
-              end={item.to === '/'}
+              end={item.to === '/' }
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2 rounded-xl transition ${
                   isActive ? 'bg-surfaceMuted text-slate-900' : 'text-slate-500'
@@ -66,7 +69,7 @@ const DashboardLayout = () => {
         <div className="mt-auto text-sm text-slate-500">
           Balance{' '}
           <span className="block text-2xl font-display text-slate-900">
-            ₹ {stats?.totals?.balance?.toLocaleString() ?? 0}
+            {formatCurrency(stats?.totals?.balance ?? 0)}
           </span>
         </div>
       </div>
@@ -74,7 +77,6 @@ const DashboardLayout = () => {
         <header className="border-b border-borderLight bg-white px-3 py-3 md:p-4 flex items-center justify-between sticky top-0 z-30">
           <div>
             <p className="text-xs text-slate-500 uppercase tracking-widest">Welcome back</p>
-            <h2 className="text-2xl font-display text-slate-900">Your finance buddy</h2>
           </div>
           <div className="flex items-center gap-4">
             <button type="button" className="btn-secondary hidden md:block" onClick={refresh}>
@@ -127,7 +129,7 @@ const DashboardLayout = () => {
           <NavLink
             key={item.to}
             to={item.to}
-            end={item.to === '/'}
+            end={item.to === '/' }
             className={({ isActive }) =>
               `flex-1 flex flex-col items-center py-2.5 text-xs ${
                 isActive ? 'text-accentBlue' : 'text-slate-500'
@@ -144,7 +146,7 @@ const DashboardLayout = () => {
           onClick={() => setMobileMenuOpen(true)}
         >
           <span className="h-5 w-5 rounded-full border border-borderLight flex items-center justify-center text-sm">
-            ⋯
+            +
           </span>
           More
         </button>
@@ -154,11 +156,7 @@ const DashboardLayout = () => {
           <div className="absolute bottom-16 left-3 right-3 bg-white rounded-2xl shadow-xl p-4 space-y-3">
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold text-slate-700">More sections</p>
-              <button
-                type="button"
-                className="text-xs text-slate-500"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <button type="button" className="text-xs text-slate-500" onClick={() => setMobileMenuOpen(false)}>
                 Close
               </button>
             </div>

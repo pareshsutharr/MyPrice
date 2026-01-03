@@ -1,3 +1,5 @@
+import './FilterToolbar.css'
+
 const FilterToolbar = ({ filters, onChange }) => {
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -5,42 +7,39 @@ const FilterToolbar = ({ filters, onChange }) => {
   }
 
   return (
-    <div className="glass-card p-4 grid md:grid-cols-4 gap-3 text-sm">
-      <div>
-        <label className="text-slate-500">Search</label>
+    <div className="filter-toolbar">
+      <div className="filter-toolbar__field">
+        <label>Search</label>
         <input
           type="text"
           name="q"
           placeholder="Groceries, cab..."
           value={filters.q}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
         />
       </div>
-      <div>
-        <label className="text-slate-500">From</label>
+      <div className="filter-toolbar__field">
+        <label>From</label>
         <input
           type="date"
           name="startDate"
           value={filters.startDate}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
         />
       </div>
-      <div>
-        <label className="text-slate-500">To</label>
+      <div className="filter-toolbar__field">
+        <label>To</label>
         <input
           type="date"
           name="endDate"
           value={filters.endDate}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
         />
       </div>
-      <div className="flex items-end">
+      <div className="filter-toolbar__actions">
         <button
           type="button"
-          className="btn-secondary w-full"
+          className="filter-toolbar__button btn-secondary"
           onClick={() => onChange({ q: '', startDate: '', endDate: '' })}
         >
           Clear

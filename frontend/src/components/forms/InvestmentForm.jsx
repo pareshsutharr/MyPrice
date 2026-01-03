@@ -1,4 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useSettings } from '@context/SettingsContext.jsx'
+import { useCurrencySymbol } from '@hooks/useCurrencyFormatter.js'
+import './InvestmentForm.css'
 
 const platforms = ['Groww', 'Angel One', 'Kuvera', 'Paytm Money', 'Other']
 
@@ -17,6 +20,11 @@ const initialState = (defaults = {}) => ({
 
 const InvestmentForm = ({ onSubmit, defaultValues, onCancel }) => {
   const [form, setForm] = useState(() => initialState(defaultValues))
+  const [formError, setFormError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const { dateFormat } = useSettings()
+  const currencySymbol = useCurrencySymbol()
+  const isEditing = useMemo(() => Boolean(defaultValues?._id), [defaultValues])
 
   useEffect(() => {
     setForm(initialState(defaultValues))
@@ -29,53 +37,77 @@ const InvestmentForm = ({ onSubmit, defaultValues, onCancel }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    await onSubmit({
-      schemeName: form.schemeName.trim(),
-      platform: form.platform,
-      broker: form.broker || form.platform,
-      amountInvested: Number(form.amountInvested),
-      currentValue: Number(form.currentValue),
-      lastUpdated: new Date(form.lastUpdated).toISOString(),
-      notes: form.notes.trim(),
-    })
-    setForm(initialState())
+    setFormError('')
+    const amountInvested = Number(form.amountInvested)
+    const currentValue = Number(form.currentValue)
+    const lastUpdated = form.lastUpdated ? new Date(form.lastUpdated) : new Date()
+
+    if (!form.schemeName.trim()) {
+      setFormError('Enter the scheme name.')
+      return
+    }
+    if (!Number.isFinite(amountInvested) || amountInvested < 0) {
+      setFormError('Amount invested must be zero or more.')
+      return
+    }
+    if (!Number.isFinite(currentValue) || currentValue < 0) {
+      setFormError('Current value must be zero or more.')
+      return
+    }
+    if (Number.isNaN(lastUpdated.getTime())) {
+      setFormError('Choose a valid last updated date.')
+      return
+    }
+
+    setSubmitting(true)
+    try {
+      await onSubmit({
+        schemeName: form.schemeName.trim(),
+        platform: form.platform,
+        broker: form.broker || form.platform,
+        amountInvested,
+        currentValue,
+        lastUpdated: lastUpdated.toISOString(),
+        notes: form.notes.trim(),
+      })
+      if (isEditing) {
+        onCancel?.()
+      } else {
+        setForm(initialState())
+      }
+    } catch (error) {
+      setFormError(error?.response?.data?.message ?? 'Unable to save this investment right now.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
-  const isEditing = Boolean(defaultValues?._id)
-
   return (
-    <form onSubmit={handleSubmit} className="glass-card p-4 space-y-4">
-      <div>
-        <label className="text-sm text-slate-500">Scheme name</label>
+    <form onSubmit={handleSubmit} className="investment-form">
+      <div className="investment-form__field">
+        <label>Scheme name</label>
         <input
           type="text"
           name="schemeName"
           value={form.schemeName}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
           placeholder="e.g. Axis Bluechip Fund"
           required
         />
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Broker</label>
+      <div className="investment-form__field">
+        <label>Broker</label>
         <input
           type="text"
           name="broker"
           value={form.broker}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
           placeholder="Angel One / Groww"
         />
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Platform</label>
-        <select
-          name="platform"
-          value={form.platform}
-          onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
-        >
+      <div className="investment-form__field">
+        <label>Platform</label>
+        <select name="platform" value={form.platform} onChange={handleChange}>
           {platforms.map((platform) => (
             <option value={platform} key={platform}>
               {platform}
@@ -83,68 +115,65 @@ const InvestmentForm = ({ onSubmit, defaultValues, onCancel }) => {
           ))}
         </select>
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm text-slate-500">Amount invested</label>
+      <div className="investment-form__grid">
+        <div className="investment-form__field">
+          <label>{`Amount invested (${currencySymbol})`}</label>
           <input
             type="number"
             name="amountInvested"
             value={form.amountInvested}
             onChange={handleChange}
-            className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
             min="0"
-            step="100"
+            step="0.01"
+            inputMode="decimal"
             required
           />
         </div>
-        <div>
-          <label className="text-sm text-slate-500">Current value</label>
+        <div className="investment-form__field">
+          <label>{`Current value (${currencySymbol})`}</label>
           <input
             type="number"
             name="currentValue"
             value={form.currentValue}
             onChange={handleChange}
-            className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
             min="0"
-            step="100"
+            step="0.01"
+            inputMode="decimal"
             required
           />
         </div>
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Last updated on</label>
+      <div className="investment-form__field">
+        <label>{`Last updated on (${dateFormat})`}</label>
         <input
           type="date"
           name="lastUpdated"
           value={form.lastUpdated}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
           required
+          placeholder={dateFormat}
+          title={`Use ${dateFormat} format`}
         />
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Notes</label>
+      <div className="investment-form__field">
+        <label>Notes</label>
         <textarea
           name="notes"
           value={form.notes}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
           rows={3}
           placeholder="SIP amount, goal, etc."
         />
       </div>
-      <div className="flex gap-3">
+      {formError && <p className="investment-form__error">{formError}</p>}
+      <div className="investment-form__actions">
         {isEditing && (
-          <button
-            type="button"
-            className="btn-secondary flex-1"
-            onClick={onCancel}
-          >
+          <button type="button" className="btn-secondary flex-1" onClick={onCancel}>
             Cancel
           </button>
         )}
-        <button type="submit" className="btn-primary flex-1">
-          {isEditing ? 'Update Investment' : 'Save Investment'}
+        <button type="submit" className="btn-primary flex-1" disabled={submitting}>
+          {submitting ? 'Saving...' : isEditing ? 'Update Investment' : 'Save Investment'}
         </button>
       </div>
     </form>

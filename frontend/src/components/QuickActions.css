@@ -1,0 +1,8 @@
+.quick-actions {
+  @apply grid grid-cols-2 gap-3;
+}
+
+.quick-actions__link,
+.quick-actions__button {
+  @apply text-center;
+}

@@ -1,6 +1,6 @@
 {
-  "name": "Finance Tracker PWA",
-  "short_name": "MyPrice",
+  "name": "MoneyXP",
+  "short_name": "MoneyXP",
   "description": "Track expenses, loans, and reports with offline support.",
   "start_url": "/",
   "display": "standalone",

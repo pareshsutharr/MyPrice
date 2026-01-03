@@ -1,0 +1,52 @@
+.emi-payment-modal {
+  @apply fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50;
+}
+
+.emi-payment-modal__card {
+  @apply bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4;
+}
+
+.emi-payment-modal__header {
+  @apply flex items-center justify-between;
+}
+
+.emi-payment-modal__header p {
+  @apply text-xs uppercase tracking-wide text-slate-400;
+}
+
+.emi-payment-modal__header h3 {
+  @apply text-xl font-display text-slate-900;
+}
+
+.emi-payment-modal__header button {
+  @apply text-slate-400 hover:text-slate-600 text-sm;
+}
+
+.emi-payment-modal__summary {
+  @apply text-sm text-slate-500;
+}
+
+.emi-payment-modal__summary span {
+  @apply font-semibold text-slate-900;
+}
+
+.emi-payment-modal__form {
+  @apply space-y-4;
+}
+
+.emi-payment-modal__field label {
+  @apply text-sm text-slate-500;
+}
+
+.emi-payment-modal__field input,
+.emi-payment-modal__field textarea {
+  @apply w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+}
+
+.emi-payment-modal__error {
+  @apply text-sm text-rose-500;
+}
+
+.emi-payment-modal__submit {
+  @apply w-full;
+}

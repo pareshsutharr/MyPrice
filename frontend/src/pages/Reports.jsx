@@ -1,26 +1,28 @@
-import ExpensesBarChart from '@components/charts/ExpensesBarChart.jsx'
+﻿import ExpensesBarChart from '@components/charts/ExpensesBarChart.jsx'
 import CategoryPieChart from '@components/charts/CategoryPieChart.jsx'
 import StatCard from '@components/StatCard.jsx'
 import { useFinance } from '@context/FinanceContext.jsx'
+import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
 
 const Reports = () => {
   const { stats } = useFinance()
   const split = stats?.incomeSplit ?? {}
+  const formatCurrency = useCurrencyFormatter()
   const cards = [
     {
       label: 'Needs (50%)',
-      value: `₹ ${Math.round(split.needs ?? 0).toLocaleString()}`,
+      value: formatCurrency(Math.round(split.needs ?? 0)),
       description: 'Rent, groceries, EMI',
     },
     {
       label: 'Wants (30%)',
-      value: `₹ ${Math.round(split.wants ?? 0).toLocaleString()}`,
+      value: formatCurrency(Math.round(split.wants ?? 0)),
       description: 'Lifestyle spends',
       accent: 'from-pink-500 to-orange-500',
     },
     {
       label: 'Savings (20%)',
-      value: `₹ ${Math.round(split.savings ?? 0).toLocaleString()}`,
+      value: formatCurrency(Math.round(split.savings ?? 0)),
       description: 'Investments & buffer',
       accent: 'from-emerald-500 to-cyan-500',
     },

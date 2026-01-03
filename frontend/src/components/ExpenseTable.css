@@ -1,0 +1,51 @@
+﻿.expense-table {
+  @apply bg-surface rounded-2xl border border-borderLight shadow-glow overflow-auto;
+}
+
+.expense-table table {
+  @apply w-full text-left;
+}
+
+.expense-table thead {
+  @apply text-sm uppercase text-slate-500;
+}
+
+.expense-table th {
+  @apply px-4 py-3;
+}
+
+.expense-table__th-actions {
+  @apply text-right;
+}
+
+.expense-table tbody tr {
+  @apply border-t border-borderLight text-sm;
+}
+
+.expense-table td {
+  @apply px-4 py-3;
+}
+
+.expense-table__category {
+  @apply capitalize;
+}
+
+.expense-table__amount {
+  @apply font-semibold text-slate-900;
+}
+
+.expense-table__actions {
+  @apply text-right space-x-2;
+}
+
+.expense-table__action-btn {
+  @apply !py-1 !px-3 text-xs;
+}
+
+.expense-table__delete-btn {
+  @apply !py-1 !px-3 text-xs border border-red-200 text-red-500 hover:bg-red-50;
+}
+
+.expense-table__empty {
+  @apply text-center py-8 text-slate-500 text-sm;
+}

@@ -1,11 +1,12 @@
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+﻿import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import './ExpensesBarChart.css'
 
 const ExpensesBarChart = ({ data }) => (
-  <div className="glass-card p-4 h-72 min-w-0">
-    <div className="flex items-center justify-between mb-4">
+  <div className="expenses-bar-chart">
+    <div className="expenses-bar-chart__header">
       <div>
-        <p className="text-sm text-slate-500">Reports</p>
-        <h3 className="text-xl font-display text-slate-900">Monthly expenses</h3>
+        <p>Reports</p>
+        <h3>Monthly expenses</h3>
       </div>
     </div>
     <ResponsiveContainer width="100%" height="100%">

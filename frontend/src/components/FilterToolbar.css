@@ -1,0 +1,19 @@
+﻿.filter-toolbar {
+  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 grid md:grid-cols-4 gap-3 text-sm;
+}
+
+.filter-toolbar__field label {
+  @apply text-slate-500;
+}
+
+.filter-toolbar__field input {
+  @apply w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+}
+
+.filter-toolbar__actions {
+  @apply flex items-end;
+}
+
+.filter-toolbar__button {
+  @apply w-full;
+}

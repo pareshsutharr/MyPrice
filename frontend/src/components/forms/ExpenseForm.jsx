@@ -1,21 +1,36 @@
 import { useState } from 'react'
 import { CATEGORY_MAP } from '@shared/constants.js'
+import { useSettings } from '@context/SettingsContext.jsx'
+import { useCurrencySymbol } from '@hooks/useCurrencyFormatter.js'
+import './ExpenseForm.css'
 
 const getInitialState = () => ({
   amount: '',
-  category: CATEGORY_MAP[0].id,
+  category: CATEGORY_MAP[0]?.id ?? 'food',
+  customCategory: '',
   date: new Date().toISOString().split('T')[0],
   note: '',
 })
 
-const ExpenseForm = ({ onSubmit, defaultValues = getInitialState() }) => {
-  const [form, setForm] = useState(() => ({ ...getInitialState(), ...defaultValues }))
+const ExpenseForm = ({ onSubmit, defaultValues }) => {
+  const [form, setForm] = useState(() => ({ ...getInitialState(), ...(defaultValues ?? {}) }))
   const [formError, setFormError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const { dateFormat } = useSettings()
+  const currencySymbol = useCurrencySymbol()
 
   const handleChange = (event) => {
     const { name, value } = event.target
-    setForm((prev) => ({ ...prev, [name]: value }))
+    setForm((prev) => {
+      if (name === 'category') {
+        return {
+          ...prev,
+          category: value,
+          customCategory: value === 'others' ? prev.customCategory : '',
+        }
+      }
+      return { ...prev, [name]: value }
+    })
   }
 
   const handleSubmit = async (event) => {
@@ -31,10 +46,18 @@ const ExpenseForm = ({ onSubmit, defaultValues = getInitialState() }) => {
       setFormError('Select a valid date.')
       return
     }
+    if (form.category === 'others' && !form.customCategory.trim()) {
+      setFormError('Enter a custom category name.')
+      return
+    }
+    const { customCategory, ...rest } = form
+    const category =
+      form.category === 'others' && customCategory.trim() ? customCategory.trim() : form.category
     setSubmitting(true)
     try {
       await onSubmit({
-        ...form,
+        ...rest,
+        category,
         amount,
         date: date.toISOString(),
       })
@@ -47,26 +70,23 @@ const ExpenseForm = ({ onSubmit, defaultValues = getInitialState() }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="glass-card p-4 space-y-4">
-      <div>
-        <label className="text-sm text-slate-500">Amount</label>
+    <form onSubmit={handleSubmit} className="expense-form">
+      <div className="expense-form__field">
+        <label>{`Amount (${currencySymbol})`}</label>
         <input
           type="number"
           name="amount"
           value={form.amount}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
+          inputMode="decimal"
+          step="0.01"
+          min="0"
           required
         />
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Category</label>
-        <select
-          name="category"
-          value={form.category}
-          onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2 capitalize"
-        >
+      <div className="expense-form__field">
+        <label>Category</label>
+        <select name="category" value={form.category} onChange={handleChange}>
           {CATEGORY_MAP.map((category) => (
             <option key={category.id} value={category.id}>
               {category.icon} {category.label}
@@ -74,29 +94,36 @@ const ExpenseForm = ({ onSubmit, defaultValues = getInitialState() }) => {
           ))}
         </select>
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Date</label>
+      {form.category === 'others' && (
+        <div className="expense-form__field">
+          <label>Custom category</label>
+          <input
+            type="text"
+            name="customCategory"
+            value={form.customCategory}
+            onChange={handleChange}
+            placeholder="Enter category name"
+          />
+        </div>
+      )}
+      <div className="expense-form__field">
+        <label>{`Date (${dateFormat})`}</label>
         <input
           type="date"
           name="date"
           value={form.date}
           onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
+          placeholder={dateFormat}
+          title={`Use ${dateFormat} format`}
         />
       </div>
-      <div>
-        <label className="text-sm text-slate-500">Note</label>
-        <textarea
-          name="note"
-          value={form.note}
-          onChange={handleChange}
-          className="w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2"
-          rows={3}
-        />
+      <div className="expense-form__field">
+        <label>Note</label>
+        <textarea name="note" value={form.note} onChange={handleChange} rows={3} />
       </div>
-      {formError && <p className="text-sm text-rose-500">{formError}</p>}
-      <button type="submit" className="btn-primary w-full" disabled={submitting}>
-        {submitting ? 'Saving…' : 'Save Expense'}
+      {formError && <p className="expense-form__error">{formError}</p>}
+      <button type="submit" className="expense-form__submit btn-primary" disabled={submitting}>
+        {submitting ? 'Saving...' : 'Save Expense'}
       </button>
     </form>
   )

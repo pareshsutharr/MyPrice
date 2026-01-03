@@ -1,15 +1,12 @@
 import { Link } from 'react-router-dom'
+import './QuickActions.css'
 
 const QuickActions = ({ onAddIncome }) => (
-  <div className="grid grid-cols-2 gap-3">
-    <Link to="/expenses" className="btn-primary text-center">
+  <div className="quick-actions">
+    <Link to="/expenses" className="quick-actions__link btn-primary">
       Add Expense
     </Link>
-    <button
-      type="button"
-      className="btn-secondary text-center"
-      onClick={onAddIncome}
-    >
+    <button type="button" className="quick-actions__button btn-secondary" onClick={onAddIncome}>
       Add Income
     </button>
   </div>

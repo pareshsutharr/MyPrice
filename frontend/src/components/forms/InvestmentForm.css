@@ -1,0 +1,25 @@
+﻿.investment-form {
+  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 space-y-4;
+}
+
+.investment-form__grid {
+  @apply grid grid-cols-2 gap-4;
+}
+
+.investment-form__field label {
+  @apply text-sm text-slate-500;
+}
+
+.investment-form__field input,
+.investment-form__field select,
+.investment-form__field textarea {
+  @apply w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+}
+
+.investment-form__error {
+  @apply text-sm text-rose-500;
+}
+
+.investment-form__actions {
+  @apply flex gap-3;
+}

@@ -1,15 +1,15 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { CandlestickChart, Wallet, TrendingUp, PiggyBank } from 'lucide-react'
 import { useFinance } from '@context/FinanceContext.jsx'
 import StockForm from '@components/forms/StockForm.jsx'
 import InvestmentCard from '@components/InvestmentCard.jsx'
 import StatCard from '@components/StatCard.jsx'
-
-const formatCurrency = (value = 0) => `₹ ${Number(value).toLocaleString()}`
+import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
 
 const Stocks = () => {
   const { investments = [], actions } = useFinance()
   const [editing, setEditing] = useState(null)
+  const formatCurrency = useCurrencyFormatter()
 
   const stocks = useMemo(
     () => investments.filter((investment) => investment.metadata?.assetType === 'stock'),

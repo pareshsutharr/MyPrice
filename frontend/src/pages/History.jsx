@@ -1,4 +1,6 @@
-import { useFinance } from '@context/FinanceContext.jsx'
+﻿import { useFinance } from '@context/FinanceContext.jsx'
+import { useDateFormatter } from '@hooks/useDateFormatter.js'
+import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
 import clsx from 'clsx'
 
 const typeMeta = {
@@ -8,10 +10,21 @@ const typeMeta = {
   'emi-reversal': { label: 'EMI Reverted', color: 'text-amber-600 bg-amber-50' },
 }
 
-const formatCurrency = (value = 0) => `₹ ${Number(value).toLocaleString()}`
+const EMPTY_VALUE = '--'
 
 const History = () => {
   const { history, loading } = useFinance()
+  const formatDate = useDateFormatter()
+  const formatCurrency = useCurrencyFormatter()
+
+  const formatDateTime = (value) => {
+    if (!value) return EMPTY_VALUE
+    const parsed = new Date(value)
+    if (Number.isNaN(parsed.getTime())) return EMPTY_VALUE
+    const datePart = formatDate(parsed, { fallback: EMPTY_VALUE })
+    const timePart = parsed.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+    return `${datePart} · ${timePart}`
+  }
 
   if (loading && history.length === 0) {
     return <p className="text-center text-slate-500">Loading history...</p>
@@ -34,17 +47,11 @@ const History = () => {
                 <span className={clsx('text-xs px-2 py-0.5 rounded-full uppercase tracking-wide', meta.color)}>
                   {meta.label}
                 </span>
-                <p className="text-sm text-slate-500 mt-1">{entry.note || entry.category}</p>
-                <p className="text-xs text-slate-400">
-                  {new Date(entry.date).toLocaleString('en-IN', {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  })}
-                </p>
+                <p className="text-sm text-slate-500 mt-1">{entry.note || entry.category || EMPTY_VALUE}</p>
+                <p className="text-xs text-slate-400">{formatDateTime(entry.date)}</p>
               </div>
               <div className={clsx('text-lg font-semibold', isCredit ? 'text-emerald-600' : 'text-slate-900')}>
-                {isCredit ? '+' : '-'}
-                {formatCurrency(entry.amount)}
+                {isCredit ? '+' : '-'} {formatCurrency(entry.amount)}
               </div>
             </div>
           )

@@ -20,14 +20,16 @@ body {
   min-height: 100vh;
 }
 
-.glass-card {
-  @apply bg-surface rounded-2xl border border-borderLight shadow-glow;
-}
+@layer components {
+  .glass-card {
+    @apply bg-surface rounded-2xl border border-borderLight shadow-glow;
+  }
 
-.btn-primary {
-  @apply bg-accentDark text-white px-5 py-2 rounded-xl font-semibold shadow-glow transition hover:bg-black active:scale-95;
-}
+  .btn-primary {
+    @apply bg-accentDark text-white px-5 py-2 rounded-xl font-semibold shadow-glow transition hover:bg-black active:scale-95;
+  }
 
-.btn-secondary {
-  @apply bg-white border border-borderLight text-accentDark px-5 py-2 rounded-xl font-semibold transition hover:bg-surfaceMuted;
+  .btn-secondary {
+    @apply bg-white border border-borderLight text-accentDark px-5 py-2 rounded-xl font-semibold transition hover:bg-surfaceMuted;
+  }
 }
