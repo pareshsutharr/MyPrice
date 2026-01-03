@@ -1,0 +1,7 @@
+.income-form__shell {
+  @apply transition-all duration-300 rounded-2xl border-2 border-transparent;
+}
+
+.income-form__shell--editing {
+  @apply border-black bg-surfaceMuted shadow-glow;
+}

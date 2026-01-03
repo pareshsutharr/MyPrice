@@ -12,6 +12,9 @@ import {
   History as HistoryIcon,
   Settings as SettingsIcon,
   AlertCircle,
+  EllipsisVertical,
+  SlidersHorizontal,
+  Palette,
 } from 'lucide-react'
 import { useFinance } from '@context/FinanceContext.jsx'
 import { useAuth } from '@context/AuthContext.jsx'
@@ -32,6 +35,21 @@ const navItems = [
 ]
 
 const primaryMobileRoutes = ['/', '/mutual-funds', '/net-worth']
+
+const mobileUtilities = [
+  {
+    label: 'Customize dashboard',
+    description: 'Reorder tiles & manage cards',
+    to: '/?customize=1',
+    icon: SlidersHorizontal,
+  },
+  {
+    label: 'Appearance',
+    description: 'Theme, currency, date format',
+    to: '/settings',
+    icon: Palette,
+  },
+]
 
 const DashboardLayout = () => {
   const { stats, refresh, error, clearError } = useFinance()
@@ -76,7 +94,12 @@ const DashboardLayout = () => {
       <div className="lg:ml-64 min-h-screen">
         <header className="border-b border-borderLight bg-white px-3 py-3 md:p-4 flex items-center justify-between sticky top-0 z-30">
           <div>
-            <p className="text-xs text-slate-500 uppercase tracking-widest">Welcome back</p>
+            <img
+              src="/assets/moneyxp_logo.png"
+              alt="MoneyXP"
+              className="h-7 w-auto md:hidden"
+            />
+            <p className="text-xs text-slate-500 uppercase tracking-widest hidden md:block">Welcome back</p>
           </div>
           <div className="flex items-center gap-4">
             <button type="button" className="btn-secondary hidden md:block" onClick={refresh}>
@@ -131,31 +154,32 @@ const DashboardLayout = () => {
             to={item.to}
             end={item.to === '/' }
             className={({ isActive }) =>
-              `flex-1 flex flex-col items-center py-2.5 text-xs ${
+              `flex-1 flex items-center justify-center py-2.5 ${
                 isActive ? 'text-accentBlue' : 'text-slate-500'
               }`
             }
+            aria-label={item.label}
           >
-            <item.icon className="h-5 w-5" />
-            {item.label.split(' ')[0]}
+            <item.icon className="h-5 w-5" aria-hidden="true" />
+            <span className="sr-only">{item.label}</span>
           </NavLink>
         ))}
         <button
           type="button"
-          className="flex-1 flex flex-col items-center py-2.5 text-xs text-slate-600"
+          className="flex-1 flex items-center justify-center py-2.5 text-slate-600"
           onClick={() => setMobileMenuOpen(true)}
+          aria-label="More"
         >
-          <span className="h-5 w-5 rounded-full border border-borderLight flex items-center justify-center text-sm">
-            +
+          <span className="h-8 w-8 rounded-full border border-borderLight flex items-center justify-center">
+            <EllipsisVertical className="h-5 w-5" aria-hidden="true" />
           </span>
-          More
         </button>
       </nav>
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden">
-          <div className="absolute bottom-16 left-3 right-3 bg-white rounded-2xl shadow-xl p-4 space-y-3">
+          <div className="absolute bottom-16 left-3 right-3 bg-white rounded-2xl shadow-xl p-4 space-y-4">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-slate-700">More sections</p>
+              <p className="text-sm font-semibold text-slate-700">Navigate</p>
               <button type="button" className="text-xs text-slate-500" onClick={() => setMobileMenuOpen(false)}>
                 Close
               </button>
@@ -176,6 +200,25 @@ const DashboardLayout = () => {
                   {item.label}
                 </NavLink>
               ))}
+            </div>
+            <div className="space-y-2 pt-2 border-t border-borderLight">
+              <p className="text-xs uppercase tracking-wide text-slate-400">Quick tools</p>
+              <div className="space-y-2">
+                {mobileUtilities.map((tool) => (
+                  <Link
+                    key={`mobile-tool-${tool.to}`}
+                    to={tool.to}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 rounded-2xl border border-borderLight px-3 py-2 text-sm text-slate-600"
+                  >
+                    <tool.icon className="h-4 w-4" />
+                    <div>
+                      <p className="font-medium text-slate-800">{tool.label}</p>
+                      <p className="text-xs text-slate-500">{tool.description}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>

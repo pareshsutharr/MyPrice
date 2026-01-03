@@ -1,8 +1,11 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { CATEGORY_MAP, DEFAULT_CURRENCY } from '@shared/constants.js'
 
 const STORAGE_KEY = 'myprice-settings'
 const DEFAULT_DATE_FORMAT = 'DD/MM/YYYY'
+const DEFAULT_THEME = 'light'
+
+const sanitiseTheme = (theme) => (theme === 'dark' ? 'dark' : DEFAULT_THEME)
 
 const cloneCategories = (source = CATEGORY_MAP) => {
   const list = Array.isArray(source) && source.length ? source : CATEGORY_MAP
@@ -13,6 +16,7 @@ const buildSettings = (overrides = {}) => ({
   currency: overrides.currency ?? DEFAULT_CURRENCY,
   categories: cloneCategories(overrides.categories),
   dateFormat: overrides.dateFormat ?? DEFAULT_DATE_FORMAT,
+  theme: sanitiseTheme(overrides.theme),
 })
 
 const readStoredSettings = () => {
@@ -37,6 +41,7 @@ const SettingsContext = createContext({
   addCategory: () => {},
   removeCategory: () => {},
   setDateFormat: () => {},
+  setTheme: () => {},
 })
 
 const persist = (nextState) => {
@@ -96,18 +101,33 @@ export const SettingsProvider = ({ children }) => {
     }))
   }, [applyPatch])
 
+  const setTheme = useCallback((theme) => {
+    applyPatch((prev) => ({
+      ...prev,
+      theme: sanitiseTheme(theme),
+    }))
+  }, [applyPatch])
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    const theme = settings.theme ?? DEFAULT_THEME
+    document.documentElement.dataset.theme = theme
+  }, [settings.theme])
+
   const value = useMemo(
     () => ({
       currency: settings.currency,
       categories: settings.categories,
       dateFormat: settings.dateFormat,
+      theme: settings.theme,
       setCurrency,
       setCategories,
       addCategory,
       removeCategory,
       setDateFormat,
+      setTheme,
     }),
-    [settings, setCurrency, setCategories, addCategory, removeCategory, setDateFormat],
+    [settings, setCurrency, setCategories, addCategory, removeCategory, setDateFormat, setTheme],
   )
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>

@@ -20,6 +20,26 @@
   @apply text-sm text-rose-500;
 }
 
+.income-form__date-row {
+  @apply flex items-center gap-2 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+}
+
+.income-form__date-input {
+  @apply flex-1 bg-transparent border-none focus:outline-none;
+}
+
+.income-form__calendar-btn {
+  @apply h-9 w-9 min-w-[2.25rem] flex items-center justify-center rounded-lg text-slate-500 bg-white border border-borderLight;
+}
+
+.income-form__calendar-btn:hover {
+  @apply text-slate-700 bg-surface;
+}
+
+.income-form__calendar-input {
+  @apply absolute opacity-0 pointer-events-none w-0 h-0;
+}
+
 .income-form__actions {
   @apply flex gap-3;
 }
