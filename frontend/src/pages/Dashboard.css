@@ -1,0 +1,103 @@
+.dashboard-tiles {
+  @apply gap-4;
+}
+
+.dashboard-tiles__item {
+  @apply transition;
+}
+
+.dashboard-tiles__item--draggable {
+  @apply rounded-3xl border border-dashed border-borderLight cursor-move;
+}
+
+.dashboard-tiles__item--dragging {
+  @apply opacity-70;
+}
+
+.dashboard-tiles--editing .stat-card {
+  @apply pointer-events-none;
+}
+
+.dashboard-toggle-group {
+  @apply inline-flex rounded-full border border-borderLight bg-surfaceMuted;
+}
+
+.dashboard-toggle-button {
+  @apply px-3 py-1.5 text-sm text-slate-500;
+}
+
+.dashboard-toggle-button--active {
+  @apply bg-white text-slate-900 rounded-full shadow-glow;
+}
+
+.alerts-stack {
+  @apply space-y-2;
+}
+
+.alert-pill {
+  @apply flex items-center justify-between gap-2 rounded-full border border-borderLight px-3 py-1.5 text-xs text-slate-600;
+}
+
+.alert-pill button {
+  @apply text-slate-400 hover:text-slate-800;
+}
+
+.top-categories__item {
+  @apply space-y-2;
+}
+
+.top-categories__bar {
+  @apply h-2 rounded-full bg-surfaceMuted overflow-hidden;
+}
+
+.top-categories__bar div {
+  @apply h-full bg-accentDark;
+}
+
+.goal-builder {
+  @apply grid md:grid-cols-4 gap-3;
+}
+
+.goal-builder input {
+  @apply rounded-full border border-borderLight bg-surfaceMuted px-4 py-2 text-sm;
+}
+
+.dashboard-tile-picker {
+  @apply grid sm:grid-cols-2 md:grid-cols-3 gap-2;
+}
+
+.dashboard-tile-picker__item {
+  @apply flex items-center gap-2 rounded-full border border-borderLight px-3 py-1.5 text-sm text-slate-600;
+}
+
+.dashboard-tile-picker__item input[type='checkbox'] {
+  @apply accent-black h-4 w-4 rounded;
+}
+
+.dashboard-tile-picker__remove {
+  @apply text-xs text-slate-500 hover:text-red-500 ml-auto;
+}
+
+.custom-tile-builder__form {
+  @apply grid gap-3 md:grid-cols-2 xl:grid-cols-4;
+}
+
+.custom-tile-builder__form input {
+  @apply rounded-full border border-borderLight bg-surfaceMuted px-4 py-2 text-sm;
+}
+
+.custom-tile-list__item {
+  @apply flex items-center justify-between rounded-2xl border border-borderLight px-3 py-2 text-sm text-slate-600;
+}
+
+.custom-tile-list__item button {
+  @apply text-xs text-slate-500 hover:text-slate-900;
+}
+
+.available-metrics {
+  @apply flex flex-wrap gap-2 text-xs text-slate-500;
+}
+
+.available-metrics span {
+  @apply px-2 py-1 rounded-full border border-borderLight;
+}

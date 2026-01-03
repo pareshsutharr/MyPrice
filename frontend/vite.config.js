@@ -23,12 +23,12 @@ export default defineConfig({
         ...neonGradient,
         icons: [
           {
-            src: 'icons/icon-192.png',
+            src: 'assets/moneyxp_round_logo.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: 'icons/icon-512.png',
+            src: 'assets/moneyxp_round_logo.png',
             sizes: '512x512',
             type: 'image/png',
           },
