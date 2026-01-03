@@ -12,9 +12,19 @@ const DATE_FORMAT_OPTIONS = DATE_FORMATS.map((format) => ({
 }))
 
 const Settings = () => {
-  const { currency, categories, dateFormat, setCurrency, addCategory, removeCategory, setDateFormat } =
-    useSettings()
+  const {
+    currency,
+    categories,
+    dateFormat,
+    theme,
+    setCurrency,
+    addCategory,
+    removeCategory,
+    setDateFormat,
+    setTheme,
+  } = useSettings()
   const [newCategory, setNewCategory] = useState({ label: '', color: '#4f9cff', icon: '✨' })
+  const isDarkMode = theme === 'dark'
 
   const handleCurrencyChange = (event) => {
     setCurrency(event.target.value)
@@ -39,8 +49,24 @@ const Settings = () => {
     setDateFormat(event.target.value)
   }
 
+  const handleThemeToggle = () => {
+    setTheme(isDarkMode ? 'light' : 'dark')
+  }
+
   return (
     <div className="space-y-6">
+      <section className="glass-card p-6 space-y-4">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <h2 className="text-2xl font-display">Appearance</h2>
+            <p className="text-sm text-slate-500">Switch between light and dark themes.</p>
+          </div>
+          <button type="button" className="btn-secondary" onClick={handleThemeToggle}>
+            {isDarkMode ? 'Use light mode' : 'Use dark mode'}
+          </button>
+        </div>
+      </section>
+
       <section className="glass-card p-6 space-y-4">
         <h2 className="text-2xl font-display">Currency</h2>
         <input

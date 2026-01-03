@@ -1,23 +1,37 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Wallet, TrendingUp, PiggyBank, CreditCard, LineChart } from 'lucide-react'
 import StatCard from '@components/StatCard.jsx'
 import QuickActions from '@components/QuickActions.jsx'
 import TrendAreaChart from '@components/charts/TrendAreaChart.jsx'
 import ReminderCard from '@components/ReminderCard.jsx'
 import IncomeForm from '@components/forms/IncomeForm.jsx'
+import ExpenseForm from '@components/forms/ExpenseForm.jsx'
 import { useFinance } from '@context/FinanceContext.jsx'
 import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
+
+const REMINDER_SESSION_KEY = 'moneyxp-reminder-seen'
 
 const Dashboard = () => {
   const { stats, actions, loading } = useFinance()
   const [showIncome, setShowIncome] = useState(false)
+  const [showExpense, setShowExpense] = useState(false)
   const [showReminder, setShowReminder] = useState(false)
   const formatCurrency = useCurrencyFormatter()
 
   const reminders = stats?.reminders
 
   useEffect(() => {
-    setShowReminder(Boolean(reminders?.length))
+    if (!reminders?.length) {
+      setShowReminder(false)
+      return
+    }
+    const hasShown = typeof sessionStorage !== 'undefined' && sessionStorage.getItem(REMINDER_SESSION_KEY) === '1'
+    if (!hasShown) {
+      setShowReminder(true)
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem(REMINDER_SESSION_KEY, '1')
+      }
+    }
   }, [reminders])
 
   if (!stats) {
@@ -83,7 +97,10 @@ const Dashboard = () => {
             <p className="text-sm text-slate-500">Quick Actions</p>
             <h3 className="text-2xl font-display text-slate-900">Spend smarter</h3>
           </div>
-          <QuickActions onAddIncome={() => setShowIncome(true)} />
+          <QuickActions
+            onAddExpense={() => setShowExpense(true)}
+            onAddIncome={() => setShowIncome(true)}
+          />
           <div className="text-sm text-slate-500">
             EMI pending: {formatCurrency(totals?.emiPending ?? 0)}
           </div>
@@ -96,6 +113,22 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {showExpense && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-6">
+          <div className="glass-card p-6 w-full max-w-md relative">
+            <button
+              type="button"
+              className="absolute top-3 right-3 text-slate-500"
+              onClick={() => setShowExpense(false)}
+            >
+              x
+            </button>
+            <h3 className="text-xl font-display text-slate-900 mb-4">Record Expense</h3>
+            <ExpenseForm onSubmit={(payload) => actions.addExpense(payload)} onCancel={() => setShowExpense(false)} />
+          </div>
+        </div>
+      )}
+
       {showIncome && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-6">
           <div className="glass-card p-6 w-full max-w-md relative">
@@ -104,10 +137,10 @@ const Dashboard = () => {
               className="absolute top-3 right-3 text-slate-500"
               onClick={() => setShowIncome(false)}
             >
-              ×
+              x
             </button>
             <h3 className="text-xl font-display text-slate-900 mb-4">Record Income</h3>
-            <IncomeForm onClose={() => setShowIncome(false)} onSubmit={(payload) => actions.addIncome(payload)} />
+            <IncomeForm onCancel={() => setShowIncome(false)} onSubmit={(payload) => actions.addIncome(payload)} />
           </div>
         </div>
       )}
@@ -120,7 +153,7 @@ const Dashboard = () => {
               className="absolute top-3 right-3 text-slate-500"
               onClick={() => setShowReminder(false)}
             >
-              ×
+              x
             </button>
             <h3 className="text-2xl font-display text-slate-900">Upcoming EMIs</h3>
             <p className="text-sm text-slate-500">

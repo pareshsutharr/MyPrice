@@ -1,11 +1,10 @@
-import { Link } from 'react-router-dom'
 import './QuickActions.css'
 
-const QuickActions = ({ onAddIncome }) => (
+const QuickActions = ({ onAddExpense, onAddIncome }) => (
   <div className="quick-actions">
-    <Link to="/expenses" className="quick-actions__link btn-primary">
+    <button type="button" className="quick-actions__link btn-primary" onClick={onAddExpense}>
       Add Expense
-    </Link>
+    </button>
     <button type="button" className="quick-actions__button btn-secondary" onClick={onAddIncome}>
       Add Income
     </button>

@@ -69,6 +69,7 @@ export default defineConfig({
       '@layout': path.resolve(__dirname, './src/layout'),
       '@shared': path.resolve(__dirname, '../shared'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@utils': path.resolve(__dirname, './src/utils'),
     },
   },
   server: {

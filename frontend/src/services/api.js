@@ -1,12 +1,4 @@
 import axios from 'axios'
-import {
-  mockExpenses,
-  mockIncome,
-  mockInvestments,
-  mockLoans,
-  mockStats,
-  mockHistory,
-} from '@data/mockData.js'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api'
 
@@ -15,16 +7,12 @@ const client = axios.create({
   timeout: 8000,
 })
 
-const safeRequest = async (request, fallback = null) => {
+const safeRequest = async (request) => {
   try {
     const response = await request()
     return response.data
   } catch (error) {
-    if (error?.response) {
-      throw error
-    }
-    console.warn('API unreachable, using fallback data', error?.message)
-    return fallback
+    throw error
   }
 }
 
@@ -37,40 +25,28 @@ export const api = {
     }
   },
   loginWithGoogle: (idToken) => client.post('/auth/google', { idToken }).then((res) => res.data),
-  getStats: () => safeRequest(() => client.get('/stats'), mockStats),
-  getExpenses: (params = {}) =>
-    safeRequest(() => client.get('/expenses', { params }), mockExpenses),
-  createExpense: (payload) => safeRequest(() => client.post('/expenses', payload), payload),
-  updateExpense: (id, payload) =>
-    safeRequest(() => client.put(`/expenses/${id}`, payload), payload),
-  deleteExpense: (id) => safeRequest(() => client.delete(`/expenses/${id}`), { success: true }),
+  getStats: () => safeRequest(() => client.get('/stats')),
+  getExpenses: (params = {}) => safeRequest(() => client.get('/expenses', { params })),
+  createExpense: (payload) => safeRequest(() => client.post('/expenses', payload)),
+  updateExpense: (id, payload) => safeRequest(() => client.put(`/expenses/${id}`, payload)),
+  deleteExpense: (id) => safeRequest(() => client.delete(`/expenses/${id}`)),
 
-  getIncome: () => safeRequest(() => client.get('/income'), mockIncome),
-  createIncome: (payload) => safeRequest(() => client.post('/income', payload), payload),
-  updateIncome: (id, payload) => safeRequest(() => client.put(`/income/${id}`, payload), payload),
-  deleteIncome: (id) => safeRequest(() => client.delete(`/income/${id}`), { success: true }),
+  getIncome: () => safeRequest(() => client.get('/income')),
+  createIncome: (payload) => safeRequest(() => client.post('/income', payload)),
+  updateIncome: (id, payload) => safeRequest(() => client.put(`/income/${id}`, payload)),
+  deleteIncome: (id) => safeRequest(() => client.delete(`/income/${id}`)),
 
-  getLoans: () =>
-    safeRequest(() => client.get('/loans'), {
-      active: mockLoans.filter((loan) => loan.status === 'active'),
-      completed: mockLoans.filter((loan) => loan.status === 'completed'),
-    }),
-  createLoan: (payload) => safeRequest(() => client.post('/loans', payload), payload),
-  updateLoan: (id, payload) => safeRequest(() => client.put(`/loans/${id}`, payload), payload),
-  payLoan: (id, payload = {}) => safeRequest(() => client.post(`/loans/${id}/pay`, payload), payload),
+  getLoans: () => safeRequest(() => client.get('/loans')),
+  createLoan: (payload) => safeRequest(() => client.post('/loans', payload)),
+  updateLoan: (id, payload) => safeRequest(() => client.put(`/loans/${id}`, payload)),
+  payLoan: (id, payload = {}) => safeRequest(() => client.post(`/loans/${id}/pay`, payload)),
   undoLoanPayment: (id, paymentId) =>
-    safeRequest(() => client.delete(`/loans/${id}/pay/${paymentId}`), { id, paymentId }),
+    safeRequest(() => client.delete(`/loans/${id}/pay/${paymentId}`)),
 
-  getInvestments: () => safeRequest(() => client.get('/investments'), mockInvestments),
-  createInvestment: (payload) =>
-    safeRequest(() => client.post('/investments', payload), {
-      ...payload,
-      _id: `investment-fallback-${Date.now()}`,
-      gain: (payload.currentValue ?? 0) - (payload.amountInvested ?? 0),
-    }),
-  updateInvestment: (id, payload) =>
-    safeRequest(() => client.put(`/investments/${id}`, payload), payload),
-  deleteInvestment: (id) => safeRequest(() => client.delete(`/investments/${id}`), { success: true }),
+  getInvestments: () => safeRequest(() => client.get('/investments')),
+  createInvestment: (payload) => safeRequest(() => client.post('/investments', payload)),
+  updateInvestment: (id, payload) => safeRequest(() => client.put(`/investments/${id}`, payload)),
+  deleteInvestment: (id) => safeRequest(() => client.delete(`/investments/${id}`)),
   importInvestments: async ({ broker, statementDate, file, onUploadProgress }) => {
     const formData = new FormData()
     formData.append('broker', broker)
@@ -82,5 +58,5 @@ export const api = {
     })
     return response.data
   },
-  getHistory: () => safeRequest(() => client.get('/history'), mockHistory),
+  getHistory: () => safeRequest(() => client.get('/history')),
 }

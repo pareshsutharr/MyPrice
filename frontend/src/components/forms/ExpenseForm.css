@@ -20,6 +20,32 @@
   @apply text-sm text-rose-500;
 }
 
+.expense-form__date-row {
+  @apply flex items-center gap-2 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2 relative;
+}
+
+.expense-form__date-input {
+  @apply flex-1 bg-transparent border-none focus:outline-none;
+}
+
+.expense-form__calendar-btn {
+  @apply h-9 w-9 min-w-[2.25rem] flex items-center justify-center rounded-lg text-slate-500 bg-white border border-borderLight;
+}
+
+.expense-form__calendar-btn:hover {
+  @apply text-slate-700 bg-surface;
+}
+
+.expense-form__calendar-input {
+  @apply absolute opacity-0 pointer-events-none w-0 h-0;
+  top: calc(100% + 0.5rem);
+  right: 0;
+}
+
+.expense-form__actions {
+  @apply flex gap-3;
+}
+
 .expense-form__submit {
   @apply w-full;
 }

@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSettings } from '@context/SettingsContext.jsx'
 import { useCurrencySymbol } from '@hooks/useCurrencyFormatter.js'
+import { autoFormatDateInput, parseDateInput } from '@utils/dateFormat.js'
+import { formatDateValue } from '@hooks/useDateFormatter.js'
 import './IncomeForm.css'
 
 const initialState = () => ({
@@ -19,6 +21,8 @@ const IncomeForm = ({ onSubmit, defaultValues, onCancel }) => {
   const [submitting, setSubmitting] = useState(false)
   const { dateFormat } = useSettings()
   const currencySymbol = useCurrencySymbol()
+  const [dateInput, setDateInput] = useState('')
+  const calendarInputRef = useRef(null)
 
   const isEditing = useMemo(() => Boolean(defaultValues?._id), [defaultValues])
 
@@ -29,17 +33,21 @@ const IncomeForm = ({ onSubmit, defaultValues, onCancel }) => {
         : new Date().toISOString().split('T')[0]
       const incomingCategory = defaultValues.category ?? 'salary'
       const isKnownCategory = BUILTIN_CATEGORIES.includes(incomingCategory)
-      setForm({
+      const nextFormState = {
         amount: defaultValues.amount ?? '',
         category: isKnownCategory ? incomingCategory : 'others',
         customCategory: isKnownCategory && incomingCategory !== 'others' ? '' : incomingCategory ?? '',
         date: baseDate,
         note: defaultValues.note ?? '',
-      })
+      }
+      setForm(nextFormState)
+      setDateInput(formatDateValue(nextFormState.date, dateFormat) || '')
     } else {
-      setForm(initialState())
+      const reset = initialState()
+      setForm(reset)
+      setDateInput(formatDateValue(reset.date, dateFormat) || '')
     }
-  }, [defaultValues])
+  }, [defaultValues, dateFormat])
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -50,6 +58,12 @@ const IncomeForm = ({ onSubmit, defaultValues, onCancel }) => {
           category: value,
           customCategory: value === 'others' ? prev.customCategory : '',
         }
+      }
+      if (name === 'date') {
+        const formatted = autoFormatDateInput(value, dateFormat)
+        setDateInput(formatted)
+        const parsed = parseDateInput(formatted, dateFormat)
+        return { ...prev, date: parsed ? parsed.toISOString().split('T')[0] : '' }
       }
       return { ...prev, [name]: value }
     })
@@ -63,9 +77,9 @@ const IncomeForm = ({ onSubmit, defaultValues, onCancel }) => {
       setFormError('Enter a valid income amount.')
       return
     }
-    const date = form.date ? new Date(form.date) : new Date()
-    if (Number.isNaN(date.getTime())) {
-      setFormError('Select a valid date.')
+    const parsedDate = form.date ? new Date(form.date) : parseDateInput(dateInput, dateFormat)
+    if (!parsedDate || Number.isNaN(parsedDate.getTime())) {
+      setFormError(`Enter a valid date in ${dateFormat}.`)
       return
     }
     if (form.category === 'others' && !form.customCategory.trim()) {
@@ -81,17 +95,29 @@ const IncomeForm = ({ onSubmit, defaultValues, onCancel }) => {
       await onSubmit({
         amount,
         category: payloadCategory,
-        date: date.toISOString(),
+        date: parsedDate.toISOString(),
         note: form.note,
       })
       if (isEditing) {
         onCancel?.()
       }
-      setForm(initialState())
+      const reset = initialState()
+      setForm(reset)
+      setDateInput(formatDateValue(reset.date, dateFormat) || '')
     } catch (error) {
       setFormError(error?.response?.data?.message ?? 'Unable to save income entry.')
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  const triggerCalendar = () => {
+    const node = calendarInputRef.current
+    if (!node) return
+    if (typeof node.showPicker === 'function') {
+      node.showPicker()
+    } else {
+      node.focus()
     }
   }
 
@@ -132,14 +158,27 @@ const IncomeForm = ({ onSubmit, defaultValues, onCancel }) => {
       )}
       <div className="income-form__field">
         <label>{`Date (${dateFormat})`}</label>
-        <input
-          type="date"
-          name="date"
-          value={form.date}
-          onChange={handleChange}
-          placeholder={dateFormat}
-          title={`Use ${dateFormat} format`}
-        />
+        <div className="income-form__date-row">
+          <input
+            type="text"
+            name="date"
+            value={dateInput}
+            onChange={handleChange}
+            placeholder={dateFormat}
+            inputMode="numeric"
+            className="income-form__date-input"
+          />
+          <button type="button" className="income-form__calendar-btn" onClick={triggerCalendar} aria-label="Choose date">
+            📅
+          </button>
+          <input
+            type="date"
+            ref={calendarInputRef}
+            className="income-form__calendar-input"
+            value={form.date}
+            onChange={(event) => handleChange({ target: { name: 'date', value: event.target.value } })}
+          />
+        </div>
       </div>
       <div className="income-form__field">
         <label>Note</label>
