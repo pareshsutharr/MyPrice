@@ -80,11 +80,11 @@ const LoanForm = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="loan-form">
-      <div className="loan-form__field">
-        <label>Lender</label>
-        <input type="text" name="lender" value={form.lender} onChange={handleChange} required />
-      </div>
-      <div className="loan-form__grid">
+      <div className="form-grid form-grid--two">
+        <div className="loan-form__field form-grid__full">
+          <label>Lender</label>
+          <input type="text" name="lender" value={form.lender} onChange={handleChange} required />
+        </div>
         <div className="loan-form__field">
           <label>{`Principal (${currencySymbol})`}</label>
           <input
@@ -111,8 +111,6 @@ const LoanForm = ({ onSubmit }) => {
             required
           />
         </div>
-      </div>
-      <div className="loan-form__grid">
         <div className="loan-form__field">
           <label>{`Monthly EMI (${currencySymbol})`}</label>
           <input
@@ -138,33 +136,33 @@ const LoanForm = ({ onSubmit }) => {
             required
           />
         </div>
-      </div>
-      <div className="loan-form__field">
-        <label>{`Other charges (${currencySymbol})`}</label>
-        <input
-          type="number"
-          name="otherCharges"
-          value={form.otherCharges}
-          onChange={handleChange}
-          min="0"
-          step="0.01"
-          inputMode="decimal"
-        />
-      </div>
-      <div className="loan-form__field">
-        <label>{`Start date (${dateFormat})`}</label>
-        <input
-          type="date"
-          name="startDate"
-          value={form.startDate}
-          onChange={handleChange}
-          placeholder={dateFormat}
-          title={`Use ${dateFormat} format`}
-        />
-      </div>
-      <div className="loan-form__field">
-        <label>Notes</label>
-        <textarea name="notes" value={form.notes} onChange={handleChange} rows={3} />
+        <div className="loan-form__field">
+          <label>{`Other charges (${currencySymbol})`}</label>
+          <input
+            type="number"
+            name="otherCharges"
+            value={form.otherCharges}
+            onChange={handleChange}
+            min="0"
+            step="0.01"
+            inputMode="decimal"
+          />
+        </div>
+        <div className="loan-form__field form-grid__full">
+          <label>{`Start date (${dateFormat})`}</label>
+          <input
+            type="date"
+            name="startDate"
+            value={form.startDate}
+            onChange={handleChange}
+            placeholder={dateFormat}
+            title={`Use ${dateFormat} format`}
+          />
+        </div>
+        <div className="loan-form__field form-grid__full">
+          <label>Notes</label>
+          <textarea name="notes" value={form.notes} onChange={handleChange} rows={3} />
+        </div>
       </div>
       {formError && <p className="loan-form__error">{formError}</p>}
       <button type="submit" className="loan-form__submit btn-primary" disabled={submitting}>

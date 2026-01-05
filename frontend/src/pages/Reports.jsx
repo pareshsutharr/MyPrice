@@ -29,17 +29,17 @@ const Reports = () => {
   ]
 
   return (
-    <div className="space-y-6">
-      <div className="grid md:grid-cols-3 gap-4">
+    <div className="page-stack">
+      <div className="page-grid md:grid-cols-3">
         {cards.map((card) => (
           <StatCard key={card.label} {...card} />
         ))}
       </div>
-      <div className="grid lg:grid-cols-2 gap-6">
-        <div className="min-w-0">
+      <div className="page-grid lg:grid-cols-2">
+        <div className="page-section min-w-0">
           <ExpensesBarChart data={stats?.monthlyExpenses ?? []} />
         </div>
-        <div className="min-w-0">
+        <div className="page-section min-w-0">
           <CategoryPieChart data={stats?.categoryDistribution ?? []} />
         </div>
       </div>

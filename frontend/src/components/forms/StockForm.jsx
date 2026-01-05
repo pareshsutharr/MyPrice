@@ -107,22 +107,22 @@ const StockForm = ({ defaultValues, onSubmit, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit} className="stock-form">
-      <div className="stock-form__field">
-        <label>Stock name</label>
-        <input
-          type="text"
-          name="stockName"
-          value={form.stockName}
-          onChange={handleChange}
-          placeholder="e.g. Reliance Industries"
-          required
-        />
-      </div>
-      <div className="stock-form__field">
-        <label>Ticker / symbol</label>
-        <input type="text" name="symbol" value={form.symbol} onChange={handleChange} placeholder="RELIANCE" />
-      </div>
-      <div className="stock-form__grid">
+      <div className="form-grid form-grid--two">
+        <div className="stock-form__field form-grid__full">
+          <label>Stock name</label>
+          <input
+            type="text"
+            name="stockName"
+            value={form.stockName}
+            onChange={handleChange}
+            placeholder="e.g. Reliance Industries"
+            required
+          />
+        </div>
+        <div className="stock-form__field">
+          <label>Ticker / symbol</label>
+          <input type="text" name="symbol" value={form.symbol} onChange={handleChange} placeholder="RELIANCE" />
+        </div>
         <div className="stock-form__field">
           <label>Broker</label>
           <input type="text" name="broker" value={form.broker} onChange={handleChange} placeholder="Angel One" />
@@ -137,8 +137,6 @@ const StockForm = ({ defaultValues, onSubmit, onCancel }) => {
             ))}
           </select>
         </div>
-      </div>
-      <div className="stock-form__grid">
         <div className="stock-form__field">
           <label>Quantity</label>
           <input
@@ -163,34 +161,40 @@ const StockForm = ({ defaultValues, onSubmit, onCancel }) => {
             required
           />
         </div>
-      </div>
-      <div className="stock-form__field">
-        <label>{`Current price (${currencySymbol})`}</label>
-        <input
-          type="number"
-          name="currentPrice"
-          value={form.currentPrice}
-          onChange={handleChange}
-          min="0"
-          step="0.01"
-          required
-        />
-      </div>
-      <div className="stock-form__field">
-        <label>{`Last updated on (${dateFormat})`}</label>
-        <input
-          type="date"
-          name="lastUpdated"
-          value={form.lastUpdated}
-          onChange={handleChange}
-          required
-          placeholder={dateFormat}
-          title={`Use ${dateFormat} format`}
-        />
-      </div>
-      <div className="stock-form__field">
-        <label>Notes</label>
-        <textarea name="notes" value={form.notes} onChange={handleChange} rows={3} placeholder="Brokerage, goal, etc." />
+        <div className="stock-form__field">
+          <label>{`Current price (${currencySymbol})`}</label>
+          <input
+            type="number"
+            name="currentPrice"
+            value={form.currentPrice}
+            onChange={handleChange}
+            min="0"
+            step="0.01"
+            required
+          />
+        </div>
+        <div className="stock-form__field form-grid__full">
+          <label>{`Last updated on (${dateFormat})`}</label>
+          <input
+            type="date"
+            name="lastUpdated"
+            value={form.lastUpdated}
+            onChange={handleChange}
+            required
+            placeholder={dateFormat}
+            title={`Use ${dateFormat} format`}
+          />
+        </div>
+        <div className="stock-form__field form-grid__full">
+          <label>Notes</label>
+          <textarea
+            name="notes"
+            value={form.notes}
+            onChange={handleChange}
+            rows={3}
+            placeholder="Brokerage, goal, etc."
+          />
+        </div>
       </div>
       {formError && <p className="stock-form__error">{formError}</p>}
       <div className="stock-form__actions">

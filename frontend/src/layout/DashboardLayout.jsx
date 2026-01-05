@@ -65,9 +65,9 @@ const DashboardLayout = () => {
         <div>
           <Link to="/" className="inline-flex" aria-label="MoneyXP Dashboard">
             <img
-              src="/assets/moneyxp_logo.png"
+              src="/assets/MoneyXP.gif"
               alt="MoneyXP"
-              className="h-12 md:h-14 w-auto logo-image"
+              className="h-12 md:h-14 w-auto "
             />
           </Link>
         </div>
@@ -99,9 +99,9 @@ const DashboardLayout = () => {
         <header className="border-b border-borderLight bg-white px-3 py-3 md:p-4 flex items-center justify-between sticky top-0 z-30">
           <div>
             <img
-              src="/assets/moneyxp_logo.png"
+              src="/assets/MoneyXP.gif"
               alt="MoneyXP"
-              className="h-7 w-auto md:hidden logo-image"
+              className="h-7 w-auto md:hidden "
             />
             <p className="text-xs text-slate-500 uppercase tracking-widest hidden md:block">Welcome back</p>
           </div>

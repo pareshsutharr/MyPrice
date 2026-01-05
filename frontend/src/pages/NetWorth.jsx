@@ -101,14 +101,14 @@ const NetWorth = () => {
   const recentActivity = history?.slice(0, 5) ?? []
 
   return (
-    <div className="space-y-6 pb-16">
-      <div className="grid md:grid-cols-4 gap-4">
+    <div className="page-stack">
+      <div className="page-grid md:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
           <StatCard key={card.label} {...card} />
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="page-grid lg:grid-cols-3">
         <div className="glass-card p-5 space-y-4 lg:col-span-2">
           <h3 className="text-xl font-display text-slate-900">Asset allocation snapshot</h3>
           <div className="space-y-3 text-sm">

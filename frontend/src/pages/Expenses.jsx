@@ -65,22 +65,28 @@ const Expenses = () => {
   }, [editing])
 
   return (
-    <div className="space-y-6 pb-20">
-      <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1 space-y-4 hidden lg:block">
-          <h2 className="text-2xl font-display">{editing ? 'Edit Expense' : 'Add Expense'}</h2>
-          <div className={`expense-form__shell ${editing ? 'expense-form__shell--editing' : ''}`}>
-            <ExpenseForm
-              onSubmit={handleSubmit}
-              defaultValues={editing ?? undefined}
-              onCancel={() => setEditing(null)}
-            />
+    <div className="page-stack">
+      <div className="page-grid page-grid--sidebar">
+        <div className="hidden lg:block">
+          <div className="page-section space-y-4">
+            <h2 className="text-2xl font-display">
+              {editing ? 'Edit Expense' : 'Add Expense'}
+            </h2>
+            <div className={`expense-form__shell ${editing ? 'expense-form__shell--editing' : ''}`}>
+              <ExpenseForm
+                onSubmit={handleSubmit}
+                defaultValues={editing ?? undefined}
+                onCancel={() => setEditing(null)}
+              />
+            </div>
           </div>
         </div>
-        <div className="lg:col-span-2 space-y-4">
-          <h2 className="text-2xl font-display">Expense History</h2>
-          <FilterToolbar filters={filters} onChange={setFilters} />
-          <ExpenseTable expenses={filteredExpenses} onEdit={setEditing} onDelete={handleDelete} />
+        <div className="space-y-4">
+          <div className="page-section space-y-4">
+            <h2 className="text-2xl font-display">Expense History</h2>
+            <FilterToolbar filters={filters} onChange={setFilters} />
+            <ExpenseTable expenses={filteredExpenses} onEdit={setEditing} onDelete={handleDelete} />
+          </div>
         </div>
       </div>
       <button
@@ -95,7 +101,7 @@ const Expenses = () => {
       </button>
       {showMobileForm && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-40 px-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4">
+          <div className="bg-[var(--app-card-bg)] border border-borderLight rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-display">
                 {editing ? 'Edit Expense' : 'Add Expense'}

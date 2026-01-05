@@ -1,15 +1,13 @@
-﻿.expense-form {
-  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 space-y-4;
+.expense-form {
+  @apply rounded-2xl shadow-glow p-4 space-y-4;
+  background-color: var(--app-card-bg);
+  border: 1px solid var(--app-card-border);
+  backdrop-filter: blur(18px);
 }
 
 .expense-form__field label {
-  @apply text-sm text-slate-500;
-}
-
-.expense-form__field input,
-.expense-form__field select,
-.expense-form__field textarea {
-  @apply w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+  @apply text-sm;
+  color: rgba(71, 85, 105, 0.85);
 }
 
 .expense-form__field select {
@@ -21,19 +19,26 @@
 }
 
 .expense-form__date-row {
-  @apply flex items-center gap-2 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2 relative;
+  @apply flex items-center gap-2 rounded-xl px-3 py-2 relative;
+  background-color: var(--app-muted-bg);
+  border: 1px solid var(--app-card-border);
 }
 
 .expense-form__date-input {
   @apply flex-1 bg-transparent border-none focus:outline-none;
+  color: var(--app-body-text);
 }
 
 .expense-form__calendar-btn {
-  @apply h-9 w-9 min-w-[2.25rem] flex items-center justify-center rounded-lg text-slate-500 bg-white border border-borderLight;
+  @apply h-9 w-9 min-w-[2.25rem] flex items-center justify-center rounded-lg;
+  color: rgba(15, 23, 42, 0.65);
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--app-card-border);
 }
 
 .expense-form__calendar-btn:hover {
-  @apply text-slate-700 bg-surface;
+  color: var(--app-body-text);
+  background-color: var(--app-card-bg);
 }
 
 .expense-form__calendar-input {
@@ -43,9 +48,24 @@
 }
 
 .expense-form__actions {
-  @apply flex gap-3;
+  @apply flex flex-col gap-3 sm:flex-row;
 }
 
 .expense-form__submit {
   @apply w-full;
+}
+
+:root[data-theme='dark'] .expense-form__field label {
+  color: rgba(226, 232, 255, 0.75);
+}
+
+:root[data-theme='dark'] .expense-form__date-row {
+  background-color: rgba(5, 8, 15, 0.9);
+  border-color: rgba(94, 112, 146, 0.45);
+}
+
+:root[data-theme='dark'] .expense-form__calendar-btn {
+  color: rgba(226, 232, 255, 0.75);
+  background-color: rgba(6, 9, 16, 0.9);
+  border-color: rgba(90, 110, 150, 0.45);
 }

@@ -1,13 +1,12 @@
-﻿.filter-toolbar {
-  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 grid md:grid-cols-4 gap-3 text-sm;
+.filter-toolbar {
+  @apply rounded-2xl shadow-glow p-4 grid grid-cols-1 md:grid-cols-4 gap-3 text-sm;
+  background-color: var(--app-card-bg);
+  border: 1px solid var(--app-card-border);
+  backdrop-filter: blur(18px);
 }
 
 .filter-toolbar__field label {
-  @apply text-slate-500;
-}
-
-.filter-toolbar__field input {
-  @apply w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+  color: rgba(71, 85, 105, 0.85);
 }
 
 .filter-toolbar__actions {
@@ -19,21 +18,43 @@
 }
 
 .filter-toolbar__date-row {
-  @apply flex items-center gap-2 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+  @apply flex items-center gap-2 rounded-xl px-3 py-2;
+  background-color: var(--app-muted-bg);
+  border: 1px solid var(--app-card-border);
 }
 
 .filter-toolbar__date-input {
   @apply flex-1 bg-transparent border-none focus:outline-none;
+  color: var(--app-body-text);
 }
 
 .filter-toolbar__calendar-btn {
-  @apply h-9 w-9 min-w-[2.25rem] flex items-center justify-center rounded-lg text-slate-500 bg-white border border-borderLight;
+  @apply h-9 w-9 min-w-[2.25rem] flex items-center justify-center rounded-lg;
+  color: rgba(71, 85, 105, 0.65);
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--app-card-border);
 }
 
 .filter-toolbar__calendar-btn:hover {
-  @apply text-slate-700 bg-surface;
+  color: var(--app-body-text);
+  background-color: var(--app-card-bg);
 }
 
 .filter-toolbar__calendar-input {
   @apply absolute opacity-0 pointer-events-none w-0 h-0;
+}
+
+:root[data-theme='dark'] .filter-toolbar__field label {
+  color: rgba(226, 232, 255, 0.75);
+}
+
+:root[data-theme='dark'] .filter-toolbar__date-row {
+  background-color: rgba(6, 9, 16, 0.92);
+  border-color: rgba(92, 112, 150, 0.45);
+}
+
+:root[data-theme='dark'] .filter-toolbar__calendar-btn {
+  color: rgba(226, 232, 255, 0.75);
+  background-color: rgba(5, 8, 14, 0.9);
+  border-color: rgba(92, 112, 150, 0.45);
 }

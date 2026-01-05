@@ -3,7 +3,9 @@
 }
 
 .emi-payment-modal__card {
-  @apply bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4;
+  @apply rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4 border border-borderLight;
+  background-color: var(--app-card-bg);
+  backdrop-filter: blur(22px);
 }
 
 .emi-payment-modal__header {

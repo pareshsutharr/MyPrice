@@ -54,24 +54,28 @@ const Income = () => {
   }
 
   return (
-    <div className="space-y-6 pb-16">
-      <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1 space-y-4">
-          <h2 className="text-2xl font-display">
-            {editing ? 'Edit Income Entry' : 'Record Income'}
-          </h2>
-          <div className={`income-form__shell ${editing ? 'income-form__shell--editing' : ''}`}>
-            <IncomeForm
-              onSubmit={handleSubmit}
-              defaultValues={editing ?? undefined}
-              onCancel={() => setEditing(null)}
-            />
+    <div className="page-stack">
+      <div className="page-grid page-grid--sidebar">
+        <div>
+          <div className="page-section space-y-4">
+            <h2 className="text-2xl font-display">
+              {editing ? 'Edit Income Entry' : 'Record Income'}
+            </h2>
+            <div className={`income-form__shell ${editing ? 'income-form__shell--editing' : ''}`}>
+              <IncomeForm
+                onSubmit={handleSubmit}
+                defaultValues={editing ?? undefined}
+                onCancel={() => setEditing(null)}
+              />
+            </div>
           </div>
         </div>
-        <div className="lg:col-span-2 space-y-4">
-          <h2 className="text-2xl font-display">Income History</h2>
-          <FilterToolbar filters={filters} onChange={setFilters} />
-          <IncomeTable incomes={filteredIncome} onEdit={setEditing} onDelete={handleDelete} />
+        <div className="space-y-4">
+          <div className="page-section space-y-4">
+            <h2 className="text-2xl font-display">Income History</h2>
+            <FilterToolbar filters={filters} onChange={setFilters} />
+            <IncomeTable incomes={filteredIncome} onEdit={setEditing} onDelete={handleDelete} />
+          </div>
         </div>
       </div>
     </div>

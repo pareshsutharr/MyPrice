@@ -112,16 +112,16 @@ const MutualFunds = () => {
         })
 
   return (
-    <div className="space-y-6 pb-16">
-      <div className="grid md:grid-cols-4 gap-4">
+    <div className="page-stack">
+      <div className="page-grid md:grid-cols-2 xl:grid-cols-4">
         {summaryCards.map((card) => (
           <StatCard key={card.label} {...card} />
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-1 space-y-4">
-          <div>
+      <div className="page-grid lg:grid-cols-4">
+        <div className="space-y-4">
+          <div className="page-section space-y-2">
             <h2 className="text-2xl font-display">Mutual fund desk</h2>
             <p className="text-sm text-slate-500">
               Log Groww / Angel One schemes manually to keep tabs on gains.
@@ -140,7 +140,7 @@ const MutualFunds = () => {
             }}
           />
         </div>
-        <div className="lg:col-span-3 space-y-6">
+        <div className="lg:col-span-3 page-stack">
           {brokers.length > 0 && (
             <div className="glass-card p-4 space-y-3">
               <div className="flex items-center justify-between flex-wrap gap-3">
@@ -173,7 +173,7 @@ const MutualFunds = () => {
                   ))}
                 </div>
               </div>
-              <div className="grid md:grid-cols-2 gap-3">
+              <div className="page-grid md:grid-cols-2">
                 {brokers.map((brokerEntry) => (
                   <div
                     key={`${brokerEntry.broker}-card`}
@@ -228,7 +228,7 @@ const MutualFunds = () => {
             </div>
           )}
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="page-grid md:grid-cols-2">
             {filteredInvestments.map((investment) => (
               <InvestmentCard
                 key={investment._id ?? investment.schemeName}

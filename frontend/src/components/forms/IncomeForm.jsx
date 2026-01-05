@@ -123,66 +123,68 @@ const IncomeForm = ({ onSubmit, defaultValues, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit} className="income-form">
-      <div className="income-form__field">
-        <label>{`Amount (${currencySymbol})`}</label>
-        <input
-          type="number"
-          name="amount"
-          value={form.amount}
-          onChange={handleChange}
-          inputMode="decimal"
-          step="0.01"
-          min="0"
-          required
-        />
-      </div>
-      <div className="income-form__field">
-        <label>Category</label>
-        <select name="category" value={form.category} onChange={handleChange}>
-          <option value="salary">Salary</option>
-          <option value="freelance">Freelance</option>
-          <option value="others">Others</option>
-        </select>
-      </div>
-      {form.category === 'others' && (
+      <div className="form-grid form-grid--two">
         <div className="income-form__field">
-          <label>Custom category</label>
+          <label>{`Amount (${currencySymbol})`}</label>
           <input
-            type="text"
-            name="customCategory"
-            value={form.customCategory}
+            type="number"
+            name="amount"
+            value={form.amount}
             onChange={handleChange}
-            placeholder="Enter category name"
+            inputMode="decimal"
+            step="0.01"
+            min="0"
+            required
           />
         </div>
-      )}
-      <div className="income-form__field">
-        <label>{`Date (${dateFormat})`}</label>
-        <div className="income-form__date-row">
-          <input
-            type="text"
-            name="date"
-            value={dateInput}
-            onChange={handleChange}
-            placeholder={dateFormat}
-            inputMode="numeric"
-            className="income-form__date-input"
-          />
-          <button type="button" className="income-form__calendar-btn" onClick={triggerCalendar} aria-label="Choose date">
-            📅
-          </button>
-          <input
-            type="date"
-            ref={calendarInputRef}
-            className="income-form__calendar-input"
-            value={form.date}
-            onChange={(event) => handleChange({ target: { name: 'date', value: event.target.value } })}
-          />
+        <div className="income-form__field">
+          <label>Category</label>
+          <select name="category" value={form.category} onChange={handleChange}>
+            <option value="salary">Salary</option>
+            <option value="freelance">Freelance</option>
+            <option value="others">Others</option>
+          </select>
         </div>
-      </div>
-      <div className="income-form__field">
-        <label>Note</label>
-        <textarea name="note" value={form.note} onChange={handleChange} rows={3} />
+        {form.category === 'others' && (
+          <div className="income-form__field form-grid__full">
+            <label>Custom category</label>
+            <input
+              type="text"
+              name="customCategory"
+              value={form.customCategory}
+              onChange={handleChange}
+              placeholder="Enter category name"
+            />
+          </div>
+        )}
+        <div className="income-form__field form-grid__full">
+          <label>{`Date (${dateFormat})`}</label>
+          <div className="income-form__date-row">
+            <input
+              type="text"
+              name="date"
+              value={dateInput}
+              onChange={handleChange}
+              placeholder={dateFormat}
+              inputMode="numeric"
+              className="income-form__date-input"
+            />
+            <button type="button" className="income-form__calendar-btn" onClick={triggerCalendar} aria-label="Choose date">
+              📅
+            </button>
+            <input
+              type="date"
+              ref={calendarInputRef}
+              className="income-form__calendar-input"
+              value={form.date}
+              onChange={(event) => handleChange({ target: { name: 'date', value: event.target.value } })}
+            />
+          </div>
+        </div>
+        <div className="income-form__field form-grid__full">
+          <label>Note</label>
+          <textarea name="note" value={form.note} onChange={handleChange} rows={3} />
+        </div>
       </div>
       {formError && <p className="income-form__error">{formError}</p>}
       <div className="income-form__actions">

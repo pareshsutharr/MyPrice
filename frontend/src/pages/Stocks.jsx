@@ -73,16 +73,16 @@ const Stocks = () => {
   ]
 
   return (
-    <div className="space-y-6 pb-16">
-      <div className="grid md:grid-cols-4 gap-4">
+    <div className="page-stack">
+      <div className="page-grid md:grid-cols-2 xl:grid-cols-4">
         {statCards.map((card) => (
           <StatCard key={card.label} {...card} />
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1 space-y-4">
-          <div>
+      <div className="page-grid lg:grid-cols-3">
+        <div className="space-y-4">
+          <div className="page-section space-y-2">
             <h2 className="text-2xl font-display">Stocks & equity</h2>
             <p className="text-sm text-slate-500">
               Track direct equity investments alongside your mutual funds.
@@ -94,13 +94,13 @@ const Stocks = () => {
             onCancel={() => setEditing(null)}
           />
         </div>
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2">
           {stocks.length === 0 ? (
             <div className="glass-card p-6 text-center text-slate-500">
               No stocks tracked yet. Add your first position from the form to get started.
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="page-grid md:grid-cols-2">
               {stocks.map((stock) => (
                 <InvestmentCard
                   key={stock._id}

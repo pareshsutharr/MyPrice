@@ -1,5 +1,8 @@
-﻿.loan-card {
-  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 space-y-3;
+.loan-card {
+  @apply rounded-2xl shadow-glow p-4 space-y-3;
+  background-color: var(--app-card-bg);
+  border: 1px solid var(--app-card-border);
+  backdrop-filter: blur(18px);
 }
 
 .loan-card__header {
@@ -7,11 +10,13 @@
 }
 
 .loan-card__lender {
-  @apply text-sm text-slate-500;
+  @apply text-sm;
+  color: rgba(71, 85, 105, 0.8);
 }
 
 .loan-card__principal {
-  @apply text-xl font-display text-slate-900;
+  @apply text-xl font-display;
+  color: var(--app-body-text);
 }
 
 .loan-card__status {
@@ -19,39 +24,37 @@
 }
 
 .loan-card__status--active {
-  @apply bg-emerald-100 text-emerald-700;
+  @apply text-emerald-700;
+  background: rgba(16, 185, 129, 0.18);
 }
 
 .loan-card__status--completed {
-  @apply bg-purple-100 text-purple-700;
+  @apply text-purple-700;
+  background: rgba(167, 139, 250, 0.2);
 }
 
-.loan-card__emi {
-  @apply text-sm text-slate-500;
-}
-
-.loan-card__interest {
-  @apply text-sm text-slate-500;
+.loan-card__emi,
+.loan-card__interest,
+.loan-card__remaining,
+.loan-card__other-charges {
+  @apply text-sm;
+  color: rgba(71, 85, 105, 0.8);
 }
 
 .loan-card__progress-bar {
-  @apply w-full bg-slate-100 rounded-full h-2;
+  @apply w-full rounded-full h-2;
+  background-color: rgba(148, 163, 184, 0.3);
 }
 
 .loan-card__progress-bar div {
-  @apply bg-gradient-to-r from-accentBlue to-accentPurple h-2 rounded-full;
-}
-
-.loan-card__remaining {
-  @apply text-xs text-slate-500;
-}
-
-.loan-card__other-charges {
-  @apply text-sm text-slate-500;
+  @apply h-2 rounded-full;
+  background: linear-gradient(120deg, var(--app-fab-start), var(--app-fab-end));
 }
 
 .loan-card__payment-meta {
-  @apply rounded-2xl bg-slate-50 p-3 space-y-1 text-sm text-slate-600;
+  @apply rounded-2xl p-3 space-y-1 text-sm;
+  background-color: var(--app-muted-bg);
+  color: rgba(71, 85, 105, 0.85);
 }
 
 .loan-card__undo-btn {
@@ -67,5 +70,25 @@
 }
 
 .loan-card__delete-btn {
-  @apply w-full text-sm border border-red-200 text-red-600 rounded-xl py-2 hover:bg-red-50 transition;
+  @apply w-full text-sm rounded-xl py-2 transition;
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: #f87171;
+  background: transparent;
+}
+
+:root[data-theme='dark'] .loan-card__lender,
+:root[data-theme='dark'] .loan-card__emi,
+:root[data-theme='dark'] .loan-card__interest,
+:root[data-theme='dark'] .loan-card__remaining,
+:root[data-theme='dark'] .loan-card__other-charges,
+:root[data-theme='dark'] .loan-card__payment-meta {
+  color: rgba(226, 232, 255, 0.75);
+}
+
+:root[data-theme='dark'] .loan-card__payment-meta {
+  background-color: rgba(6, 9, 16, 0.92);
+}
+
+:root[data-theme='dark'] .loan-card__progress-bar {
+  background-color: rgba(255, 255, 255, 0.08);
 }

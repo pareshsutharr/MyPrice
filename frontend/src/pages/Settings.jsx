@@ -54,7 +54,7 @@ const Settings = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="page-stack">
       <section className="glass-card p-6 space-y-4">
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div>

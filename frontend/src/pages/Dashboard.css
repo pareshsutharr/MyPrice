@@ -27,7 +27,8 @@
 }
 
 .dashboard-toggle-button--active {
-  @apply bg-white text-slate-900 rounded-full shadow-glow;
+  @apply text-slate-900 rounded-full shadow-glow;
+  background-color: var(--app-card-bg);
 }
 
 .alerts-stack {

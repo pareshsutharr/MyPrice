@@ -1,5 +1,8 @@
-﻿.income-table {
-  @apply bg-surface rounded-2xl border border-borderLight shadow-glow overflow-auto;
+.income-table {
+  @apply rounded-2xl shadow-glow overflow-auto;
+  background-color: var(--app-card-bg);
+  border: 1px solid var(--app-card-border);
+  backdrop-filter: blur(18px);
 }
 
 .income-table table {
@@ -7,7 +10,8 @@
 }
 
 .income-table thead {
-  @apply text-sm uppercase text-slate-500;
+  @apply text-sm uppercase;
+  color: rgba(71, 85, 105, 0.85);
 }
 
 .income-table th {
@@ -20,7 +24,8 @@
 }
 
 .income-table tbody tr {
-  @apply border-t border-borderLight text-sm;
+  @apply border-t text-sm;
+  border-color: var(--app-card-border);
 }
 
 .income-table td {
@@ -32,7 +37,8 @@
 }
 
 .income-table__amount {
-  @apply text-right font-semibold text-emerald-600;
+  @apply text-right font-semibold;
+  color: var(--app-body-text);
 }
 
 .income-table__actions {
@@ -44,9 +50,25 @@
 }
 
 .income-table__delete-btn {
-  @apply !py-1 !px-3 text-xs border border-red-200 text-red-500 hover:bg-red-50;
+  @apply !py-1 !px-3 text-xs;
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: #f87171;
+  background-color: transparent;
 }
 
 .income-table__empty {
-  @apply text-center py-8 text-slate-500 text-sm;
+  @apply text-center py-8 text-sm;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+:root[data-theme='dark'] .income-table thead {
+  color: rgba(226, 232, 255, 0.65);
+}
+
+:root[data-theme='dark'] .income-table tbody tr {
+  border-color: rgba(80, 96, 132, 0.35);
+}
+
+:root[data-theme='dark'] .income-table__delete-btn:hover {
+  background-color: rgba(248, 113, 113, 0.12);
 }

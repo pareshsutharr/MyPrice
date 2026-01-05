@@ -729,8 +729,8 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6 pb-16">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="page-stack">
+      <div className="page-section flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-display text-slate-900">Your overview</h2>
           <p className="text-sm text-slate-500">
@@ -841,7 +841,11 @@ const Dashboard = () => {
         </div>
       )}
 
-      <div className={`grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 dashboard-tiles ${isCustomizing ? 'dashboard-tiles--editing' : ''}`}>
+      <div
+        className={`page-grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 dashboard-tiles ${
+          isCustomizing ? 'dashboard-tiles--editing' : ''
+        }`}
+      >
         {orderedTiles.map((card) => (
           <div
             key={card.id}
@@ -857,7 +861,7 @@ const Dashboard = () => {
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4">
+      <div className="page-grid lg:grid-cols-3">
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div>
@@ -912,7 +916,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4">
+      <div className="page-grid lg:grid-cols-3">
         <div className="glass-card p-5 space-y-4 lg:col-span-2">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -1021,7 +1025,7 @@ const Dashboard = () => {
         {goals.length === 0 ? (
           <p className="text-sm text-slate-500">Add a goal to keep track of progress here.</p>
         ) : (
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="page-grid md:grid-cols-2 xl:grid-cols-3">
             {goals.map((goal) => (
               <GoalCard
                 key={goal.id}

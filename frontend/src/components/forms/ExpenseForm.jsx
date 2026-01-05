@@ -117,82 +117,84 @@ const ExpenseForm = ({ onSubmit, defaultValues, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit} className="expense-form">
-      <div className="expense-form__field">
-        <label>{`Amount (${currencySymbol})`}</label>
-        <input
-          type="number"
-          name="amount"
-          value={form.amount}
-          onChange={handleChange}
-          inputMode="decimal"
-          step="0.01"
-          min="0"
-          required
-        />
-      </div>
-      <div className="expense-form__field">
-        <label>Category</label>
-        <select name="category" value={form.category} onChange={handleChange}>
-          {CATEGORY_MAP.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.icon} {category.label}
-            </option>
-          ))}
-        </select>
-      </div>
-      {form.category === 'others' && (
+      <div className="form-grid form-grid--two">
         <div className="expense-form__field">
-          <label>Custom category</label>
+          <label>{`Amount (${currencySymbol})`}</label>
           <input
-            type="text"
-            name="customCategory"
-            value={form.customCategory}
+            type="number"
+            name="amount"
+            value={form.amount}
             onChange={handleChange}
-            placeholder="Enter category name"
+            inputMode="decimal"
+            step="0.01"
+            min="0"
+            required
           />
         </div>
-      )}
-      <div className="expense-form__field">
-        <label>{`Date (${dateFormat})`}</label>
-        <div className="filter-toolbar__field expense-form__date-row">
-          <input
-            type="text"
-            name="date"
-            value={dateInput}
-            onChange={handleChange}
-            placeholder={dateFormat}
-            inputMode="numeric"
-            title={`Use ${dateFormat} format`}
-            className="expense-form__date-input"
-          />
-          <button
-            type="button"
-            className="expense-form__calendar-btn"
-            onClick={() => {
-              const input = calendarInputRef.current
-              if (!input) return
-              if (typeof input.showPicker === 'function') {
-                input.showPicker()
-              } else {
-                input.focus()
-              }
-            }}
-            aria-label="Choose date"
-          >
-            📅
-          </button>
-          <input
-            type="date"
-            value={form.date}
-            onChange={handleCalendarChange}
-            className="expense-form__calendar-input"
-            ref={calendarInputRef}
-          />
+        <div className="expense-form__field">
+          <label>Category</label>
+          <select name="category" value={form.category} onChange={handleChange}>
+            {CATEGORY_MAP.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.icon} {category.label}
+              </option>
+            ))}
+          </select>
         </div>
-      </div>
-      <div className="expense-form__field">
-        <label>Note</label>
-        <textarea name="note" value={form.note} onChange={handleChange} rows={3} />
+        {form.category === 'others' && (
+          <div className="expense-form__field form-grid__full">
+            <label>Custom category</label>
+            <input
+              type="text"
+              name="customCategory"
+              value={form.customCategory}
+              onChange={handleChange}
+              placeholder="Enter category name"
+            />
+          </div>
+        )}
+        <div className="expense-form__field form-grid__full">
+          <label>{`Date (${dateFormat})`}</label>
+          <div className="filter-toolbar__field expense-form__date-row">
+            <input
+              type="text"
+              name="date"
+              value={dateInput}
+              onChange={handleChange}
+              placeholder={dateFormat}
+              inputMode="numeric"
+              title={`Use ${dateFormat} format`}
+              className="expense-form__date-input"
+            />
+            <button
+              type="button"
+              className="expense-form__calendar-btn"
+              onClick={() => {
+                const input = calendarInputRef.current
+                if (!input) return
+                if (typeof input.showPicker === 'function') {
+                  input.showPicker()
+                } else {
+                  input.focus()
+                }
+              }}
+              aria-label="Choose date"
+            >
+              📅
+            </button>
+            <input
+              type="date"
+              value={form.date}
+              onChange={handleCalendarChange}
+              className="expense-form__calendar-input"
+              ref={calendarInputRef}
+            />
+          </div>
+        </div>
+        <div className="expense-form__field form-grid__full">
+          <label>Note</label>
+          <textarea name="note" value={form.note} onChange={handleChange} rows={3} />
+        </div>
       </div>
       {formError && <p className="expense-form__error">{formError}</p>}
       <div className="expense-form__actions">

@@ -1,19 +1,13 @@
-﻿.investment-form {
-  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 space-y-4;
-}
-
-.investment-form__grid {
-  @apply grid grid-cols-2 gap-4;
+.investment-form {
+  @apply rounded-2xl shadow-glow p-4 space-y-4;
+  background-color: var(--app-card-bg);
+  border: 1px solid var(--app-card-border);
+  backdrop-filter: blur(18px);
 }
 
 .investment-form__field label {
-  @apply text-sm text-slate-500;
-}
-
-.investment-form__field input,
-.investment-form__field select,
-.investment-form__field textarea {
-  @apply w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+  @apply text-sm;
+  color: rgba(71, 85, 105, 0.85);
 }
 
 .investment-form__error {
@@ -22,4 +16,8 @@
 
 .investment-form__actions {
   @apply flex gap-3;
+}
+
+:root[data-theme='dark'] .investment-form__field label {
+  color: rgba(226, 232, 255, 0.75);
 }

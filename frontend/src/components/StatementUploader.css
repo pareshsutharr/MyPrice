@@ -1,5 +1,8 @@
-﻿.statement-uploader {
-  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 space-y-4;
+.statement-uploader {
+  @apply rounded-2xl shadow-glow p-4 space-y-4;
+  background-color: var(--app-card-bg);
+  border: 1px solid var(--app-card-border);
+  backdrop-filter: blur(18px);
 }
 
 .statement-uploader__intro h3 {
@@ -7,24 +10,24 @@
 }
 
 .statement-uploader__intro p {
-  @apply text-sm text-slate-500;
+  @apply text-sm;
+  color: rgba(71, 85, 105, 0.75);
 }
 
 .statement-uploader__grid {
-  @apply grid md:grid-cols-2 gap-4;
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
 }
 
 .statement-uploader__field label {
-  @apply text-sm text-slate-500;
-}
-
-.statement-uploader__field select,
-.statement-uploader__field input {
-  @apply w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+  @apply text-sm;
+  color: rgba(71, 85, 105, 0.85);
 }
 
 .statement-uploader__dropzone {
-  @apply flex flex-col items-center justify-center border-2 border-dashed border-borderLight rounded-xl p-6 text-sm text-slate-500 cursor-pointer;
+  @apply flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 text-sm cursor-pointer;
+  border-color: var(--app-card-border);
+  color: rgba(71, 85, 105, 0.7);
+  background-color: var(--app-muted-bg);
 }
 
 .statement-uploader__file-input {
@@ -32,11 +35,12 @@
 }
 
 .statement-uploader__file-name {
-  @apply text-slate-900;
+  color: var(--app-body-text);
 }
 
 .statement-uploader__progress {
-  @apply w-full bg-slate-100 h-2 rounded-full overflow-hidden;
+  @apply w-full h-2 rounded-full overflow-hidden;
+  background-color: rgba(148, 163, 184, 0.25);
 }
 
 .statement-uploader__progress div {
@@ -48,7 +52,9 @@
 }
 
 .statement-uploader__skipped {
-  @apply bg-rose-50 text-rose-600 text-left text-sm p-3 rounded-xl space-y-1 max-h-40 overflow-auto;
+  @apply text-left text-sm p-3 rounded-xl space-y-1 max-h-40 overflow-auto;
+  background-color: rgba(254, 226, 226, 0.4);
+  color: #b91c1c;
 }
 
 .statement-uploader__status {
@@ -57,4 +63,24 @@
 
 .statement-uploader__submit {
   @apply w-full;
+}
+
+:root[data-theme='dark'] .statement-uploader__intro p,
+:root[data-theme='dark'] .statement-uploader__field label {
+  color: rgba(226, 232, 255, 0.75);
+}
+
+:root[data-theme='dark'] .statement-uploader__dropzone {
+  background-color: rgba(6, 9, 16, 0.92);
+  border-color: rgba(92, 112, 150, 0.5);
+  color: rgba(226, 232, 255, 0.7);
+}
+
+:root[data-theme='dark'] .statement-uploader__progress {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme='dark'] .statement-uploader__skipped {
+  background-color: rgba(255, 99, 132, 0.12);
+  color: #fecdd3;
 }

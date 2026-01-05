@@ -84,38 +84,38 @@ const InvestmentForm = ({ onSubmit, defaultValues, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit} className="investment-form">
-      <div className="investment-form__field">
-        <label>Scheme name</label>
-        <input
-          type="text"
-          name="schemeName"
-          value={form.schemeName}
-          onChange={handleChange}
-          placeholder="e.g. Axis Bluechip Fund"
-          required
-        />
-      </div>
-      <div className="investment-form__field">
-        <label>Broker</label>
-        <input
-          type="text"
-          name="broker"
-          value={form.broker}
-          onChange={handleChange}
-          placeholder="Angel One / Groww"
-        />
-      </div>
-      <div className="investment-form__field">
-        <label>Platform</label>
-        <select name="platform" value={form.platform} onChange={handleChange}>
-          {platforms.map((platform) => (
-            <option value={platform} key={platform}>
-              {platform}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="investment-form__grid">
+      <div className="form-grid form-grid--two">
+        <div className="investment-form__field form-grid__full">
+          <label>Scheme name</label>
+          <input
+            type="text"
+            name="schemeName"
+            value={form.schemeName}
+            onChange={handleChange}
+            placeholder="e.g. Axis Bluechip Fund"
+            required
+          />
+        </div>
+        <div className="investment-form__field">
+          <label>Broker</label>
+          <input
+            type="text"
+            name="broker"
+            value={form.broker}
+            onChange={handleChange}
+            placeholder="Angel One / Groww"
+          />
+        </div>
+        <div className="investment-form__field">
+          <label>Platform</label>
+          <select name="platform" value={form.platform} onChange={handleChange}>
+            {platforms.map((platform) => (
+              <option value={platform} key={platform}>
+                {platform}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="investment-form__field">
           <label>{`Amount invested (${currencySymbol})`}</label>
           <input
@@ -142,28 +142,28 @@ const InvestmentForm = ({ onSubmit, defaultValues, onCancel }) => {
             required
           />
         </div>
-      </div>
-      <div className="investment-form__field">
-        <label>{`Last updated on (${dateFormat})`}</label>
-        <input
-          type="date"
-          name="lastUpdated"
-          value={form.lastUpdated}
-          onChange={handleChange}
-          required
-          placeholder={dateFormat}
-          title={`Use ${dateFormat} format`}
-        />
-      </div>
-      <div className="investment-form__field">
-        <label>Notes</label>
-        <textarea
-          name="notes"
-          value={form.notes}
-          onChange={handleChange}
-          rows={3}
-          placeholder="SIP amount, goal, etc."
-        />
+        <div className="investment-form__field form-grid__full">
+          <label>{`Last updated on (${dateFormat})`}</label>
+          <input
+            type="date"
+            name="lastUpdated"
+            value={form.lastUpdated}
+            onChange={handleChange}
+            required
+            placeholder={dateFormat}
+            title={`Use ${dateFormat} format`}
+          />
+        </div>
+        <div className="investment-form__field form-grid__full">
+          <label>Notes</label>
+          <textarea
+            name="notes"
+            value={form.notes}
+            onChange={handleChange}
+            rows={3}
+            placeholder="SIP amount, goal, etc."
+          />
+        </div>
       </div>
       {formError && <p className="investment-form__error">{formError}</p>}
       <div className="investment-form__actions">

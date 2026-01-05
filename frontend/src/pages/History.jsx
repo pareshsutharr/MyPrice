@@ -35,9 +35,10 @@ const History = () => {
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-display">Transaction History</h2>
-      <div className="glass-card divide-y divide-borderLight">
+    <div className="page-stack">
+      <div className="page-section space-y-3">
+        <h2 className="text-2xl font-display">Transaction History</h2>
+        <div className="divide-y divide-borderLight">
         {history.map((entry) => {
           const meta = typeMeta[entry.type] ?? { label: entry.type, color: 'text-slate-600 bg-slate-100' }
           const isCredit = entry.type === 'income'
@@ -56,6 +57,7 @@ const History = () => {
             </div>
           )
         })}
+        </div>
       </div>
     </div>
   )
