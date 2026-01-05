@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useCallback } from 'react'
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import {
   Wallet,
@@ -75,6 +75,22 @@ const buildWeeklySeries = (entries = [], weeks = 6) => {
   })
 }
 
+const normalizeMetricToken = (value = '') => value.replace(/[^a-z0-9]/gi, '').toLowerCase()
+
+const findUnknownMetricToken = (expression = '', normalizedMetrics = [], options = {}) => {
+  const tokenToIgnore = options?.tokenInProgress
+    ? normalizeMetricToken(options.tokenInProgress)
+    : ''
+  const tokens = expression.split(/[^a-zA-Z0-9]+/).filter(Boolean)
+  return tokens.find((token) => {
+    if (!/[a-zA-Z]/.test(token)) return false
+    const normalized = normalizeMetricToken(token)
+    if (!normalized) return false
+    if (tokenToIgnore && normalized === tokenToIgnore) return false
+    return !normalizedMetrics.some((metric) => metric.normalized === normalized)
+  })
+}
+
 const readStoredGoals = () => {
   if (typeof window === 'undefined') return []
   try {
@@ -115,6 +131,11 @@ const Dashboard = () => {
   const [goalForm, setGoalForm] = useState({ name: '', target: '', saved: '' })
   const [customTiles, setCustomTiles] = useState(readStoredCustomTiles)
   const [customTileForm, setCustomTileForm] = useState({ name: '', expression: '', description: '' })
+  const expressionInputRef = useRef(null)
+  const pendingCaretRef = useRef(null)
+  const [expressionSuggestions, setExpressionSuggestions] = useState([])
+  const [expressionFeedback, setExpressionFeedback] = useState('')
+  const expressionValueRef = useRef(customTileForm.expression)
   const [dismissedAlerts, setDismissedAlerts] = useState([])
   const [tipIndex, setTipIndex] = useState(0)
   const formatCurrency = useCurrencyFormatter()
@@ -152,6 +173,10 @@ const Dashboard = () => {
       console.warn('Unable to persist custom tiles', error)
     }
   }, [customTiles])
+
+  useEffect(() => {
+    expressionValueRef.current = customTileForm.expression
+  }, [customTileForm.expression])
 
   const totals = useMemo(
     () => stats?.totals ?? { totalCredit: 0, totalDebit: 0, emiPending: 0, balance: 0 },
@@ -321,13 +346,19 @@ const Dashboard = () => {
     ],
   )
 
+  const metricKeys = useMemo(() => Object.keys(metrics), [metrics])
+  const normalizedMetricKeys = useMemo(
+    () => metricKeys.map((key) => ({ key, normalized: normalizeMetricToken(key) })),
+    [metricKeys],
+  )
+
   const evaluateExpression = useCallback(
     (expression) => {
       if (!expression?.trim()) return Number.NaN
       try {
         const fn = new Function(
           'metrics',
-          `"use strict"; const { ${Object.keys(metrics).join(', ')} } = metrics; return ${expression};`,
+          `"use strict"; const { ${metricKeys.join(', ')} } = metrics; return ${expression};`,
         )
         const result = fn(metrics)
         const numeric = Number(result)
@@ -336,7 +367,72 @@ const Dashboard = () => {
         return Number.NaN
       }
     },
-    [metrics],
+    [metricKeys, metrics],
+  )
+
+  const updateExpressionAssist = useCallback(
+    (value = '', caretPosition = value.length) => {
+      const pointerBase = typeof caretPosition === 'number' ? caretPosition : value.length
+      const pointer = Math.max(0, Math.min(pointerBase, value.length))
+      const uptoCaret = value.slice(0, pointer)
+      const match = uptoCaret.match(/([a-zA-Z][a-zA-Z0-9]*)$/)
+      const currentToken = match ? match[0] : ''
+      const normalizedCurrent = normalizeMetricToken(currentToken)
+      const invalidToken = findUnknownMetricToken(value, normalizedMetricKeys, { tokenInProgress: currentToken })
+      setExpressionFeedback(invalidToken ? `No metric named "${invalidToken}".` : '')
+      const matches =
+        normalizedCurrent.length > 0
+          ? normalizedMetricKeys
+              .filter((metric) => metric.normalized.includes(normalizedCurrent))
+              .map((metric) => metric.key)
+          : metricKeys
+      setExpressionSuggestions(matches.slice(0, 6))
+    },
+    [metricKeys, normalizedMetricKeys],
+  )
+
+  useEffect(() => {
+    updateExpressionAssist(expressionValueRef.current)
+  }, [metricKeys, updateExpressionAssist])
+
+  useEffect(() => {
+    if (pendingCaretRef.current == null) return
+    const node = expressionInputRef.current
+    if (!node) return
+    const caret = Math.max(0, Math.min(pendingCaretRef.current, customTileForm.expression.length))
+    pendingCaretRef.current = null
+    requestAnimationFrame(() => {
+      node.focus()
+      node.setSelectionRange(caret, caret)
+    })
+  }, [customTileForm.expression])
+
+  const updateExpressionValue = useCallback(
+    (nextValue, caretPosition) => {
+      setCustomTileForm((prev) => ({ ...prev, expression: nextValue }))
+      pendingCaretRef.current = typeof caretPosition === 'number' ? caretPosition : nextValue.length
+      updateExpressionAssist(nextValue, caretPosition)
+    },
+    [updateExpressionAssist],
+  )
+
+  const insertMetricIntoExpression = useCallback(
+    (metricKey) => {
+      if (!metricKey) return
+      const input = expressionInputRef.current
+      const selectionStart = input?.selectionStart ?? customTileForm.expression.length
+      const selectionEnd = input?.selectionEnd ?? selectionStart
+      const nextValue =
+        customTileForm.expression.slice(0, selectionStart) +
+        metricKey +
+        customTileForm.expression.slice(selectionEnd)
+      const nextCaret = selectionStart + metricKey.length
+      updateExpressionValue(nextValue, nextCaret)
+      requestAnimationFrame(() => {
+        expressionInputRef.current?.focus()
+      })
+    },
+    [customTileForm.expression, updateExpressionValue],
   )
 
   const customCardData = useMemo(
@@ -691,21 +787,35 @@ const Dashboard = () => {
   )
 
   const handleCustomTileFormChange = (event) => {
-    const { name, value } = event.target
+    const { name, value, selectionStart } = event.target
+    if (name === 'expression') {
+      const caret = typeof selectionStart === 'number' ? selectionStart : value.length
+      updateExpressionValue(value, caret)
+      return
+    }
     setCustomTileForm((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleAddCustomTile = (event) => {
     event.preventDefault()
     if (!customTileForm.name.trim() || !customTileForm.expression.trim()) return
+    const expressionValue = customTileForm.expression.trim()
+    const invalidToken = findUnknownMetricToken(expressionValue, normalizedMetricKeys)
+    if (invalidToken) {
+      setExpressionFeedback(`No metric named "${invalidToken}".`)
+      expressionInputRef.current?.focus()
+      return
+    }
     const newTile = {
       id: `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
       name: customTileForm.name.trim(),
-      expression: customTileForm.expression.trim(),
+      expression: expressionValue,
       description: customTileForm.description.trim(),
     }
     setCustomTiles((prev) => [...prev, newTile])
     setCustomTileForm({ name: '', expression: '', description: '' })
+    pendingCaretRef.current = 0
+    updateExpressionAssist('', 0)
   }
 
   const handleRemoveCustomTile = (id) => {
@@ -751,7 +861,7 @@ const Dashboard = () => {
       )}
 
       {isCustomizing && (
-        <div className="glass-card p-4 space-y-3">
+        <div className="glass-card p-4 space-y-3 advanced-only">
           <p className="text-sm text-slate-500">Choose the tiles you want visible on your dashboard.</p>
           <div className="dashboard-tile-picker">
             {cardData.map((card) => {
@@ -798,14 +908,35 @@ const Dashboard = () => {
                 onChange={handleCustomTileFormChange}
                 required
               />
-              <input
-                type="text"
-                name="expression"
-                placeholder="Formula e.g. balance - outstandingLoans"
-                value={customTileForm.expression}
-                onChange={handleCustomTileFormChange}
-                required
-              />
+              <div className="custom-tile-builder__expression">
+                <input
+                  ref={expressionInputRef}
+                  type="text"
+                  name="expression"
+                  placeholder="Formula e.g. balance - outstandingLoans"
+                  value={customTileForm.expression}
+                  onChange={handleCustomTileFormChange}
+                  required
+                />
+                {expressionSuggestions.length > 0 && (
+                  <div className="custom-tile-suggestions" role="listbox" aria-label="Suggested metrics">
+                    {expressionSuggestions.map((suggestion) => (
+                      <button
+                        type="button"
+                        key={`suggestion-${suggestion}`}
+                        onClick={() => insertMetricIntoExpression(suggestion)}
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {expressionFeedback && (
+                  <p className="custom-tile-hint custom-tile-hint--error" aria-live="polite">
+                    {expressionFeedback}
+                  </p>
+                )}
+              </div>
               <input
                 type="text"
                 name="description"
@@ -832,9 +963,16 @@ const Dashboard = () => {
                 ))}
               </div>
             )}
-            <div className="available-metrics">
-              {Object.keys(metrics).map((key) => (
-                <span key={`metric-${key}`}>{key}</span>
+            <div className="available-metrics" role="list">
+              {metricKeys.map((key) => (
+                <button
+                  type="button"
+                  key={`metric-${key}`}
+                  onClick={() => insertMetricIntoExpression(key)}
+                  aria-label={`Insert ${key}`}
+                >
+                  {key}
+                </button>
               ))}
             </div>
           </div>
@@ -857,7 +995,7 @@ const Dashboard = () => {
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4">
+      <div className="grid lg:grid-cols-3 gap-4 advanced-only">
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div>
@@ -913,7 +1051,7 @@ const Dashboard = () => {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4">
-        <div className="glass-card p-5 space-y-4 lg:col-span-2">
+        <div className="glass-card p-5 space-y-4 lg:col-span-2 advanced-only">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-sm text-slate-500">Interactive view</p>
@@ -966,7 +1104,7 @@ const Dashboard = () => {
               </div>
             )}
           </div>
-          <div className="glass-card p-5 space-y-3">
+            <div className="glass-card p-5 space-y-3 advanced-only">
             <p className="text-sm text-slate-500">EMI reminders</p>
             {reminders?.length ? (
               reminders.slice(0, 3).map((reminder) => (
@@ -979,7 +1117,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="glass-card p-5 space-y-4">
+      <div className="glass-card p-5 space-y-4 advanced-only">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <p className="text-sm text-slate-500">Goal progress</p>

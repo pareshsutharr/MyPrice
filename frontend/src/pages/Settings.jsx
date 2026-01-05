@@ -22,9 +22,12 @@ const Settings = () => {
     removeCategory,
     setDateFormat,
     setTheme,
+    mode,
+    setMode,
   } = useSettings()
   const [newCategory, setNewCategory] = useState({ label: '', color: '#4f9cff', icon: '✨' })
   const isDarkMode = theme === 'dark'
+  const isAdvancedMode = mode === 'advanced'
 
   const handleCurrencyChange = (event) => {
     setCurrency(event.target.value)
@@ -53,6 +56,10 @@ const Settings = () => {
     setTheme(isDarkMode ? 'light' : 'dark')
   }
 
+  const handleModeSelect = (targetMode) => {
+    setMode(targetMode)
+  }
+
   return (
     <div className="space-y-6">
       <section className="glass-card p-6 space-y-4">
@@ -64,6 +71,43 @@ const Settings = () => {
           <button type="button" className="btn-secondary" onClick={handleThemeToggle}>
             {isDarkMode ? 'Use light mode' : 'Use dark mode'}
           </button>
+        </div>
+      </section>
+
+      <section className="glass-card p-6 space-y-4">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <h2 className="text-2xl font-display">Experience mode</h2>
+            <p className="text-sm text-slate-500">
+              Toggle between the lightweight Basic view or Advanced analytics workspace.
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              className={`px-4 py-2 rounded-full border text-sm ${!isAdvancedMode ? 'bg-slate-900 text-white border-slate-900' : 'bg-surfaceMuted text-slate-500 border-borderLight'}`}
+              onClick={() => handleModeSelect('basic')}
+            >
+              Basic
+            </button>
+            <button
+              type="button"
+              className={`px-4 py-2 rounded-full border text-sm ${isAdvancedMode ? 'bg-slate-900 text-white border-slate-900' : 'bg-surfaceMuted text-slate-500 border-borderLight'}`}
+              onClick={() => handleModeSelect('advanced')}
+            >
+              Advanced
+            </button>
+          </div>
+        </div>
+        <div className="grid md:grid-cols-2 gap-3 text-sm text-slate-600">
+          <div className={`p-4 rounded-2xl border ${!isAdvancedMode ? 'border-slate-900 bg-white/70' : 'border-borderLight bg-surfaceMuted/70'}`}>
+            <p className="font-semibold text-slate-900">Basic mode</p>
+            <p>Focuses on balances, quick actions, and reminders for a minimal everyday view.</p>
+          </div>
+          <div className={`p-4 rounded-2xl border ${isAdvancedMode ? 'border-slate-900 bg-white/70 dark:bg-surfaceMuted/70' : 'border-borderLight bg-surfaceMuted/70'}`}>
+            <p className="font-semibold text-slate-900">Advanced mode</p>
+            <p>Enables detailed charts, DIY customization, and every analytics panel in the app.</p>
+          </div>
         </div>
       </section>
 
