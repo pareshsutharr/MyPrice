@@ -64,7 +64,11 @@ const DashboardLayout = () => {
       <div className="hidden lg:flex fixed inset-y-0 left-0 w-64 border-r border-borderLight bg-white p-6 flex-col gap-8">
         <div>
           <Link to="/" className="inline-flex" aria-label="MoneyXP Dashboard">
-            <img src="/assets/moneyxp_logo.png" alt="MoneyXP" className="h-12 md:h-14 w-auto" />
+            <img
+              src="/assets/moneyxp_logo.png"
+              alt="MoneyXP"
+              className="h-12 md:h-14 w-auto logo-image"
+            />
           </Link>
         </div>
         <nav className="space-y-2">
@@ -97,7 +101,7 @@ const DashboardLayout = () => {
             <img
               src="/assets/moneyxp_logo.png"
               alt="MoneyXP"
-              className="h-7 w-auto md:hidden"
+              className="h-7 w-auto md:hidden logo-image"
             />
             <p className="text-xs text-slate-500 uppercase tracking-widest hidden md:block">Welcome back</p>
           </div>

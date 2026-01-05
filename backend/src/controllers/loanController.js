@@ -117,6 +117,19 @@ export const updateLoan = async (req, res) => {
   }
 }
 
+export const deleteLoan = async (req, res) => {
+  try {
+    const loan = await Loan.findOneAndDelete({ _id: req.params.id, user: req.user._id })
+    if (!loan) {
+      return res.status(404).json({ message: 'Loan not found' })
+    }
+    await LoanPayment.deleteMany({ loan: loan._id, user: req.user._id })
+    res.status(204).end()
+  } catch (error) {
+    res.status(400).json({ message: 'Failed to delete loan', error: error.message })
+  }
+}
+
 export const payLoanEmi = async (req, res) => {
   try {
     const loan = await Loan.findOne({ _id: req.params.id, user: req.user._id })

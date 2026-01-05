@@ -3,7 +3,7 @@ import { useDateFormatter } from '@hooks/useDateFormatter.js'
 import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
 import './LoanCard.css'
 
-const LoanCard = ({ loan, onPay, onUndo, undoing = false }) => {
+const LoanCard = ({ loan, onPay, onUndo, onDelete, undoing = false }) => {
   const formatDate = useDateFormatter()
   const formatCurrency = useCurrencyFormatter()
   const paymentDateValue =
@@ -69,10 +69,27 @@ const LoanCard = ({ loan, onPay, onUndo, undoing = false }) => {
           )}
         </div>
       )}
-      {loan.status === 'active' && onPay && (
-        <button type="button" className="loan-card__pay-btn btn-primary" onClick={() => onPay(loan)}>
-          Pay EMI
-        </button>
+      {(loan.status === 'active' || onDelete) && (
+        <div className="loan-card__actions">
+          {loan.status === 'active' && onPay && (
+            <button
+              type="button"
+              className="loan-card__pay-btn btn-primary"
+              onClick={() => onPay(loan)}
+            >
+              Pay EMI
+            </button>
+          )}
+          {onDelete && (
+            <button
+              type="button"
+              className="loan-card__delete-btn"
+              onClick={() => onDelete(loan)}
+            >
+              Delete Loan
+            </button>
+          )}
+        </div>
       )}
     </div>
   )

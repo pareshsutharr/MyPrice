@@ -3,9 +3,9 @@ import { CATEGORY_MAP, DEFAULT_CURRENCY } from '@shared/constants.js'
 
 const STORAGE_KEY = 'myprice-settings'
 const DEFAULT_DATE_FORMAT = 'DD/MM/YYYY'
-const DEFAULT_THEME = 'light'
+const DEFAULT_THEME = 'dark'
 
-const sanitiseTheme = (theme) => (theme === 'dark' ? 'dark' : DEFAULT_THEME)
+const sanitiseTheme = (theme) => (theme === 'light' ? 'light' : 'dark')
 
 const cloneCategories = (source = CATEGORY_MAP) => {
   const list = Array.isArray(source) && source.length ? source : CATEGORY_MAP
@@ -19,18 +19,23 @@ const buildSettings = (overrides = {}) => ({
   theme: sanitiseTheme(overrides.theme),
 })
 
+const detectPreferredTheme = () => {
+  if (typeof window === 'undefined') return DEFAULT_THEME
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
 const readStoredSettings = () => {
   if (typeof window === 'undefined') {
-    return buildSettings()
+    return { state: buildSettings(), hasStored: false }
   }
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return buildSettings()
+    if (!raw) return { state: buildSettings(), hasStored: false }
     const parsed = JSON.parse(raw)
-    return buildSettings(parsed)
+    return { state: buildSettings(parsed), hasStored: true }
   } catch (error) {
     console.warn('Unable to parse stored settings', error)
-    return buildSettings()
+    return { state: buildSettings(), hasStored: false }
   }
 }
 
@@ -54,7 +59,14 @@ const persist = (nextState) => {
 }
 
 export const SettingsProvider = ({ children }) => {
-  const [settings, setSettings] = useState(readStoredSettings)
+  const [settings, setSettings] = useState(() => {
+    const { state, hasStored } = readStoredSettings()
+    if (hasStored) return state
+    return {
+      ...state,
+      theme: detectPreferredTheme(),
+    }
+  })
 
   const applyPatch = useCallback((updater) => {
     setSettings((prev) => {
