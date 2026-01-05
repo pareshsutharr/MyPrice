@@ -7,12 +7,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        surface: '#ffffff',
-        surfaceMuted: '#f8fafc',
-        accentBlue: '#2563eb',
-        accentPurple: '#7c3aed',
-        accentDark: '#111827',
-        borderLight: '#e2e8f0',
+        surface: 'rgba(255,255,255,0.92)',
+        surfaceMuted: '#eef2ff',
+        accentBlue: '#0a84ff',
+        accentPurple: '#7c4dff',
+        accentDark: '#050b18',
+        borderLight: 'rgba(15,23,42,0.12)',
       },
       fontFamily: {
         display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],

@@ -43,6 +43,19 @@ const Loans = () => {
     }
   }
 
+  const handleDelete = async (loan) => {
+    const confirmDelete = window.confirm(
+      `Delete ${loan.lender} loan? This will remove its EMI history.`,
+    )
+    if (!confirmDelete) return
+    setPageError('')
+    try {
+      await actions.deleteLoan(loan._id)
+    } catch (error) {
+      setPageError(error?.response?.data?.message ?? 'Unable to delete this loan.')
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="grid lg:grid-cols-3 gap-6">
@@ -65,6 +78,7 @@ const Loans = () => {
                   loan={loan}
                   onPay={handlePayClick}
                   onUndo={handleUndo}
+                  onDelete={handleDelete}
                   undoing={undoingLoanId === loan._id}
                 />
               ))}

@@ -3,5 +3,7 @@
 }
 
 .expense-form__shell--editing {
-  @apply border-black bg-surfaceMuted shadow-glow;
+  @apply shadow-glow;
+  background-color: var(--app-muted-bg);
+  border-color: var(--app-secondary-border);
 }

@@ -39,6 +39,7 @@ export const api = {
   getLoans: () => safeRequest(() => client.get('/loans')),
   createLoan: (payload) => safeRequest(() => client.post('/loans', payload)),
   updateLoan: (id, payload) => safeRequest(() => client.put(`/loans/${id}`, payload)),
+  deleteLoan: (id) => safeRequest(() => client.delete(`/loans/${id}`)),
   payLoan: (id, payload = {}) => safeRequest(() => client.post(`/loans/${id}/pay`, payload)),
   undoLoanPayment: (id, paymentId) =>
     safeRequest(() => client.delete(`/loans/${id}/pay/${paymentId}`)),

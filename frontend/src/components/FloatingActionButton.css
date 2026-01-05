@@ -1,3 +1,5 @@
 .floating-action-button {
-  @apply lg:hidden fixed bottom-20 right-6 bg-accentDark text-white rounded-full shadow-glow px-5 py-3 font-semibold z-40;
+  @apply lg:hidden fixed bottom-20 right-6 text-white rounded-full px-5 py-3 font-semibold z-40;
+  background: linear-gradient(120deg, var(--app-fab-start), var(--app-fab-end));
+  box-shadow: 0 25px 45px rgba(10, 132, 255, 0.35);
 }

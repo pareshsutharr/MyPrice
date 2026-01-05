@@ -1,5 +1,11 @@
-﻿.stat-card {
+.stat-card {
   @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 flex flex-col gap-2;
+  backdrop-filter: blur(18px);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
 }
 
 .stat-card__header {
@@ -28,4 +34,23 @@
 
 .stat-card__description {
   @apply text-xs text-slate-500;
+}
+
+:root[data-theme='dark'] .stat-card {
+  background: rgba(3, 4, 8, 0.82);
+  border-color: rgba(92, 110, 140, 0.4);
+  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.75);
+}
+
+:root[data-theme='dark'] .stat-card__label,
+:root[data-theme='dark'] .stat-card__description {
+  color: rgba(226, 232, 255, 0.7);
+}
+
+:root[data-theme='dark'] .stat-card__value {
+  color: #f9fbff;
+}
+
+:root[data-theme='dark'] .stat-card__icon {
+  box-shadow: 0 20px 40px rgba(10, 132, 255, 0.45);
 }
