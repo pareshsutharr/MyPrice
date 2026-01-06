@@ -13,3 +13,17 @@
 .trend-area-chart__title {
   @apply text-xl font-semibold font-display text-slate-900;
 }
+
+:root[data-theme='dark'] .trend-area-chart {
+  background: linear-gradient(175deg, rgba(9, 12, 24, 0.95), rgba(6, 8, 16, 0.98));
+  border-color: rgba(126, 143, 201, 0.38);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.78);
+}
+
+:root[data-theme='dark'] .trend-area-chart__header p {
+  color: #a7b4df;
+}
+
+:root[data-theme='dark'] .trend-area-chart__title {
+  color: #f4f7ff;
+}

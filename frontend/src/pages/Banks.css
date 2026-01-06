@@ -62,3 +62,9 @@
 .bank-statement__row--head {
   @apply bg-surfaceMuted/70 text-xs font-semibold uppercase tracking-wide text-slate-500;
 }
+
+:root[data-theme='dark'] .bank-summary {
+  background: rgba(18, 23, 37, 0.95);
+  border-color: rgba(125, 145, 204, 0.4);
+  color: #f5f8ff;
+}

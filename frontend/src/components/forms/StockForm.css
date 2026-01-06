@@ -27,3 +27,21 @@
 .stock-form__actions {
   @apply flex gap-3;
 }
+
+:root[data-theme='dark'] .stock-form {
+  background: linear-gradient(180deg, rgba(10, 13, 24, 0.94), rgba(6, 8, 16, 0.98));
+  border-color: rgba(120, 140, 198, 0.4);
+  box-shadow: 0 24px 58px rgba(0, 0, 0, 0.8);
+}
+
+:root[data-theme='dark'] .stock-form__field label {
+  color: #b3c1e8;
+}
+
+:root[data-theme='dark'] .stock-form__field input,
+:root[data-theme='dark'] .stock-form__field select,
+:root[data-theme='dark'] .stock-form__field textarea {
+  background: rgba(14, 18, 32, 0.95);
+  border-color: rgba(121, 143, 204, 0.4);
+  color: #f5f8ff;
+}

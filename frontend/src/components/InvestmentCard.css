@@ -57,3 +57,45 @@
 .investment-card__notes {
   @apply text-xs text-slate-500;
 }
+
+:root[data-theme='dark'] .investment-card {
+  background: linear-gradient(150deg, rgba(9, 12, 24, 0.96), rgba(5, 8, 16, 0.98));
+  border-color: rgba(123, 140, 196, 0.38);
+  box-shadow: 0 26px 55px rgba(0, 0, 0, 0.8);
+}
+
+:root[data-theme='dark'] .investment-card__brokers,
+:root[data-theme='dark'] .investment-card__gain-percent,
+:root[data-theme='dark'] .investment-card__metrics,
+:root[data-theme='dark'] .investment-card__footer,
+:root[data-theme='dark'] .investment-card__notes {
+  color: #a7b5e1;
+}
+
+:root[data-theme='dark'] .investment-card__title {
+  color: #f4f8ff;
+}
+
+:root[data-theme='dark'] .investment-card__gain--positive {
+  color: #89ffc9;
+}
+
+:root[data-theme='dark'] .investment-card__gain--negative {
+  color: #ff9bad;
+}
+
+:root[data-theme='dark'] .investment-card__metrics span {
+  color: #f5f7ff;
+}
+
+:root[data-theme='dark'] .investment-card__action-btn {
+  background-color: rgba(26, 32, 56, 0.9);
+  border-color: rgba(129, 149, 210, 0.4);
+  color: #dbe6ff;
+}
+
+:root[data-theme='dark'] .investment-card__delete-btn {
+  border-color: rgba(255, 128, 128, 0.45);
+  color: #ff9ea8;
+  background-color: rgba(54, 10, 18, 0.35);
+}

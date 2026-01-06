@@ -13,3 +13,17 @@
 .expenses-bar-chart__header h3 {
   @apply text-xl font-display text-slate-900;
 }
+
+:root[data-theme='dark'] .expenses-bar-chart {
+  background: linear-gradient(190deg, rgba(9, 12, 24, 0.96), rgba(6, 8, 16, 0.98));
+  border-color: rgba(122, 140, 198, 0.38);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.78);
+}
+
+:root[data-theme='dark'] .expenses-bar-chart__header p {
+  color: #a7b5df;
+}
+
+:root[data-theme='dark'] .expenses-bar-chart__header h3 {
+  color: #f4f7ff;
+}

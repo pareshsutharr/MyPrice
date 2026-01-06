@@ -48,3 +48,23 @@
 .income-form__submit {
   @apply flex-1;
 }
+
+:root[data-theme='dark'] .income-form__date-row {
+  background: rgba(18, 22, 36, 0.95);
+  border-color: rgba(126, 148, 206, 0.4);
+}
+
+:root[data-theme='dark'] .income-form__date-input {
+  color: #f5f8ff;
+}
+
+:root[data-theme='dark'] .income-form__calendar-btn {
+  background: rgba(26, 33, 54, 0.92);
+  border-color: rgba(133, 155, 217, 0.42);
+  color: #d6e3ff;
+}
+
+:root[data-theme='dark'] .income-form__calendar-btn:hover {
+  background: rgba(35, 43, 67, 0.95);
+  color: #ffffff;
+}
