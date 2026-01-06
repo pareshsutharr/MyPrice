@@ -3,6 +3,7 @@ import { api } from '@services/api.js'
 
 const AuthContext = createContext()
 const STORAGE_KEY = 'myprice-auth'
+const enableDevLogin = import.meta.env.VITE_ENABLE_DEV_LOGIN === 'true'
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
@@ -35,6 +36,18 @@ export const AuthProvider = ({ children }) => {
     return response.user
   }
 
+  const loginWithDevAccount = async (payload) => {
+    if (!enableDevLogin) {
+      throw new Error('Developer login is disabled.')
+    }
+    const response = await api.devLogin(payload)
+    setToken(response.token)
+    setUser(response.user)
+    api.setAuthToken(response.token)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(response))
+    return response.user
+  }
+
   const logout = () => {
     setToken(null)
     setUser(null)
@@ -43,7 +56,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const value = useMemo(
-    () => ({ user, token, authLoading, loginWithGoogle, logout }),
+    () => ({ user, token, authLoading, loginWithGoogle, loginWithDevAccount, logout }),
     [user, token, authLoading],
   )
 

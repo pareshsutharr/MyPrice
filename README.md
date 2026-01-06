@@ -35,6 +35,7 @@ cp .env.example .env
 # PORT=4000
 # GOOGLE_CLIENT_ID=your-web-oauth-client-id
 # JWT_SECRET=some-long-random-string
+# ENABLE_DEV_LOGIN=true   # optional, enables /api/auth/dev-login for teammates
 
 # Seed historical data once (requires SEED_USER_EMAIL in .env)
 npm run seed
@@ -60,7 +61,7 @@ The stats route powers the dashboard with balance calculations, category distrib
 ```bash
 cd frontend
 npm install
-cp .env.example .env   # set VITE_API_URL and VITE_GOOGLE_CLIENT_ID
+cp .env.example .env   # set VITE_API_URL, VITE_GOOGLE_CLIENT_ID, VITE_ENABLE_DEV_LOGIN
 npm run dev            # starts Vite dev server
 npm run build          # creates the optimized PWA build (validated in this task)
 ```
@@ -103,6 +104,13 @@ The script is idempotent (skips collections that already contain documents).
 1. Deploy backend (e.g., Render, Railway, Vercel functions) with `NODE_ENV=production`.
 2. Configure `frontend/.env` `VITE_API_URL` to the deployed API URL, rebuild (`npm run build`), and host the `dist/` output on a static host.
 3. Ensure HTTPS for both tiers so that the PWA install prompt is available.
+
+## Google Sign-In Configuration
+
+- Create a Web OAuth client in Google Cloud Console and add every dev origin you use (e.g. `http://localhost:5173`, `https://mypricefrontend.onrender.com`) under **Authorized JavaScript origins**. If the current origin is missing you will see the `The given origin is not allowed for the given client ID` 403 error coming from the Google button iframe.
+- Copy the generated client ID to both `backend/.env` (`GOOGLE_CLIENT_ID`) and `frontend/.env` (`VITE_GOOGLE_CLIENT_ID`). The backend uses it to verify ID tokens, the frontend uses it to render the Google button.
+- Chrome’s FedCM / one-tap flows require third-party sign-in permission. If a tester blocks it they will see `FedCM was disabled...`. Either re-enable the permission from the site settings or use the standard button-only login (no one-tap) provided in this repo.
+- When onboarding teammates who do not have a Google OAuth client, set `ENABLE_DEV_LOGIN=true` (backend) and `VITE_ENABLE_DEV_LOGIN=true` (frontend). This exposes `/api/auth/dev-login`, a local-only entry point that accepts an email and issues a JWT so the rest of the app can be exercised without Google. Never enable it in production.
 
 ## Verification
 

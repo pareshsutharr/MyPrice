@@ -25,6 +25,7 @@ export const api = {
     }
   },
   loginWithGoogle: (idToken) => client.post('/auth/google', { idToken }).then((res) => res.data),
+  devLogin: (payload) => client.post('/auth/dev-login', payload).then((res) => res.data),
   getStats: () => safeRequest(() => client.get('/stats')),
   getExpenses: (params = {}) => safeRequest(() => client.get('/expenses', { params })),
   createExpense: (payload) => safeRequest(() => client.post('/expenses', payload)),
