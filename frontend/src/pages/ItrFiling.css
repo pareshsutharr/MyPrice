@@ -1,0 +1,35 @@
+.itr-reminder {
+  @apply flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-borderLight bg-surfaceMuted px-4 py-3 text-sm text-slate-600;
+}
+
+.itr-reminder > div {
+  @apply flex items-center gap-2;
+}
+
+.itr-reminder__badge {
+  @apply inline-flex items-center gap-2 rounded-full border border-borderLight px-3 py-1.5 text-xs text-slate-500;
+}
+
+.itr-reminder__badge--active {
+  @apply border-amber-400 text-amber-600 bg-amber-100/30;
+}
+
+.itr-report__header {
+  @apply flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-borderLight px-4 py-3;
+}
+
+.itr-report__grid {
+  @apply grid gap-3 sm:grid-cols-2;
+}
+
+.itr-report__stat {
+  @apply rounded-2xl border border-borderLight px-4 py-3 bg-surfaceMuted;
+}
+
+.itr-report__notes {
+  @apply rounded-2xl border border-borderLight px-4 py-3 text-sm text-slate-600;
+}
+
+.itr-report__notes ul {
+  @apply list-disc pl-4 space-y-1;
+}

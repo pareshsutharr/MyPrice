@@ -15,6 +15,9 @@ import {
   EllipsisVertical,
   SlidersHorizontal,
   Palette,
+  UploadCloud,
+  FileText,
+  Building2,
 } from 'lucide-react'
 import { useFinance } from '@context/FinanceContext.jsx'
 import { useAuth } from '@context/AuthContext.jsx'
@@ -29,9 +32,12 @@ const navItems = [
   { to: '/mutual-funds', label: 'Mutual Funds', icon: LineChart },
   { to: '/stocks', label: 'Stocks', icon: CandlestickChart },
   { to: '/net-worth', label: 'Net Worth', icon: Coins },
+  { to: '/banks', label: 'Banks', icon: Building2 },
   { to: '/history', label: 'History', icon: HistoryIcon },
   { to: '/reports', label: 'Reports', icon: BarChart3 },
+  { to: '/import', label: 'Import Data', icon: UploadCloud },
   { to: '/settings', label: 'Settings', icon: SettingsIcon },
+  { to: '/itr-filing', label: 'ITR Filing', icon: FileText },
 ]
 
 const primaryMobileRoutes = ['/', '/mutual-funds', '/net-worth']
@@ -103,7 +109,7 @@ const DashboardLayout = () => {
               alt="MoneyXP"
               className="h-7 w-auto md:hidden "
             />
-            <p className="text-xs text-slate-500 uppercase tracking-widest hidden md:block">Welcome back</p>
+            <p className="text-xs text-slate-500 uppercase tracking-widest hidden lg:block">Manage Your Finance</p>
           </div>
           <div className="flex items-center gap-4">
             <button type="button" className="btn-secondary hidden md:block" onClick={refresh}>
@@ -233,3 +239,4 @@ const DashboardLayout = () => {
 }
 
 export default DashboardLayout
+

@@ -13,7 +13,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icons/icon-192.png', 'icons/icon-512.png'],
+      includeAssets: ['assets/moneyxp_round_logo.png', 'assets/moneyxp_round_logo.png'],
       manifest: {
         name: 'MoneyXP',
         short_name: 'MoneyXP',

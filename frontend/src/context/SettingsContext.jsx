@@ -4,8 +4,10 @@ import { CATEGORY_MAP, DEFAULT_CURRENCY } from '@shared/constants.js'
 const STORAGE_KEY = 'myprice-settings'
 const DEFAULT_DATE_FORMAT = 'DD/MM/YYYY'
 const DEFAULT_THEME = 'dark'
+const DEFAULT_MODE = 'advanced'
 
 const sanitiseTheme = (theme) => (theme === 'light' ? 'light' : 'dark')
+const sanitiseMode = (mode) => (mode === 'basic' ? 'basic' : 'advanced')
 
 const cloneCategories = (source = CATEGORY_MAP) => {
   const list = Array.isArray(source) && source.length ? source : CATEGORY_MAP
@@ -17,6 +19,7 @@ const buildSettings = (overrides = {}) => ({
   categories: cloneCategories(overrides.categories),
   dateFormat: overrides.dateFormat ?? DEFAULT_DATE_FORMAT,
   theme: sanitiseTheme(overrides.theme),
+  mode: sanitiseMode(overrides.mode),
 })
 
 const detectPreferredTheme = () => {
@@ -47,6 +50,7 @@ const SettingsContext = createContext({
   removeCategory: () => {},
   setDateFormat: () => {},
   setTheme: () => {},
+  setMode: () => {},
 })
 
 const persist = (nextState) => {
@@ -120,11 +124,19 @@ export const SettingsProvider = ({ children }) => {
     }))
   }, [applyPatch])
 
+  const setMode = useCallback((mode) => {
+    applyPatch((prev) => ({
+      ...prev,
+      mode: sanitiseMode(mode),
+    }))
+  }, [applyPatch])
+
   useEffect(() => {
     if (typeof document === 'undefined') return
     const theme = settings.theme ?? DEFAULT_THEME
     document.documentElement.dataset.theme = theme
-  }, [settings.theme])
+    document.documentElement.dataset.mode = settings.mode ?? DEFAULT_MODE
+  }, [settings.mode, settings.theme])
 
   const value = useMemo(
     () => ({
@@ -132,14 +144,16 @@ export const SettingsProvider = ({ children }) => {
       categories: settings.categories,
       dateFormat: settings.dateFormat,
       theme: settings.theme,
+      mode: settings.mode,
       setCurrency,
       setCategories,
       addCategory,
       removeCategory,
       setDateFormat,
       setTheme,
+      setMode,
     }),
-    [settings, setCurrency, setCategories, addCategory, removeCategory, setDateFormat, setTheme],
+    [settings, setCurrency, setCategories, addCategory, removeCategory, setDateFormat, setTheme, setMode],
   )
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>

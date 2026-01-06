@@ -11,6 +11,9 @@ import Reports from '@pages/Reports.jsx'
 import Settings from '@pages/Settings.jsx'
 import History from '@pages/History.jsx'
 import Login from '@pages/Login.jsx'
+import ImportData from '@pages/ImportData.jsx'
+import ItrFiling from '@pages/ItrFiling.jsx'
+import Banks from '@pages/Banks.jsx'
 import { useAuth } from '@context/AuthContext.jsx'
 
 const App = () => {
@@ -41,6 +44,9 @@ const App = () => {
         <Route path="/investments" element={<MutualFunds />} />
         <Route path="/history" element={<History />} />
         <Route path="/reports" element={<Reports />} />
+        <Route path="/import" element={<ImportData />} />
+        <Route path="/itr-filing" element={<ItrFiling />} />
+        <Route path="/banks" element={<Banks />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
     </Routes>

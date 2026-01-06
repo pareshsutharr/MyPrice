@@ -1,0 +1,64 @@
+.bank-summary {
+  @apply grid gap-3 md:grid-cols-3 rounded-2xl border border-borderLight bg-surfaceMuted px-4 py-3;
+}
+
+.bank-form {
+  @apply space-y-3;
+}
+
+.bank-form input,
+.bank-form select {
+  @apply w-full rounded-2xl border border-borderLight bg-surfaceMuted px-4 py-2 text-sm;
+}
+
+.bank-cards {
+  @apply space-y-3;
+}
+
+.bank-card {
+  @apply rounded-3xl border border-borderLight bg-surfaceMuted/60 p-4 space-y-3;
+}
+
+.bank-card__meta {
+  @apply flex items-center justify-between text-sm text-slate-500;
+}
+
+.bank-card__meta span {
+  @apply inline-flex items-center rounded-full border border-borderLight px-3 py-1 text-xs;
+}
+
+.bank-card__actions {
+  @apply flex flex-wrap items-center gap-2;
+}
+
+.bank-card__primary {
+  @apply inline-flex items-center gap-1 rounded-full border border-borderLight px-3 py-1 text-xs text-slate-600 hover:border-slate-900 hover:text-slate-900;
+}
+
+.bank-card__primary--active {
+  @apply border-amber-400 text-amber-600 bg-amber-100/40;
+}
+
+.bank-card__remove {
+  @apply inline-flex items-center gap-1 rounded-full border border-borderLight px-3 py-1 text-xs text-slate-500 hover:border-rose-400 hover:text-rose-500;
+}
+
+.bank-card__statement {
+  @apply inline-flex items-center gap-1 rounded-full border border-borderLight px-3 py-1 text-xs text-slate-500 hover:border-slate-900 hover:text-slate-900;
+}
+
+.bank-card__statement--active {
+  @apply border-slate-900 text-slate-900;
+}
+
+.bank-statement {
+  @apply rounded-2xl border border-borderLight divide-y divide-borderLight overflow-hidden;
+}
+
+.bank-statement__row {
+  @apply grid grid-cols-4 gap-2 px-3 py-2 text-sm text-slate-600;
+}
+
+.bank-statement__row--head {
+  @apply bg-surfaceMuted/70 text-xs font-semibold uppercase tracking-wide text-slate-500;
+}
