@@ -9,10 +9,28 @@ const DEFAULT_MODE = 'advanced'
 const sanitiseTheme = (theme) => (theme === 'light' ? 'light' : 'dark')
 const sanitiseMode = (mode) => (mode === 'basic' ? 'basic' : 'advanced')
 
+const DEFAULT_INTEGRATIONS = {
+  digilocker: {
+    clientId: '',
+    clientSecret: '',
+    redirectUri: '',
+    environment: 'sandbox',
+  },
+}
+
 const cloneCategories = (source = CATEGORY_MAP) => {
   const list = Array.isArray(source) && source.length ? source : CATEGORY_MAP
   return list.map((category) => ({ ...category }))
 }
+
+const cloneIntegrations = (source = DEFAULT_INTEGRATIONS) => ({
+  digilocker: {
+    clientId: source?.digilocker?.clientId ?? '',
+    clientSecret: source?.digilocker?.clientSecret ?? '',
+    redirectUri: source?.digilocker?.redirectUri ?? '',
+    environment: source?.digilocker?.environment === 'production' ? 'production' : 'sandbox',
+  },
+})
 
 const buildSettings = (overrides = {}) => ({
   currency: overrides.currency ?? DEFAULT_CURRENCY,
@@ -20,6 +38,7 @@ const buildSettings = (overrides = {}) => ({
   dateFormat: overrides.dateFormat ?? DEFAULT_DATE_FORMAT,
   theme: sanitiseTheme(overrides.theme),
   mode: sanitiseMode(overrides.mode),
+  integrations: cloneIntegrations(overrides.integrations),
 })
 
 const detectPreferredTheme = () => {
@@ -51,6 +70,7 @@ const SettingsContext = createContext({
   setDateFormat: () => {},
   setTheme: () => {},
   setMode: () => {},
+  updateDigilockerConfig: () => {},
 })
 
 const persist = (nextState) => {
@@ -131,6 +151,19 @@ export const SettingsProvider = ({ children }) => {
     }))
   }, [applyPatch])
 
+  const updateDigilockerConfig = useCallback((patch = {}) => {
+    applyPatch((prev) => ({
+      ...prev,
+      integrations: {
+        ...prev.integrations,
+        digilocker: {
+          ...prev.integrations?.digilocker,
+          ...patch,
+        },
+      },
+    }))
+  }, [applyPatch])
+
   useEffect(() => {
     if (typeof document === 'undefined') return
     const theme = settings.theme ?? DEFAULT_THEME
@@ -152,8 +185,20 @@ export const SettingsProvider = ({ children }) => {
       setDateFormat,
       setTheme,
       setMode,
+      integrations: settings.integrations,
+      updateDigilockerConfig,
     }),
-    [settings, setCurrency, setCategories, addCategory, removeCategory, setDateFormat, setTheme, setMode],
+    [
+      settings,
+      setCurrency,
+      setCategories,
+      addCategory,
+      removeCategory,
+      setDateFormat,
+      setTheme,
+      setMode,
+      updateDigilockerConfig,
+    ],
   )
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>

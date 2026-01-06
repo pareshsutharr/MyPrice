@@ -17,3 +17,22 @@
 .reminder-card__amount {
   @apply text-accentBlue font-semibold;
 }
+
+:root[data-theme='dark'] .reminder-card {
+  background: linear-gradient(185deg, rgba(9, 12, 22, 0.94), rgba(6, 8, 16, 0.98));
+  border-color: rgba(120, 140, 198, 0.38);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.78);
+}
+
+:root[data-theme='dark'] .reminder-card__label,
+:root[data-theme='dark'] .reminder-card__meta {
+  color: #a6b4de;
+}
+
+:root[data-theme='dark'] .reminder-card__title {
+  color: #f4f7ff;
+}
+
+:root[data-theme='dark'] .reminder-card__amount {
+  color: #7cc6ff;
+}

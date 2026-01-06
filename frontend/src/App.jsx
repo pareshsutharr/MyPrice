@@ -14,6 +14,7 @@ import Login from '@pages/Login.jsx'
 import ImportData from '@pages/ImportData.jsx'
 import ItrFiling from '@pages/ItrFiling.jsx'
 import Banks from '@pages/Banks.jsx'
+import Documents from '@pages/Documents.jsx'
 import { useAuth } from '@context/AuthContext.jsx'
 
 const App = () => {
@@ -47,6 +48,7 @@ const App = () => {
         <Route path="/import" element={<ImportData />} />
         <Route path="/itr-filing" element={<ItrFiling />} />
         <Route path="/banks" element={<Banks />} />
+        <Route path="/documents" element={<Documents />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
     </Routes>

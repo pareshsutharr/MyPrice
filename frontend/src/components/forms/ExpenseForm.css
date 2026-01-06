@@ -55,17 +55,36 @@
   @apply w-full;
 }
 
+:root[data-theme='dark'] .expense-form {
+  background: linear-gradient(180deg, rgba(11, 15, 25, 0.85), rgba(9, 12, 20, 0.95));
+  border-color: rgba(123, 146, 201, 0.35);
+  box-shadow: 0 20px 60px rgba(1, 4, 12, 0.9);
+}
+
 :root[data-theme='dark'] .expense-form__field label {
-  color: rgba(226, 232, 255, 0.75);
+  color: #b8c7ef;
+}
+
+:root[data-theme='dark'] .expense-form__field input,
+:root[data-theme='dark'] .expense-form__field select,
+:root[data-theme='dark'] .expense-form__field textarea {
+  background: rgba(12, 16, 28, 0.95);
+  border-color: rgba(116, 138, 194, 0.4);
+  color: #f6f9ff;
 }
 
 :root[data-theme='dark'] .expense-form__date-row {
-  background-color: rgba(5, 8, 15, 0.9);
-  border-color: rgba(94, 112, 146, 0.45);
+  background: rgba(15, 20, 33, 0.95);
+  border-color: rgba(108, 134, 198, 0.45);
 }
 
 :root[data-theme='dark'] .expense-form__calendar-btn {
-  color: rgba(226, 232, 255, 0.75);
-  background-color: rgba(6, 9, 16, 0.9);
-  border-color: rgba(90, 110, 150, 0.45);
+  background: rgba(21, 28, 46, 0.95);
+  border-color: rgba(117, 144, 214, 0.4);
+  color: #d3e1ff;
+}
+
+:root[data-theme='dark'] .expense-form__calendar-btn:hover {
+  background: rgba(33, 43, 67, 0.9);
+  color: #ffffff;
 }

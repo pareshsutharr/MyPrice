@@ -18,6 +18,7 @@ import {
   UploadCloud,
   FileText,
   Building2,
+  FolderLock,
 } from 'lucide-react'
 import { useFinance } from '@context/FinanceContext.jsx'
 import { useAuth } from '@context/AuthContext.jsx'
@@ -33,6 +34,7 @@ const navItems = [
   { to: '/stocks', label: 'Stocks', icon: CandlestickChart },
   { to: '/net-worth', label: 'Net Worth', icon: Coins },
   { to: '/banks', label: 'Banks', icon: Building2 },
+  { to: '/documents', label: 'Documents', icon: FolderLock },
   { to: '/history', label: 'History', icon: HistoryIcon },
   { to: '/reports', label: 'Reports', icon: BarChart3 },
   { to: '/import', label: 'Import Data', icon: UploadCloud },
@@ -239,4 +241,3 @@ const DashboardLayout = () => {
 }
 
 export default DashboardLayout
-

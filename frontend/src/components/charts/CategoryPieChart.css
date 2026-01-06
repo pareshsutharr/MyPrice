@@ -13,3 +13,17 @@
 .category-pie-chart__header h3 {
   @apply text-xl font-display text-slate-900;
 }
+
+:root[data-theme='dark'] .category-pie-chart {
+  background: linear-gradient(170deg, rgba(9, 12, 24, 0.96), rgba(6, 8, 16, 0.98));
+  border-color: rgba(124, 142, 201, 0.38);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.78);
+}
+
+:root[data-theme='dark'] .category-pie-chart__header p {
+  color: #a5b4e0;
+}
+
+:root[data-theme='dark'] .category-pie-chart__header h3 {
+  color: #f4f7ff;
+}

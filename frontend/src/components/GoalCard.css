@@ -41,3 +41,33 @@
 .goal-card__delete {
   @apply text-xs text-slate-500 hover:text-slate-900;
 }
+
+:root[data-theme='dark'] .goal-card {
+  background: linear-gradient(170deg, rgba(9, 12, 24, 0.94), rgba(6, 8, 16, 0.98));
+  border-color: rgba(123, 141, 200, 0.4);
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.78);
+}
+
+:root[data-theme='dark'] .goal-card__label,
+:root[data-theme='dark'] .goal-card__percentage,
+:root[data-theme='dark'] .goal-card__meta {
+  color: #a9b8e1;
+}
+
+:root[data-theme='dark'] .goal-card__title {
+  color: #f4f7ff;
+}
+
+:root[data-theme='dark'] .goal-card__progress {
+  background: rgba(20, 24, 38, 0.9);
+}
+
+:root[data-theme='dark'] .goal-card__actions input {
+  background: rgba(18, 21, 34, 0.95);
+  border-color: rgba(125, 145, 205, 0.4);
+  color: #f4f7ff;
+}
+
+:root[data-theme='dark'] .goal-card__delete {
+  color: #d1dcff;
+}

@@ -65,22 +65,43 @@
   @apply w-full;
 }
 
+:root[data-theme='dark'] .statement-uploader {
+  background: linear-gradient(170deg, rgba(9, 12, 24, 0.96), rgba(7, 9, 18, 0.98));
+  border-color: rgba(122, 142, 201, 0.38);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.78);
+}
+
 :root[data-theme='dark'] .statement-uploader__intro p,
 :root[data-theme='dark'] .statement-uploader__field label {
-  color: rgba(226, 232, 255, 0.75);
+  color: #aab8e2;
+}
+
+:root[data-theme='dark'] .statement-uploader__field input,
+:root[data-theme='dark'] .statement-uploader__field select {
+  background: rgba(16, 20, 34, 0.96);
+  border-color: rgba(125, 146, 205, 0.4);
+  color: #f6f8ff;
 }
 
 :root[data-theme='dark'] .statement-uploader__dropzone {
-  background-color: rgba(6, 9, 16, 0.92);
-  border-color: rgba(92, 112, 150, 0.5);
-  color: rgba(226, 232, 255, 0.7);
+  border-color: rgba(130, 150, 210, 0.45);
+  background: rgba(12, 16, 28, 0.92);
+  color: #cdd8ff;
+}
+
+:root[data-theme='dark'] .statement-uploader__file-name {
+  color: #f5f8ff;
 }
 
 :root[data-theme='dark'] .statement-uploader__progress {
-  background-color: rgba(255, 255, 255, 0.08);
+  background: rgba(28, 34, 56, 0.9);
 }
 
 :root[data-theme='dark'] .statement-uploader__skipped {
-  background-color: rgba(255, 99, 132, 0.12);
-  color: #fecdd3;
+  background: rgba(80, 7, 25, 0.45);
+  color: #ff9ab1;
+}
+
+:root[data-theme='dark'] .statement-uploader__status {
+  color: #6cf6c5;
 }
