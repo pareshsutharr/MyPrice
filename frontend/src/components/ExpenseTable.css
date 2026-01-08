@@ -1,62 +1,76 @@
+/* Component: ExpenseTable */
 .expense-table {
-  @apply rounded-2xl shadow-glow overflow-auto;
+  border-radius: 1rem;
+  box-shadow: 0 10px 35px rgba(15, 23, 42, 0.12);
+  overflow: auto;
   background-color: var(--app-card-bg);
   border: 1px solid var(--app-card-border);
   backdrop-filter: blur(18px);
 }
 
 .expense-table table {
-  @apply w-full text-left;
+  width: 100%;
+  text-align: left;
 }
 
 .expense-table thead {
-  @apply text-sm uppercase;
+  font-size: 0.875rem;
+  text-transform: uppercase;
   color: rgba(71, 85, 105, 0.85);
 }
 
 .expense-table th {
-  @apply px-4 py-3;
+  padding: 0.75rem 1rem;
 }
 
 .expense-table__th-actions {
-  @apply text-right;
+  text-align: right;
 }
 
 .expense-table tbody tr {
-  @apply border-t text-sm;
+  border-top: 1px solid var(--app-card-border);
+  font-size: 0.875rem;
   border-color: var(--app-card-border);
 }
 
 .expense-table td {
-  @apply px-4 py-3;
+  padding: 0.75rem 1rem;
 }
 
 .expense-table__category {
-  @apply capitalize;
+  text-transform: capitalize;
 }
 
 .expense-table__amount {
-  @apply font-semibold;
+  font-weight: 600;
   color: var(--app-body-text);
 }
 
 .expense-table__actions {
-  @apply text-right space-x-2;
+  text-align: right;
+}
+
+.expense-table__actions > * + * {
+  margin-left: 0.5rem;
 }
 
 .expense-table__action-btn {
-  @apply !py-1 !px-3 text-xs;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
 }
 
 .expense-table__delete-btn {
-  @apply !py-1 !px-3 text-xs;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
   border: 1px solid rgba(248, 113, 113, 0.4);
   color: #f87171;
   background-color: transparent;
 }
 
 .expense-table__empty {
-  @apply text-center py-8 text-sm;
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.875rem;
   color: rgba(148, 163, 184, 0.9);
 }
 

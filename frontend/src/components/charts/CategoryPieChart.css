@@ -1,27 +1,40 @@
-﻿.category-pie-chart {
-  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 h-72 min-w-0;
+/* Component: CategoryPieChart */
+.category-pie-chart {
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 0 10px 35px rgba(15, 23, 42, 0.12);
+  padding: 1rem;
+  height: 18rem;
+  min-width: 0;
 }
 
 .category-pie-chart__header {
-  @apply flex items-center justify-between mb-4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .category-pie-chart__header p {
-  @apply text-sm text-slate-500;
+  font-size: 0.875rem;
+  color: #64748b;
 }
 
 .category-pie-chart__header h3 {
-  @apply text-xl font-display text-slate-900;
+  font-size: 1.25rem;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  color: #0f172a;
 }
 
 :root[data-theme='dark'] .category-pie-chart {
-  background: linear-gradient(170deg, rgba(9, 12, 24, 0.96), rgba(6, 8, 16, 0.98));
-  border-color: rgba(124, 142, 201, 0.38);
+  background: linear-gradient(180deg, rgba(9, 12, 24, 0.96), rgba(6, 8, 16, 0.98));
+  border-color: rgba(122, 140, 198, 0.38);
   box-shadow: 0 22px 55px rgba(0, 0, 0, 0.78);
 }
 
 :root[data-theme='dark'] .category-pie-chart__header p {
-  color: #a5b4e0;
+  color: #a7b5df;
 }
 
 :root[data-theme='dark'] .category-pie-chart__header h3 {

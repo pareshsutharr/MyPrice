@@ -1,33 +1,52 @@
+/* Component: IncomeForm */
 .income-form {
-  @apply space-y-4 text-left;
+  text-align: left;
+}
+
+.income-form > * + * {
+  margin-top: 1rem;
 }
 
 .income-form__field label {
-  @apply text-sm;
+  font-size: 0.875rem;
   color: rgba(71, 85, 105, 0.85);
 }
 
 .income-form__field select {
-  @apply capitalize;
+  text-transform: capitalize;
 }
 
 .income-form__error {
-  @apply text-sm text-rose-500;
+  font-size: 0.875rem;
+  color: #f43f5e;
 }
 
 .income-form__date-row {
-  @apply flex items-center gap-2 rounded-xl px-3 py-2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
   background-color: var(--app-muted-bg);
   border: 1px solid var(--app-card-border);
 }
 
 .income-form__date-input {
-  @apply flex-1 bg-transparent border-none focus:outline-none;
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
   color: var(--app-body-text);
 }
 
 .income-form__calendar-btn {
-  @apply h-9 w-9 min-w-[2.25rem] flex items-center justify-center rounded-lg;
+  height: 2.25rem;
+  width: 2.25rem;
+  min-width: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
   color: rgba(71, 85, 105, 0.65);
   background-color: rgba(255, 255, 255, 0.8);
   border: 1px solid var(--app-card-border);
@@ -39,16 +58,28 @@
 }
 
 .income-form__calendar-input {
-  @apply absolute opacity-0 pointer-events-none w-0 h-0;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
 }
 
 .income-form__actions {
-  @apply flex flex-col gap-3 sm:flex-row;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .income-form__actions {
+    flex-direction: row;
+  }
 }
 
 .income-form__cancel,
 .income-form__submit {
-  @apply flex-1;
+  flex: 1;
 }
 
 :root[data-theme='dark'] .income-form__date-row {

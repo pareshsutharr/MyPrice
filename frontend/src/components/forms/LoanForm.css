@@ -1,21 +1,29 @@
+/* Component: LoanForm */
 .loan-form {
-  @apply rounded-2xl shadow-glow p-4 space-y-4;
+  border-radius: 1rem;
+  box-shadow: 0 10px 35px rgba(15, 23, 42, 0.12);
+  padding: 1rem;
   background-color: var(--app-card-bg);
   border: 1px solid var(--app-card-border);
   backdrop-filter: blur(18px);
 }
 
+.loan-form > * + * {
+  margin-top: 1rem;
+}
+
 .loan-form__field label {
-  @apply text-sm;
+  font-size: 0.875rem;
   color: rgba(71, 85, 105, 0.85);
 }
 
 .loan-form__error {
-  @apply text-sm text-rose-500;
+  font-size: 0.875rem;
+  color: #f43f5e;
 }
 
 .loan-form__submit {
-  @apply w-full;
+  width: 100%;
 }
 
 :root[data-theme='dark'] .loan-form {

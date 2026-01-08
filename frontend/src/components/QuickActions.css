@@ -1,8 +1,11 @@
+/* Component: QuickActions */
 .quick-actions {
-  @apply grid grid-cols-2 gap-3;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
 }
 
 .quick-actions__link,
 .quick-actions__button {
-  @apply text-center;
+  text-align: center;
 }

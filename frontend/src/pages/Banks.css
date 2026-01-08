@@ -1,66 +1,168 @@
+/* Page: Banks */
 .bank-summary {
-  @apply grid gap-3 md:grid-cols-3 rounded-2xl border border-borderLight bg-surfaceMuted px-4 py-3;
+  display: grid;
+  gap: 0.75rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background-color: #eef2ff;
+  padding: 0.75rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .bank-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .bank-form {
-  @apply space-y-3;
+  display: block;
+}
+
+.bank-form > * + * {
+  margin-top: 0.75rem;
 }
 
 .bank-form input,
 .bank-form select {
-  @apply w-full rounded-2xl border border-borderLight bg-surfaceMuted px-4 py-2 text-sm;
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background-color: #eef2ff;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
 }
 
 .bank-cards {
-  @apply space-y-3;
+  display: block;
+}
+
+.bank-cards > * + * {
+  margin-top: 0.75rem;
 }
 
 .bank-card {
-  @apply rounded-3xl border border-borderLight bg-surfaceMuted/60 p-4 space-y-3;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background-color: rgba(238, 242, 255, 0.6);
+  padding: 1rem;
+}
+
+.bank-card > * + * {
+  margin-top: 0.75rem;
 }
 
 .bank-card__meta {
-  @apply flex items-center justify-between text-sm text-slate-500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #64748b;
 }
 
 .bank-card__meta span {
-  @apply inline-flex items-center rounded-full border border-borderLight px-3 py-1 text-xs;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
 }
 
 .bank-card__actions {
-  @apply flex flex-wrap items-center gap-2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .bank-card__primary {
-  @apply inline-flex items-center gap-1 rounded-full border border-borderLight px-3 py-1 text-xs text-slate-600 hover:border-slate-900 hover:text-slate-900;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  color: #475569;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.bank-card__primary:hover {
+  border-color: #0f172a;
+  color: #0f172a;
 }
 
 .bank-card__primary--active {
-  @apply border-amber-400 text-amber-600 bg-amber-100/40;
+  border-color: #fbbf24;
+  color: #d97706;
+  background-color: rgba(254, 243, 199, 0.4);
 }
 
 .bank-card__remove {
-  @apply inline-flex items-center gap-1 rounded-full border border-borderLight px-3 py-1 text-xs text-slate-500 hover:border-rose-400 hover:text-rose-500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  color: #64748b;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.bank-card__remove:hover {
+  border-color: #f472b6;
+  color: #f43f5e;
 }
 
 .bank-card__statement {
-  @apply inline-flex items-center gap-1 rounded-full border border-borderLight px-3 py-1 text-xs text-slate-500 hover:border-slate-900 hover:text-slate-900;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  color: #64748b;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.bank-card__statement:hover {
+  border-color: #0f172a;
+  color: #0f172a;
 }
 
 .bank-card__statement--active {
-  @apply border-slate-900 text-slate-900;
+  border-color: #0f172a;
+  color: #0f172a;
 }
 
 .bank-statement {
-  @apply rounded-2xl border border-borderLight divide-y divide-borderLight overflow-hidden;
+  border-radius: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  overflow: hidden;
+}
+
+.bank-statement > * + * {
+  border-top: 1px solid rgba(15, 23, 42, 0.12);
 }
 
 .bank-statement__row {
-  @apply grid grid-cols-4 gap-2 px-3 py-2 text-sm text-slate-600;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: #475569;
 }
 
 .bank-statement__row--head {
-  @apply bg-surfaceMuted/70 text-xs font-semibold uppercase tracking-wide text-slate-500;
+  background-color: rgba(238, 242, 255, 0.7);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
 }
 
 :root[data-theme='dark'] .bank-summary {

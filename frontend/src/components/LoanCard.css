@@ -1,35 +1,47 @@
+/* Component: LoanCard */
 .loan-card {
-  @apply rounded-2xl shadow-glow p-4 space-y-3;
+  border-radius: 1rem;
+  box-shadow: 0 10px 35px rgba(15, 23, 42, 0.12);
+  padding: 1rem;
   background-color: var(--app-card-bg);
   border: 1px solid var(--app-card-border);
   backdrop-filter: blur(18px);
 }
 
+.loan-card > * + * {
+  margin-top: 0.75rem;
+}
+
 .loan-card__header {
-  @apply flex items-center justify-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .loan-card__lender {
-  @apply text-sm;
+  font-size: 0.875rem;
   color: rgba(71, 85, 105, 0.8);
 }
 
 .loan-card__principal {
-  @apply text-xl font-display;
+  font-size: 1.25rem;
+  font-family: "Space Grotesk", system-ui, sans-serif;
   color: var(--app-body-text);
 }
 
 .loan-card__status {
-  @apply px-3 py-1 rounded-full text-xs;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
 }
 
 .loan-card__status--active {
-  @apply text-emerald-700;
+  color: #047857;
   background: rgba(16, 185, 129, 0.18);
 }
 
 .loan-card__status--completed {
-  @apply text-purple-700;
+  color: #6d28d9;
   background: rgba(167, 139, 250, 0.2);
 }
 
@@ -37,40 +49,71 @@
 .loan-card__interest,
 .loan-card__remaining,
 .loan-card__other-charges {
-  @apply text-sm;
+  font-size: 0.875rem;
   color: rgba(71, 85, 105, 0.8);
 }
 
 .loan-card__progress-bar {
-  @apply w-full rounded-full h-2;
+  width: 100%;
+  border-radius: 9999px;
+  height: 0.5rem;
   background-color: rgba(148, 163, 184, 0.3);
 }
 
 .loan-card__progress-bar div {
-  @apply h-2 rounded-full;
+  height: 0.5rem;
+  border-radius: 9999px;
   background: linear-gradient(120deg, var(--app-fab-start), var(--app-fab-end));
 }
 
 .loan-card__payment-meta {
-  @apply rounded-2xl p-3 space-y-1 text-sm;
+  border-radius: 1rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
   background-color: var(--app-muted-bg);
   color: rgba(71, 85, 105, 0.85);
 }
 
+.loan-card__payment-meta > * + * {
+  margin-top: 0.25rem;
+}
+
 .loan-card__undo-btn {
-  @apply text-xs text-rose-500 hover:underline disabled:opacity-50;
+  font-size: 0.75rem;
+  color: #f43f5e;
+  transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.loan-card__undo-btn:hover {
+  text-decoration: underline;
+}
+
+.loan-card__undo-btn:disabled {
+  opacity: 0.5;
 }
 
 .loan-card__actions {
-  @apply flex flex-col gap-2 sm:flex-row;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .loan-card__actions {
+    flex-direction: row;
+  }
 }
 
 .loan-card__pay-btn {
-  @apply w-full;
+  width: 100%;
 }
 
 .loan-card__delete-btn {
-  @apply w-full text-sm rounded-xl py-2 transition;
+  width: 100%;
+  font-size: 0.875rem;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
   border: 1px solid rgba(248, 113, 113, 0.4);
   color: #f87171;
   background: transparent;

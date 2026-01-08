@@ -1,17 +1,31 @@
-﻿.trend-area-chart {
-  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 h-64 min-w-0;
+/* Component: TrendAreaChart */
+.trend-area-chart {
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 0 10px 35px rgba(15, 23, 42, 0.12);
+  padding: 1rem;
+  height: 16rem;
+  min-width: 0;
 }
 
 .trend-area-chart__header {
-  @apply flex items-center justify-between mb-4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .trend-area-chart__header p {
-  @apply text-sm text-slate-500;
+  font-size: 0.875rem;
+  color: #64748b;
 }
 
 .trend-area-chart__title {
-  @apply text-xl font-semibold font-display text-slate-900;
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  color: #0f172a;
 }
 
 :root[data-theme='dark'] .trend-area-chart {

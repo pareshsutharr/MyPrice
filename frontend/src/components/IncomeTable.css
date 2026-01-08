@@ -1,63 +1,78 @@
+/* Component: IncomeTable */
 .income-table {
-  @apply rounded-2xl shadow-glow overflow-auto;
+  border-radius: 1rem;
+  box-shadow: 0 10px 35px rgba(15, 23, 42, 0.12);
+  overflow: auto;
   background-color: var(--app-card-bg);
   border: 1px solid var(--app-card-border);
   backdrop-filter: blur(18px);
 }
 
 .income-table table {
-  @apply w-full text-left;
+  width: 100%;
+  text-align: left;
 }
 
 .income-table thead {
-  @apply text-sm uppercase;
+  font-size: 0.875rem;
+  text-transform: uppercase;
   color: rgba(71, 85, 105, 0.85);
 }
 
 .income-table th {
-  @apply px-4 py-3;
+  padding: 0.75rem 1rem;
 }
 
 .income-table__th-amount,
 .income-table__th-actions {
-  @apply text-right;
+  text-align: right;
 }
 
 .income-table tbody tr {
-  @apply border-t text-sm;
+  border-top: 1px solid var(--app-card-border);
+  font-size: 0.875rem;
   border-color: var(--app-card-border);
 }
 
 .income-table td {
-  @apply px-4 py-3;
+  padding: 0.75rem 1rem;
 }
 
 .income-table__category {
-  @apply capitalize;
+  text-transform: capitalize;
 }
 
 .income-table__amount {
-  @apply text-right font-semibold;
+  text-align: right;
+  font-weight: 600;
   color: var(--app-body-text);
 }
 
 .income-table__actions {
-  @apply text-right space-x-2;
+  text-align: right;
+}
+
+.income-table__actions > * + * {
+  margin-left: 0.5rem;
 }
 
 .income-table__action-btn {
-  @apply !py-1 !px-3 text-xs;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
 }
 
 .income-table__delete-btn {
-  @apply !py-1 !px-3 text-xs;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
   border: 1px solid rgba(248, 113, 113, 0.4);
   color: #f87171;
   background-color: transparent;
 }
 
 .income-table__empty {
-  @apply text-center py-8 text-sm;
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.875rem;
   color: rgba(148, 163, 184, 0.9);
 }
 

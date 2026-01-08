@@ -1,17 +1,30 @@
-﻿.expenses-bar-chart {
-  @apply bg-surface rounded-2xl border border-borderLight shadow-glow p-4 h-72 min-w-0;
+/* Component: ExpensesBarChart */
+.expenses-bar-chart {
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 0 10px 35px rgba(15, 23, 42, 0.12);
+  padding: 1rem;
+  height: 18rem;
+  min-width: 0;
 }
 
 .expenses-bar-chart__header {
-  @apply flex items-center justify-between mb-4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .expenses-bar-chart__header p {
-  @apply text-sm text-slate-500;
+  font-size: 0.875rem;
+  color: #64748b;
 }
 
 .expenses-bar-chart__header h3 {
-  @apply text-xl font-display text-slate-900;
+  font-size: 1.25rem;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  color: #0f172a;
 }
 
 :root[data-theme='dark'] .expenses-bar-chart {

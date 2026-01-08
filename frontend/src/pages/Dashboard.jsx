@@ -1061,24 +1061,24 @@ const Dashboard = () => {
               <p className="text-sm text-slate-500">Interactive view</p>
               <h3 className="text-2xl font-display text-slate-900">Spending pulse</h3>
             </div>
-            <div className="dashboard-toggle-group">
+            <div className="dashboard-toggle">
               {['monthly', 'weekly'].map((view) => (
                 <button
                   key={view}
                   type="button"
-                  className={`dashboard-toggle-button ${trendView === view ? 'dashboard-toggle-button--active' : ''}`}
+                  className={`dashboard-toggle__button ${trendView === view ? 'dashboard-toggle__button--active' : ''}`}
                   onClick={() => setTrendView(view)}
                 >
                   {view === 'monthly' ? 'Monthly' : 'Weekly'}
                 </button>
               ))}
             </div>
-            <div className="dashboard-toggle-group">
+            <div className="dashboard-toggle">
               {['expenses', 'income'].map((type) => (
                 <button
                   key={type}
                   type="button"
-                  className={`dashboard-toggle-button ${trendType === type ? 'dashboard-toggle-button--active' : ''}`}
+                  className={`dashboard-toggle__button ${trendType === type ? 'dashboard-toggle__button--active' : ''}`}
                   onClick={() => setTrendType(type)}
                 >
                   {type === 'expenses' ? 'Expenses' : 'Income'}
@@ -1096,9 +1096,9 @@ const Dashboard = () => {
             </div>
             <QuickActions onAddExpense={() => setShowExpense(true)} onAddIncome={() => setShowIncome(true)} />
             {activeAlerts.length > 0 && (
-              <div className="alerts-stack">
+              <div className="dashboard-alerts">
                 {activeAlerts.map((alert) => (
-                  <div key={alert.id} className="alert-pill">
+                  <div key={alert.id} className="dashboard-alert">
                     <span>{alert.message}</span>
                     <button type="button" onClick={() => handleDismissAlert(alert.id)}>
                       ×
@@ -1128,7 +1128,7 @@ const Dashboard = () => {
             <h3 className="text-2xl font-display text-slate-900">Build towards milestones</h3>
           </div>
         </div>
-        <form className="goal-builder" onSubmit={handleAddGoal}>
+        <form className="dashboard-goal-builder" onSubmit={handleAddGoal}>
           <input
             type="text"
             name="name"

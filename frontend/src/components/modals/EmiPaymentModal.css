@@ -1,54 +1,99 @@
+/* Component: EmiPaymentModal */
 .emi-payment-modal {
-  @apply fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 50;
 }
 
 .emi-payment-modal__card {
-  @apply rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4 border border-borderLight;
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  max-width: 28rem;
+  width: 100%;
+  padding: 1.5rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
   background-color: var(--app-card-bg);
   backdrop-filter: blur(22px);
 }
 
+.emi-payment-modal__card > * + * {
+  margin-top: 1rem;
+}
+
 .emi-payment-modal__header {
-  @apply flex items-center justify-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .emi-payment-modal__header p {
-  @apply text-xs uppercase tracking-wide text-slate-400;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
 }
 
 .emi-payment-modal__header h3 {
-  @apply text-xl font-display text-slate-900;
+  font-size: 1.25rem;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  color: #0f172a;
 }
 
 .emi-payment-modal__header button {
-  @apply text-slate-400 hover:text-slate-600 text-sm;
+  font-size: 0.875rem;
+  color: #94a3b8;
+  transition: color 0.2s ease;
+}
+
+.emi-payment-modal__header button:hover {
+  color: #475569;
 }
 
 .emi-payment-modal__summary {
-  @apply text-sm text-slate-500;
+  font-size: 0.875rem;
+  color: #64748b;
 }
 
 .emi-payment-modal__summary span {
-  @apply font-semibold text-slate-900;
+  font-weight: 600;
+  color: #0f172a;
 }
 
 .emi-payment-modal__form {
-  @apply space-y-4;
+  display: block;
+}
+
+.emi-payment-modal__form > * + * {
+  margin-top: 1rem;
 }
 
 .emi-payment-modal__field label {
-  @apply text-sm text-slate-500;
+  font-size: 0.875rem;
+  color: #64748b;
 }
 
 .emi-payment-modal__field input,
 .emi-payment-modal__field textarea {
-  @apply w-full mt-1 rounded-xl bg-surfaceMuted border border-borderLight px-3 py-2;
+  width: 100%;
+  margin-top: 0.25rem;
+  border-radius: 0.75rem;
+  background-color: #eef2ff;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  padding: 0.5rem 0.75rem;
 }
 
 .emi-payment-modal__error {
-  @apply text-sm text-rose-500;
+  font-size: 0.875rem;
+  color: #f43f5e;
 }
 
 .emi-payment-modal__submit {
-  @apply w-full;
+  width: 100%;
 }

@@ -73,9 +73,9 @@ const DashboardLayout = () => {
         <div>
           <Link to="/" className="inline-flex" aria-label="MoneyXP Dashboard">
             <img
-              src="/assets/MoneyXP.gif"
+              src="/assets/moneyxp_logo.png"
               alt="MoneyXP"
-              className="h-12 md:h-14 w-auto "
+              className="h-12 md:h-14 w-auto logo-image"
             />
           </Link>
         </div>
@@ -84,10 +84,9 @@ const DashboardLayout = () => {
             <NavLink
               key={item.to}
               to={item.to}
-              end={item.to === '/' }
+              end={item.to === '/'}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2 rounded-xl transition ${
-                  isActive ? 'bg-surfaceMuted text-slate-900' : 'text-slate-500'
+                `flex items-center gap-3 px-3 py-2 rounded-xl transition ${isActive ? 'bg-surfaceMuted text-slate-900' : 'text-slate-500'
                 }`
               }
             >
@@ -164,10 +163,9 @@ const DashboardLayout = () => {
           <NavLink
             key={item.to}
             to={item.to}
-            end={item.to === '/' }
+            end={item.to === '/'}
             className={({ isActive }) =>
-              `flex-1 flex items-center justify-center py-2.5 ${
-                isActive ? 'text-accentBlue' : 'text-slate-500'
+              `flex-1 flex items-center justify-center py-2.5 ${isActive ? 'text-accentBlue' : 'text-slate-500'
               }`
             }
             aria-label={item.label}
@@ -203,8 +201,7 @@ const DashboardLayout = () => {
                   to={item.to}
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center gap-2 border border-borderLight rounded-xl px-3 py-2 text-sm ${
-                      isActive ? 'bg-surfaceMuted text-slate-900' : 'text-slate-600'
+                    `flex items-center gap-2 border border-borderLight rounded-xl px-3 py-2 text-sm ${isActive ? 'bg-surfaceMuted text-slate-900' : 'text-slate-600'
                     }`
                   }
                 >
