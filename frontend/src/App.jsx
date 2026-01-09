@@ -7,6 +7,7 @@ import Loans from '@pages/Loans.jsx'
 import MutualFunds from '@pages/MutualFunds.jsx'
 import Stocks from '@pages/Stocks.jsx'
 import NetWorth from '@pages/NetWorth.jsx'
+import Goals from '@pages/Goals.jsx'
 import Reports from '@pages/Reports.jsx'
 import Settings from '@pages/Settings.jsx'
 import History from '@pages/History.jsx'
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/mutual-funds" element={<MutualFunds />} />
         <Route path="/stocks" element={<Stocks />} />
         <Route path="/net-worth" element={<NetWorth />} />
+        <Route path="/goals" element={<Goals />} />
         <Route path="/investments" element={<MutualFunds />} />
         <Route path="/history" element={<History />} />
         <Route path="/reports" element={<Reports />} />

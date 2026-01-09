@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import {
   Wallet,
   TrendingUp,
@@ -18,11 +18,11 @@ import ReminderCard from '@components/ReminderCard.jsx'
 import IncomeForm from '@components/forms/IncomeForm.jsx'
 import ExpenseForm from '@components/forms/ExpenseForm.jsx'
 import CashFlowSparkline from '@components/charts/CashFlowSparkline.jsx'
-import GoalCard from '@components/GoalCard.jsx'
 import { useFinance } from '@context/FinanceContext.jsx'
 import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
 import { CATEGORY_MAP } from '@shared/constants.js'
 import './Dashboard.css'
+import './Goals.css'
 
 const REMINDER_SESSION_KEY = 'moneyxp-reminder-seen'
 const DASHBOARD_LAYOUT_KEY = 'moneyxp-dashboard-layout'
@@ -120,6 +120,7 @@ const readStoredCustomTiles = () => {
 const Dashboard = () => {
   const { stats, actions, loading, loans, investments, expenses, income } = useFinance()
   const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
   const [showIncome, setShowIncome] = useState(false)
   const [showExpense, setShowExpense] = useState(false)
   const [showReminder, setShowReminder] = useState(false)
@@ -127,8 +128,7 @@ const Dashboard = () => {
   const [draggingTile, setDraggingTile] = useState(null)
   const [trendView, setTrendView] = useState('monthly')
   const [trendType, setTrendType] = useState('expenses')
-  const [goals, setGoals] = useState(readStoredGoals)
-  const [goalForm, setGoalForm] = useState({ name: '', target: '', saved: '' })
+  const [goals] = useState(readStoredGoals)
   const [customTiles, setCustomTiles] = useState(readStoredCustomTiles)
   const [customTileForm, setCustomTileForm] = useState({ name: '', expression: '', description: '' })
   const expressionInputRef = useRef(null)
@@ -139,6 +139,21 @@ const Dashboard = () => {
   const [dismissedAlerts, setDismissedAlerts] = useState([])
   const [tipIndex, setTipIndex] = useState(0)
   const formatCurrency = useCurrencyFormatter()
+  const isDesktopView = useCallback(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia('(min-width: 1024px)').matches
+  }, [])
+  const goalsSummary = useMemo(() => {
+    const totalTarget = goals.reduce((sum, goal) => sum + (Number(goal.target) || 0), 0)
+    const totalSaved = goals.reduce((sum, goal) => sum + (Number(goal.saved) || 0), 0)
+    const progress = totalTarget > 0 ? Math.round((totalSaved / totalTarget) * 100) : 0
+    return {
+      count: goals.length,
+      totalTarget,
+      totalSaved,
+      progress,
+    }
+  }, [goals])
 
   const reminders = useMemo(() => stats?.reminders ?? [], [stats?.reminders])
 
@@ -155,15 +170,6 @@ const Dashboard = () => {
       }
     }
   }, [reminders])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    try {
-      window.localStorage.setItem(GOALS_STORAGE_KEY, JSON.stringify(goals))
-    } catch (error) {
-      console.warn('Unable to persist goals', error)
-    }
-  }, [goals])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -470,22 +476,6 @@ const Dashboard = () => {
     }
   }, [defaultOrder])
 
-  const [tileOrder, setTileOrder] = useState(defaultOrder)
-  const [visibleTiles, setVisibleTiles] = useState(defaultOrder)
-
-  useEffect(() => {
-    setTileOrder(readStoredLayout())
-  }, [readStoredLayout])
-
-  const persistLayout = useCallback((order) => {
-    if (typeof window === 'undefined') return
-    try {
-      window.localStorage.setItem(DASHBOARD_LAYOUT_KEY, JSON.stringify(order))
-    } catch (error) {
-      console.warn('Unable to persist dashboard layout', error)
-    }
-  }, [])
-
   const readStoredVisibility = useCallback(() => {
     if (typeof window === 'undefined') return defaultOrder
     try {
@@ -501,9 +491,21 @@ const Dashboard = () => {
     }
   }, [defaultOrder])
 
+  const [tileOrder, setTileOrder] = useState(() => readStoredLayout())
+  const [visibleTiles, setVisibleTiles] = useState(() => readStoredVisibility())
+
+  const persistLayout = useCallback((order) => {
+    if (typeof window === 'undefined') return
+    try {
+      window.localStorage.setItem(DASHBOARD_LAYOUT_KEY, JSON.stringify(order))
+    } catch (error) {
+      console.warn('Unable to persist dashboard layout', error)
+    }
+  }, [])
+
   useEffect(() => {
-    setVisibleTiles(readStoredVisibility())
-  }, [readStoredVisibility])
+    persistLayout(tileOrder)
+  }, [tileOrder, persistLayout])
 
   const persistVisibility = useCallback((list) => {
     if (typeof window === 'undefined') return
@@ -513,6 +515,10 @@ const Dashboard = () => {
       console.warn('Unable to persist tile visibility', error)
     }
   }, [])
+
+  useEffect(() => {
+    persistVisibility(visibleTiles)
+  }, [visibleTiles, persistVisibility])
 
   useEffect(() => {
     setTileOrder((prev) => {
@@ -706,6 +712,22 @@ const Dashboard = () => {
     setDismissedAlerts((prev) => (prev.includes(id) ? prev : [...prev, id]))
   }
 
+  const handleQuickAddExpense = useCallback(() => {
+    if (isDesktopView()) {
+      navigate('/expenses')
+      return
+    }
+    setShowExpense(true)
+  }, [isDesktopView, navigate])
+
+  const handleQuickAddIncome = useCallback(() => {
+    if (isDesktopView()) {
+      navigate('/income')
+      return
+    }
+    setShowIncome(true)
+  }, [isDesktopView, navigate])
+
   const tips = useMemo(() => {
     const list = []
     if ((thisMonth?.savings ?? 0) > 0) {
@@ -730,41 +752,6 @@ const Dashboard = () => {
   }, [tipIndex, tips.length])
 
   const currentTip = tips[tipIndex] ?? ''
-
-  const handleGoalFormChange = (event) => {
-    const { name, value } = event.target
-    setGoalForm((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleAddGoal = (event) => {
-    event.preventDefault()
-    if (!goalForm.name.trim()) return
-    const target = Math.max(Number(goalForm.target) || 0, 0)
-    if (target === 0) return
-    const saved = Math.min(Math.max(Number(goalForm.saved) || 0, 0), target)
-    const newGoal = {
-      id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
-      name: goalForm.name.trim(),
-      target,
-      saved,
-    }
-    setGoals((prev) => [...prev, newGoal])
-    setGoalForm({ name: '', target: '', saved: '' })
-  }
-
-  const handleGoalUpdate = (id, nextSaved) => {
-    setGoals((prev) =>
-      prev.map((goal) =>
-        goal.id === id
-          ? { ...goal, saved: Math.min(Math.max(Number(nextSaved) || 0, 0), goal.target) }
-          : goal,
-      ),
-    )
-  }
-
-  const handleGoalDelete = (id) => {
-    setGoals((prev) => prev.filter((goal) => goal.id !== id))
-  }
 
   useEffect(() => {
     const shouldCustomize = searchParams.get('customize') === '1'
@@ -840,20 +827,6 @@ const Dashboard = () => {
 
   return (
     <div className="page-stack">
-      <div className="page-section flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="text-xl font-display text-slate-900">Your overview</h2>
-          <p className="text-sm text-slate-500">
-            {isCustomizing
-              ? 'Drag tiles to rearrange and build your own view.'
-              : 'Tap customize to switch to DIY layout mode.'}
-          </p>
-        </div>
-        <button type="button" className="btn-secondary" onClick={() => handleCustomizeToggle()}>
-          {isCustomizing ? 'Done' : 'Customize tiles'}
-        </button>
-      </div>
-
       {!isDataReady && (
         <div className="glass-card p-4 text-center text-sm text-slate-500">
           {loading ? 'Loading dashboard insights...' : 'Unable to load finance stats. Pull to refresh.'}
@@ -862,7 +835,12 @@ const Dashboard = () => {
 
       {isCustomizing && (
         <div className="glass-card p-4 space-y-3 advanced-only">
-          <p className="text-sm text-slate-500">Choose the tiles you want visible on your dashboard.</p>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <p className="text-sm text-slate-500">Choose the tiles you want visible on your dashboard.</p>
+            <button type="button" className="btn-secondary" onClick={() => handleCustomizeToggle(false)}>
+              Done
+            </button>
+          </div>
           <div className="dashboard-tile-picker">
             {cardData.map((card) => {
               const isCustomTile = card.id.startsWith('custom-')
@@ -1094,7 +1072,7 @@ const Dashboard = () => {
               <p className="text-sm text-slate-500">Quick actions</p>
               <h3 className="text-xl font-display text-slate-900">Capture activity</h3>
             </div>
-            <QuickActions onAddExpense={() => setShowExpense(true)} onAddIncome={() => setShowIncome(true)} />
+            <QuickActions onAddExpense={handleQuickAddExpense} onAddIncome={handleQuickAddIncome} />
             {activeAlerts.length > 0 && (
               <div className="dashboard-alerts">
                 {activeAlerts.map((alert) => (
@@ -1121,60 +1099,27 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="glass-card p-5 space-y-4 advanced-only">
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <p className="text-sm text-slate-500">Goal progress</p>
-            <h3 className="text-2xl font-display text-slate-900">Build towards milestones</h3>
+      <div className="page-section goals-header advanced-only">
+        <div className="goals-header__title">
+          <p className="text-sm text-slate-500">Goals snapshot</p>
+          <h3 className="text-2xl font-display text-slate-900">Goals overview</h3>
+          <p className="text-sm text-slate-500">Visit Goals to manage targets and progress.</p>
+        </div>
+        <div className="goals-header__stats">
+          <div className="goals-stat">
+            <p className="goals-stat__label">Goals tracked</p>
+            <p className="goals-stat__value">{goalsSummary.count}</p>
+          </div>
+          <div className="goals-stat">
+            <p className="goals-stat__label">Total target</p>
+            <p className="goals-stat__value">{formatCurrency(goalsSummary.totalTarget)}</p>
+          </div>
+          <div className="goals-stat">
+            <p className="goals-stat__label">Saved so far</p>
+            <p className="goals-stat__value">{formatCurrency(goalsSummary.totalSaved)}</p>
+            <p className="goals-stat__meta">{goalsSummary.progress}% funded</p>
           </div>
         </div>
-        <form className="dashboard-goal-builder" onSubmit={handleAddGoal}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Goal name"
-            value={goalForm.name}
-            onChange={handleGoalFormChange}
-            required
-          />
-          <input
-            type="number"
-            name="target"
-            placeholder="Target amount"
-            min="0"
-            step="0.01"
-            value={goalForm.target}
-            onChange={handleGoalFormChange}
-            required
-          />
-          <input
-            type="number"
-            name="saved"
-            placeholder="Saved so far"
-            min="0"
-            step="0.01"
-            value={goalForm.saved}
-            onChange={handleGoalFormChange}
-          />
-          <button type="submit" className="btn-primary">
-            Add goal
-          </button>
-        </form>
-        {goals.length === 0 ? (
-          <p className="text-sm text-slate-500">Add a goal to keep track of progress here.</p>
-        ) : (
-          <div className="page-grid md:grid-cols-2 xl:grid-cols-3">
-            {goals.map((goal) => (
-              <GoalCard
-                key={goal.id}
-                goal={goal}
-                formatCurrency={formatCurrency}
-                onUpdate={handleGoalUpdate}
-                onDelete={handleGoalDelete}
-              />
-            ))}
-          </div>
-        )}
       </div>
 
       {showExpense && (

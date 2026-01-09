@@ -1,12 +1,12 @@
 /* Component: ExpenseForm */
-.expense-form {
+/* .expense-form {
   border-radius: 1rem;
   box-shadow: 0 10px 35px rgba(15, 23, 42, 0.12);
   padding: 1rem;
   background-color: var(--app-card-bg);
   border: 1px solid var(--app-card-border);
   backdrop-filter: blur(18px);
-}
+} */
 
 .expense-form > :not([hidden]) ~ :not([hidden]) {
   margin-top: 1rem;

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { DATE_FORMATS, useSettings } from '@context/SettingsContext.jsx'
 
 const DATE_FORMAT_OPTIONS = DATE_FORMATS.map((format) => ({
@@ -58,6 +59,7 @@ const Settings = () => {
   const [copiedEnv, setCopiedEnv] = useState(false)
   const isDarkMode = theme === 'dark'
   const isAdvancedMode = mode === 'advanced'
+  const navigate = useNavigate()
   const digilocker = integrations?.digilocker ?? {
     clientId: '',
     clientSecret: '',
@@ -165,6 +167,20 @@ const Settings = () => {
             <p className="font-semibold text-slate-900">Advanced mode</p>
             <p>Enables detailed charts, DIY customization, and every analytics panel in the app.</p>
           </div>
+        </div>
+      </section>
+
+      <section className="glass-card p-6 space-y-4">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <h2 className="text-2xl font-display">Dashboard customization</h2>
+            <p className="text-sm text-slate-500">
+              Reorder tiles and control which cards appear on your dashboard.
+            </p>
+          </div>
+          <button type="button" className="btn-secondary" onClick={() => navigate('/?customize=1')}>
+            Customize tiles
+          </button>
         </div>
       </section>
 
