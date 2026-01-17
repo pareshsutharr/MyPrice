@@ -13,6 +13,7 @@ const Expenses = () => {
   const [filters, setFilters] = useState(defaultFilters)
   const [editing, setEditing] = useState(null)
   const [showMobileForm, setShowMobileForm] = useState(false)
+  const [selectedExpenses, setSelectedExpenses] = useState(() => new Set())
 
   const filteredExpenses = useMemo(() => {
     const query = filters.q?.trim().toLowerCase() ?? ''
@@ -57,6 +58,58 @@ const Expenses = () => {
     }
   }
 
+  const handleToggleExpenseSelection = (id) => {
+    setSelectedExpenses((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
+
+  const handleToggleAllExpenses = () => {
+    if (filteredExpenses.length === 0) return
+    setSelectedExpenses((prev) => {
+      const next = new Set(prev)
+      const allIds = filteredExpenses.map((expense) => expense._id)
+      const hasAll = allIds.every((id) => next.has(id))
+      if (hasAll) {
+        allIds.forEach((id) => next.delete(id))
+      } else {
+        allIds.forEach((id) => next.add(id))
+      }
+      return next
+    })
+  }
+
+  const handleBulkDelete = async () => {
+    const ids = Array.from(selectedExpenses)
+    if (ids.length === 0) return
+    const confirmation = window.confirm(`Delete ${ids.length} selected expense${ids.length === 1 ? '' : 's'}?`)
+    if (!confirmation) return
+    await actions.deleteExpensesBulk(ids)
+    setSelectedExpenses(new Set())
+    if (editing && ids.includes(editing._id)) {
+      setEditing(null)
+    }
+  }
+
+  useEffect(() => {
+    setSelectedExpenses((prev) => {
+      const allowedIds = new Set(filteredExpenses.map((expense) => expense._id))
+      const hasRemoved = [...prev].some((id) => !allowedIds.has(id))
+      if (!hasRemoved) return prev
+      const next = new Set([...prev].filter((id) => allowedIds.has(id)))
+      return next
+    })
+  }, [filteredExpenses])
+
+  const selectedCount = selectedExpenses.size
+  const showSelectionBar = filteredExpenses.length > 0
+
   useEffect(() => {
     if (!editing) return
     if (window.matchMedia('(max-width: 1023px)').matches) {
@@ -85,7 +138,42 @@ const Expenses = () => {
           <div className="page-section space-y-4">
             <h2 className="text-2xl font-display">Expense History</h2>
             <FilterToolbar filters={filters} onChange={setFilters} />
-            <ExpenseTable expenses={filteredExpenses} onEdit={setEditing} onDelete={handleDelete} />
+            {showSelectionBar && (
+              <div className="flex items-center justify-between flex-wrap gap-3 rounded-xl border border-borderLight bg-surfaceMuted px-4 py-2 text-sm">
+                <span className="text-slate-600">
+                  {selectedCount > 0
+                    ? `${selectedCount} selected`
+                    : 'Select entries to enable bulk actions'}
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="btn-secondary text-xs"
+                    onClick={handleToggleAllExpenses}
+                  >
+                    {selectedCount === filteredExpenses.length && filteredExpenses.length > 0
+                      ? 'Clear selection'
+                      : 'Select all'}
+                  </button>
+                  <button
+                    type="button"
+                    className="expense-table__delete-btn btn-secondary text-xs"
+                    disabled={selectedCount === 0}
+                    onClick={handleBulkDelete}
+                  >
+                    Delete selected
+                  </button>
+                </div>
+              </div>
+            )}
+            <ExpenseTable
+              expenses={filteredExpenses}
+              onEdit={setEditing}
+              onDelete={handleDelete}
+              selectedIds={selectedExpenses}
+              onToggleSelect={handleToggleExpenseSelection}
+              onToggleSelectAll={handleToggleAllExpenses}
+            />
           </div>
         </div>
       </div>

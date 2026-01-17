@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useFinance } from '@context/FinanceContext.jsx'
 import IncomeForm from '@components/forms/IncomeForm.jsx'
 import IncomeTable from '@components/IncomeTable.jsx'
@@ -12,6 +12,7 @@ const Income = () => {
   const { income, actions } = useFinance()
   const [editing, setEditing] = useState(null)
   const [filters, setFilters] = useState(defaultFilters)
+  const [selectedIncome, setSelectedIncome] = useState(() => new Set())
 
   const filteredIncome = useMemo(() => {
     const query = filters.q?.trim().toLowerCase() ?? ''
@@ -53,6 +54,58 @@ const Income = () => {
     }
   }
 
+  const handleToggleIncomeSelection = (id) => {
+    setSelectedIncome((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
+
+  const handleToggleAllIncome = () => {
+    if (filteredIncome.length === 0) return
+    setSelectedIncome((prev) => {
+      const next = new Set(prev)
+      const allIds = filteredIncome.map((entry) => entry._id)
+      const hasAll = allIds.every((id) => next.has(id))
+      if (hasAll) {
+        allIds.forEach((id) => next.delete(id))
+      } else {
+        allIds.forEach((id) => next.add(id))
+      }
+      return next
+    })
+  }
+
+  const handleBulkIncomeDelete = async () => {
+    const ids = Array.from(selectedIncome)
+    if (ids.length === 0) return
+    const confirmation = window.confirm(`Delete ${ids.length} selected income entr${ids.length === 1 ? 'y' : 'ies'}?`)
+    if (!confirmation) return
+    await actions.deleteIncomeBulk(ids)
+    setSelectedIncome(new Set())
+    if (editing && ids.includes(editing._id)) {
+      setEditing(null)
+    }
+  }
+
+  useEffect(() => {
+    setSelectedIncome((prev) => {
+      const allowedIds = new Set(filteredIncome.map((entry) => entry._id))
+      const hasRemoved = [...prev].some((id) => !allowedIds.has(id))
+      if (!hasRemoved) return prev
+      const next = new Set([...prev].filter((id) => allowedIds.has(id)))
+      return next
+    })
+  }, [filteredIncome])
+
+  const selectedCount = selectedIncome.size
+  const showSelectionBar = filteredIncome.length > 0
+
   return (
     <div className="page-stack">
       <div className="page-grid page-grid--sidebar">
@@ -74,7 +127,42 @@ const Income = () => {
           <div className="page-section space-y-4">
             <h2 className="text-2xl font-display">Income History</h2>
             <FilterToolbar filters={filters} onChange={setFilters} />
-            <IncomeTable incomes={filteredIncome} onEdit={setEditing} onDelete={handleDelete} />
+            {showSelectionBar && (
+              <div className="flex items-center justify-between flex-wrap gap-3 rounded-xl border border-borderLight bg-surfaceMuted px-4 py-2 text-sm">
+                <span className="text-slate-600">
+                  {selectedCount > 0
+                    ? `${selectedCount} selected`
+                    : 'Select entries to enable bulk actions'}
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="btn-secondary text-xs"
+                    onClick={handleToggleAllIncome}
+                  >
+                    {selectedCount === filteredIncome.length && filteredIncome.length > 0
+                      ? 'Clear selection'
+                      : 'Select all'}
+                  </button>
+                  <button
+                    type="button"
+                    className="income-table__delete-btn btn-secondary text-xs"
+                    disabled={selectedCount === 0}
+                    onClick={handleBulkIncomeDelete}
+                  >
+                    Delete selected
+                  </button>
+                </div>
+              </div>
+            )}
+            <IncomeTable
+              incomes={filteredIncome}
+              onEdit={setEditing}
+              onDelete={handleDelete}
+              selectedIds={selectedIncome}
+              onToggleSelect={handleToggleIncomeSelection}
+              onToggleSelectAll={handleToggleAllIncome}
+            />
           </div>
         </div>
       </div>

@@ -62,7 +62,9 @@ export const devLogin = async (req, res) => {
     return res.status(400).json({ message: 'Email is required for developer login.' })
   }
   const displayName = req.body?.name?.trim() || email
-  const avatar = req.body?.avatar?.trim() || `https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${encodeURIComponent(displayName)}`
+  const avatar =
+    req.body?.avatar?.trim() ||
+    `https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=${encodeURIComponent(displayName)}`
 
   try {
     const user = await User.findOneAndUpdate(

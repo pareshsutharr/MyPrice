@@ -23,6 +23,18 @@
   padding: 0.75rem 1rem;
 }
 
+.income-table__th-checkbox,
+.income-table__checkbox {
+  width: 3rem;
+  text-align: center;
+}
+
+.income-table__checkbox input,
+.income-table__th-checkbox input {
+  width: 1rem;
+  height: 1rem;
+}
+
 .income-table__th-amount,
 .income-table__th-actions {
   text-align: right;
@@ -67,6 +79,11 @@
   border: 1px solid rgba(248, 113, 113, 0.4);
   color: #f87171;
   background-color: transparent;
+}
+
+.income-table__delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .income-table__empty {

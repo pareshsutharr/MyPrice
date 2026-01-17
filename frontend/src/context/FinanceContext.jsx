@@ -121,6 +121,17 @@ export const FinanceProvider = ({ children }) => {
     [withAuthGuard, fetchAll],
   )
 
+  const deleteExpensesBulk = useCallback(
+    (ids = []) =>
+      withAuthGuard(async () => {
+        const uniqueIds = [...new Set(ids.filter(Boolean))]
+        if (uniqueIds.length === 0) return
+        await Promise.all(uniqueIds.map((expenseId) => api.deleteExpense(expenseId)))
+        await fetchAll()
+      }),
+    [withAuthGuard, fetchAll],
+  )
+
   const addIncome = useCallback(
     (payload) =>
       withAuthGuard(async () => {
@@ -143,6 +154,17 @@ export const FinanceProvider = ({ children }) => {
     (id) =>
       withAuthGuard(async () => {
         await api.deleteIncome(id)
+        await fetchAll()
+      }),
+    [withAuthGuard, fetchAll],
+  )
+
+  const deleteIncomeBulk = useCallback(
+    (ids = []) =>
+      withAuthGuard(async () => {
+        const uniqueIds = [...new Set(ids.filter(Boolean))]
+        if (uniqueIds.length === 0) return
+        await Promise.all(uniqueIds.map((incomeId) => api.deleteIncome(incomeId)))
         await fetchAll()
       }),
     [withAuthGuard, fetchAll],
@@ -239,9 +261,11 @@ export const FinanceProvider = ({ children }) => {
         addExpense,
         updateExpense,
         deleteExpense,
+        deleteExpensesBulk,
         addIncome,
         updateIncome,
         deleteIncome,
+        deleteIncomeBulk,
         addLoan,
         deleteLoan,
         addInvestment,
@@ -266,9 +290,11 @@ export const FinanceProvider = ({ children }) => {
       addExpense,
       updateExpense,
       deleteExpense,
+      deleteExpensesBulk,
       addIncome,
       updateIncome,
       deleteIncome,
+      deleteIncomeBulk,
       addLoan,
       deleteLoan,
       addInvestment,
