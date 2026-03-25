@@ -4,6 +4,44 @@ MyPrice is a full-stack personal finance dashboard for tracking expenses, income
 
 The project uses a React 19 + Vite frontend and an Express 5 + MongoDB backend. It is designed for a split deployment model such as Vercel for the frontend and Railway or Render for the API.
 
+## Product Screenshots
+
+### Login
+
+![MoneyXP login](docs/screenshots/login.png)
+
+### Dashboard
+
+![MoneyXP dashboard](docs/screenshots/dashboard.png)
+
+### Expenses
+
+![MoneyXP expenses](docs/screenshots/expenses.png)
+
+### Income
+
+![MoneyXP income](docs/screenshots/income.png)
+
+### Loans & EMI
+
+![MoneyXP loans](docs/screenshots/loans.png)
+
+### Mutual Funds
+
+![MoneyXP mutual funds](docs/screenshots/mutual-funds.png)
+
+### Documents Vault
+
+![MoneyXP documents vault](docs/screenshots/documents.png)
+
+### History
+
+![MoneyXP history](docs/screenshots/history.png)
+
+### Settings
+
+![MoneyXP settings](docs/screenshots/settings.png)
+
 ## Highlights
 
 - Expense and income tracking with filters, bulk selection, and history
@@ -315,6 +353,13 @@ Frontend production build:
 ```bash
 cd frontend
 npm run build
+```
+
+Backend start command:
+
+```bash
+cd backend
+npm start
 ```
 
 ## Contributing

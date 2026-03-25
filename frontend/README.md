@@ -1,16 +1,92 @@
-# React + Vite
+# MyPrice Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React 19 + Vite frontend for MyPrice / MoneyXP.
 
-Currently, two official plugins are available:
+This app powers the dashboard, finance forms, reports, document vault, banks MVP, and ITR estimation experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Run locally
 
-## React Compiler
+```bash
+npm install
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Default dev server:
 
-## Expanding the ESLint configuration
+```text
+http://localhost:5173
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Environment
+
+Create `frontend/.env`:
+
+```env
+VITE_API_URL=http://localhost:4000/api
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
+VITE_ENABLE_DEV_LOGIN=true
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+## Main areas
+
+- Dashboard
+- Expenses
+- Income
+- Loans & EMI
+- Mutual Funds / Investments
+- Documents vault
+- History
+- Reports
+- Settings
+- Banks
+- ITR Filing
+
+## Screenshots
+
+### Login
+
+![Login screen](../docs/screenshots/login.png)
+
+### Dashboard
+
+![Dashboard](../docs/screenshots/dashboard.png)
+
+### Expenses
+
+![Expenses](../docs/screenshots/expenses.png)
+
+### Income
+
+![Income](../docs/screenshots/income.png)
+
+### Loans & EMI
+
+![Loans](../docs/screenshots/loans.png)
+
+### Mutual Funds
+
+![Mutual Funds](../docs/screenshots/mutual-funds.png)
+
+### Documents
+
+![Documents](../docs/screenshots/documents.png)
+
+### History
+
+![History](../docs/screenshots/history.png)
+
+### Settings
+
+![Settings](../docs/screenshots/settings.png)
+
+## Full project docs
+
+See the root project readme:
+
+- [`../README.md`](../README.md)
