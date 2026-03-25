@@ -6,10 +6,6 @@ The project uses a React 19 + Vite frontend and an Express 5 + MongoDB backend. 
 
 ## Product Screenshots
 
-### Login
-
-![MoneyXP login](docs/screenshots/login.png)
-
 ### Dashboard
 
 ![MoneyXP dashboard](docs/screenshots/dashboard.png)
@@ -41,6 +37,13 @@ The project uses a React 19 + Vite frontend and an Express 5 + MongoDB backend. 
 ### Settings
 
 ![MoneyXP settings](docs/screenshots/settings.png)
+
+<details>
+<summary>Login screen</summary>
+
+![MoneyXP login](docs/screenshots/login.png)
+
+</details>
 
 ## Highlights
 

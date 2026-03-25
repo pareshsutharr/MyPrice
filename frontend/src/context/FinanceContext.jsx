@@ -80,6 +80,11 @@ export const FinanceProvider = ({ children }) => {
 
   const withAuthGuard = useCallback(
     async (operation) => {
+      if (!token) {
+        const guestError = new Error('Please sign in to continue.')
+        recordError(guestError, 'Please sign in to continue.')
+        throw guestError
+      }
       try {
         return await operation()
       } catch (err) {

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { GoogleLogin } from '@react-oauth/google'
 import { useAuth } from '@context/AuthContext.jsx'
 
-const Login = () => {
+const Login = ({ embedded = false, onClose }) => {
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
   const enableDevLogin = import.meta.env.VITE_ENABLE_DEV_LOGIN === 'true'
   const { loginWithGoogle, loginWithDevAccount } = useAuth()
@@ -17,6 +17,7 @@ const Login = () => {
     try {
       await loginWithGoogle(response.credential)
       setError('')
+      onClose?.()
     } catch (err) {
       setError(err?.response?.data?.message ?? 'Unable to sign in with Google')
     }
@@ -37,6 +38,7 @@ const Login = () => {
     try {
       setDevSubmitting(true)
       await loginWithDevAccount({ email: trimmedEmail, name: devName.trim() })
+      onClose?.()
     } catch (err) {
       setDevError(err?.response?.data?.message ?? err.message ?? 'Unable to run developer login.')
     } finally {
@@ -44,9 +46,15 @@ const Login = () => {
     }
   }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-surfaceMuted px-4">
-      <div className="glass-card max-w-md w-full p-8 text-center space-y-6">
+  const card = (
+    <div className="glass-card max-w-md w-full p-8 text-center space-y-6">
+      {embedded && onClose ? (
+        <div className="flex justify-end">
+          <button type="button" className="text-sm text-slate-500" onClick={onClose}>
+            Close
+          </button>
+        </div>
+      ) : null}
         <div>
           <h1 className="text-3xl font-display text-slate-900">Welcome to MoneyXP</h1>
           <p className="text-slate-500 mt-2">
@@ -117,6 +125,15 @@ const Login = () => {
           </p>
         )}
       </div>
+  )
+
+  if (embedded) {
+    return card
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-surfaceMuted px-4">
+      {card}
     </div>
   )
 }

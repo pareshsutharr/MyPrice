@@ -20,7 +20,7 @@ import Documents from '@pages/Documents.jsx'
 import { useAuth } from '@context/AuthContext.jsx'
 
 const App = () => {
-  const { user, authLoading } = useAuth()
+  const { authLoading } = useAuth()
 
   if (authLoading) {
     return (
@@ -28,10 +28,6 @@ const App = () => {
         <p className="text-slate-500">Checking session...</p>
       </div>
     )
-  }
-
-  if (!user) {
-    return <Login />
   }
 
   return (

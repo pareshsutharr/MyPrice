@@ -20,6 +20,7 @@ import { useFinance } from '@context/FinanceContext.jsx'
 import { useAuth } from '@context/AuthContext.jsx'
 import FloatingActionButton from '@components/FloatingActionButton.jsx'
 import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
+import Login from '@pages/Login.jsx'
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -55,6 +56,7 @@ const DashboardLayout = () => {
   const { stats, refresh, error, clearError } = useFinance()
   const { user, logout } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [loginOpen, setLoginOpen] = useState(false)
   const primaryMobileNav = navItems.filter((item) => primaryMobileRoutes.includes(item.to))
   const extraMobileNav = navItems.filter((item) => !primaryMobileRoutes.includes(item.to))
   const formatCurrency = useCurrencyFormatter()
@@ -124,6 +126,11 @@ const DashboardLayout = () => {
                   </button>
                 </div>
               </div>
+            )}
+            {!user && (
+              <button type="button" className="btn-secondary" onClick={() => setLoginOpen(true)}>
+                Login
+              </button>
             )}
           </div>
         </header>
@@ -222,6 +229,11 @@ const DashboardLayout = () => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+      {loginOpen && (
+        <div className="fixed inset-0 z-50 bg-black/55 backdrop-blur-sm flex items-center justify-center px-4">
+          <Login embedded onClose={() => setLoginOpen(false)} />
         </div>
       )}
       <FloatingActionButton />

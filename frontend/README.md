@@ -49,10 +49,6 @@ npm run build
 
 ## Screenshots
 
-### Login
-
-![Login screen](../docs/screenshots/login.png)
-
 ### Dashboard
 
 ![Dashboard](../docs/screenshots/dashboard.png)
@@ -84,6 +80,13 @@ npm run build
 ### Settings
 
 ![Settings](../docs/screenshots/settings.png)
+
+<details>
+<summary>Login screen</summary>
+
+![Login screen](../docs/screenshots/login.png)
+
+</details>
 
 ## Full project docs
 
