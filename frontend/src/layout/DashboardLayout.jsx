@@ -7,18 +7,13 @@ import {
   BarChart3,
   LineChart,
   CandlestickChart,
-  Coins,
   PiggyBank,
-  Target,
   History as HistoryIcon,
   Settings as SettingsIcon,
   AlertCircle,
   EllipsisVertical,
   SlidersHorizontal,
   Palette,
-  UploadCloud,
-  FileText,
-  Building2,
   FolderLock,
 } from 'lucide-react'
 import { useFinance } from '@context/FinanceContext.jsx'
@@ -33,18 +28,13 @@ const navItems = [
   { to: '/loans', label: 'Loans & EMI', icon: WalletCards },
   { to: '/mutual-funds', label: 'Mutual Funds', icon: LineChart },
   { to: '/stocks', label: 'Stocks', icon: CandlestickChart },
-  { to: '/net-worth', label: 'Net Worth', icon: Coins },
-  { to: '/goals', label: 'Goals', icon: Target },
-  { to: '/banks', label: 'Banks', icon: Building2 },
   { to: '/documents', label: 'Documents', icon: FolderLock },
   { to: '/history', label: 'History', icon: HistoryIcon },
   { to: '/reports', label: 'Reports', icon: BarChart3 },
-  { to: '/import', label: 'Import Data', icon: UploadCloud },
   { to: '/settings', label: 'Settings', icon: SettingsIcon },
-  { to: '/itr-filing', label: 'ITR Filing', icon: FileText },
 ]
 
-const primaryMobileRoutes = ['/', '/mutual-funds', '/net-worth']
+const primaryMobileRoutes = ['/', '/mutual-funds', '/stocks']
 
 const mobileUtilities = [
   {

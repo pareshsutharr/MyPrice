@@ -257,6 +257,11 @@ export const FinanceProvider = ({ children }) => {
       error,
       clearError,
       refresh: fetchAll,
+      refreshInvestments: async () => {
+        const investmentsRes = await api.getInvestments()
+        setInvestments(investmentsRes)
+        return investmentsRes
+      },
       actions: {
         addExpense,
         updateExpense,
@@ -287,6 +292,7 @@ export const FinanceProvider = ({ children }) => {
       error,
       clearError,
       fetchAll,
+      setInvestments,
       addExpense,
       updateExpense,
       deleteExpense,

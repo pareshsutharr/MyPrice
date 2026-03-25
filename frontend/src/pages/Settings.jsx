@@ -12,32 +12,7 @@ const DATE_FORMAT_OPTIONS = DATE_FORMATS.map((format) => ({
         : 'YYYY-MM-DD (2026-01-31)',
 }))
 
-const DIGILOCKER_FEATURES = [
-  {
-    title: 'Instant onboarding',
-    detail: 'Prefill KYC, PAN, and address proof directly from Digilocker verified docs.',
-  },
-  {
-    title: 'Smart document vault',
-    detail: 'Maintain a live repository of MF statements, insurance policies, and Form 26AS.',
-  },
-  {
-    title: 'Auto classification',
-    detail: 'Parse linked bank/passbook statements to auto-create income and expense entries.',
-  },
-  {
-    title: 'Investment sync',
-    detail: 'Ingest CAS files to keep Mutual Funds and Stocks dashboards always up to date.',
-  },
-  {
-    title: 'Compliance radar',
-    detail: 'Alert users before KYC lapses or document expiries using Digilocker metadata.',
-  },
-  {
-    title: 'Secure sharing',
-    detail: 'Grant advisors and lenders scoped access via Digilocker’s consented share links.',
-  },
-]
+const DIGILOCKER_NOTIFY_KEY = 'digilocker-notify'
 
 const Settings = () => {
   const {
@@ -52,20 +27,15 @@ const Settings = () => {
     setTheme,
     mode,
     setMode,
-    integrations,
-    updateDigilockerConfig,
   } = useSettings()
   const [newCategory, setNewCategory] = useState({ label: '', color: '#4f9cff', icon: '✨' })
-  const [copiedEnv, setCopiedEnv] = useState(false)
+  const [digilockerNotify, setDigilockerNotify] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.localStorage.getItem(DIGILOCKER_NOTIFY_KEY) === 'true'
+  })
   const isDarkMode = theme === 'dark'
   const isAdvancedMode = mode === 'advanced'
   const navigate = useNavigate()
-  const digilocker = integrations?.digilocker ?? {
-    clientId: '',
-    clientSecret: '',
-    redirectUri: '',
-    environment: 'sandbox',
-  }
 
   const handleCurrencyChange = (event) => {
     setCurrency(event.target.value)
@@ -98,25 +68,9 @@ const Settings = () => {
     setMode(targetMode)
   }
 
-  const handleDigilockerChange = (field) => (event) => {
-    updateDigilockerConfig({ [field]: event.target.value })
-  }
-
-  const envPreview = [
-    `VITE_DIGILOCKER_CLIENT_ID=${digilocker.clientId || '<your-client-id>'}`,
-    `VITE_DIGILOCKER_CLIENT_SECRET=${digilocker.clientSecret || '<your-client-secret>'}`,
-    `VITE_DIGILOCKER_REDIRECT_URI=${digilocker.redirectUri || 'https://yourapp.com/oauth/digilocker'}`,
-    `VITE_DIGILOCKER_ENV=${digilocker.environment || 'sandbox'}`,
-  ].join('\n')
-
-  const handleCopyEnv = async () => {
-    try {
-      await navigator.clipboard.writeText(envPreview)
-      setCopiedEnv(true)
-      setTimeout(() => setCopiedEnv(false), 2000)
-    } catch (error) {
-      console.warn('Unable to copy env preview', error)
-    }
+  const handleDigilockerNotify = () => {
+    window.localStorage.setItem(DIGILOCKER_NOTIFY_KEY, 'true')
+    setDigilockerNotify(true)
   }
 
   return (
@@ -265,78 +219,40 @@ const Settings = () => {
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-display">Digilocker integration</h2>
           <p className="text-sm text-slate-500">
-            Connect verified financial artefacts to unlock automation across onboarding, spending,
-            and wealth tracking. Values are stored locally until backend sync is enabled.
+            This is reserved for a future direct Digilocker connection. The current app does not
+            support account linking yet.
           </p>
         </div>
-        <div className="grid md:grid-cols-2 gap-4">
-          {DIGILOCKER_FEATURES.map((feature) => (
-            <div
-              key={feature.title}
-              className="border border-borderLight rounded-2xl p-4 bg-surfaceMuted/70 text-sm text-slate-600"
-            >
-              <p className="font-semibold text-slate-900">{feature.title}</p>
-              <p>{feature.detail}</p>
-            </div>
-          ))}
-        </div>
-        <div className="grid lg:grid-cols-2 gap-4">
-          <div className="space-y-3">
-            <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">
-              Credentials
-            </p>
-            <div className="space-y-3">
-              <input
-                type="text"
-                placeholder="Client ID"
-                value={digilocker.clientId}
-                onChange={handleDigilockerChange('clientId')}
-                className="rounded-xl bg-white/80 border border-borderLight px-3 py-2"
-              />
-              <input
-                type="password"
-                placeholder="Client secret"
-                value={digilocker.clientSecret}
-                onChange={handleDigilockerChange('clientSecret')}
-                className="rounded-xl bg-white/80 border border-borderLight px-3 py-2"
-              />
-              <input
-                type="text"
-                placeholder="Redirect URI"
-                value={digilocker.redirectUri}
-                onChange={handleDigilockerChange('redirectUri')}
-                className="rounded-xl bg-white/80 border border-borderLight px-3 py-2"
-              />
-              <select
-                value={digilocker.environment}
-                onChange={handleDigilockerChange('environment')}
-                className="rounded-xl bg-white/80 border border-borderLight px-3 py-2"
-              >
-                <option value="sandbox">Sandbox</option>
-                <option value="production">Production</option>
-              </select>
-            </div>
-            <p className="text-xs text-slate-500">
-              These values remain in your browser and will sync to the backend once Digilocker OAuth
-              is wired in.
-            </p>
-          </div>
-          <div className="space-y-3">
-            <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">
-              .env helper
-            </p>
-            <textarea
-              readOnly
-              value={envPreview}
-              className="w-full h-40 rounded-2xl bg-surfaceMuted border border-borderLight font-mono text-xs p-3"
-            />
-            <div className="flex items-center gap-3">
-              <button type="button" className="btn-secondary" onClick={handleCopyEnv}>
-                {copiedEnv ? 'Copied!' : 'Copy env snippet'}
-              </button>
-              <span className="text-xs text-slate-500">
-                Add these to your <code>.env</code> / Render environment panel.
-              </span>
+        <div className="rounded-[1.75rem] border border-borderLight bg-surfaceMuted/70 p-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                <span className="text-lg font-bold">D</span>
+              </div>
+              <div className="space-y-2">
+                <p className="text-lg font-semibold text-slate-900">Digilocker coming soon</p>
+                <p className="max-w-2xl text-sm text-slate-600">
+                  Connect your Digilocker account to auto-import documents like Aadhaar, PAN, and
+                  vehicle RC.
+                </p>
+                <button
+                  type="button"
+                  className="btn-secondary opacity-50 cursor-not-allowed"
+                  disabled
+                  aria-disabled="true"
+                >
+                  Connect Digilocker - Coming Soon
+                </button>
+                <div>
+                  <button
+                    type="button"
+                    className="text-sm font-medium text-blue-600 underline underline-offset-4"
+                    onClick={handleDigilockerNotify}
+                  >
+                    {digilockerNotify ? "✓ We'll let you know!" : 'Notify me'}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

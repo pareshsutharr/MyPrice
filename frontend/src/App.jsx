@@ -1,4 +1,5 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import ErrorBoundary from '@components/ErrorBoundary.jsx'
 import DashboardLayout from '@layout/DashboardLayout.jsx'
 import Dashboard from '@pages/Dashboard.jsx'
 import Expenses from '@pages/Expenses.jsx'
@@ -36,22 +37,24 @@ const App = () => {
   return (
     <Routes>
       <Route element={<DashboardLayout />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/expenses" element={<Expenses />} />
-        <Route path="/income" element={<Income />} />
-        <Route path="/loans" element={<Loans />} />
-        <Route path="/mutual-funds" element={<MutualFunds />} />
-        <Route path="/stocks" element={<Stocks />} />
-        <Route path="/net-worth" element={<NetWorth />} />
-        <Route path="/goals" element={<Goals />} />
-        <Route path="/investments" element={<MutualFunds />} />
-        <Route path="/history" element={<History />} />
-        <Route path="/reports" element={<Reports />} />
-        <Route path="/import" element={<ImportData />} />
-        <Route path="/itr-filing" element={<ItrFiling />} />
-        <Route path="/banks" element={<Banks />} />
-        <Route path="/documents" element={<Documents />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/" element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
+        <Route path="/expenses" element={<ErrorBoundary><Expenses /></ErrorBoundary>} />
+        <Route path="/income" element={<ErrorBoundary><Income /></ErrorBoundary>} />
+        <Route path="/loans" element={<ErrorBoundary><Loans /></ErrorBoundary>} />
+        <Route path="/mutual-funds" element={<ErrorBoundary><MutualFunds /></ErrorBoundary>} />
+        <Route path="/stocks" element={<ErrorBoundary><Stocks /></ErrorBoundary>} />
+        <Route path="/net-worth" element={<ErrorBoundary><NetWorth /></ErrorBoundary>} />
+        <Route path="/goals" element={<ErrorBoundary><Goals /></ErrorBoundary>} />
+        <Route path="/investments" element={<ErrorBoundary><MutualFunds /></ErrorBoundary>} />
+        <Route path="/history" element={<ErrorBoundary><History /></ErrorBoundary>} />
+        <Route path="/reports" element={<ErrorBoundary><Reports /></ErrorBoundary>} />
+        <Route path="/import" element={<ErrorBoundary><ImportData /></ErrorBoundary>} />
+        <Route path="/itr-filing" element={<ErrorBoundary><ItrFiling /></ErrorBoundary>} />
+        <Route path="/banks" element={<ErrorBoundary><Banks /></ErrorBoundary>} />
+        <Route path="/documents" element={<ErrorBoundary><Documents /></ErrorBoundary>} />
+        <Route path="/document" element={<ErrorBoundary><Navigate to="/documents" replace /></ErrorBoundary>} />
+        <Route path="/document-page" element={<ErrorBoundary><Navigate to="/documents" replace /></ErrorBoundary>} />
+        <Route path="/settings" element={<ErrorBoundary><Settings /></ErrorBoundary>} />
       </Route>
     </Routes>
   )

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { api } from '@services/api.js'
+import { CURRENT_API_BASE, api } from '@services/api.js'
 
 const AuthContext = createContext()
 const STORAGE_KEY = 'myprice-auth'
@@ -16,9 +16,13 @@ export const AuthProvider = ({ children }) => {
       try {
         const parsed = JSON.parse(saved)
         if (parsed?.token && parsed?.user) {
-          setToken(parsed.token)
-          setUser(parsed.user)
-          api.setAuthToken(parsed.token)
+          if (parsed.apiBase !== CURRENT_API_BASE) {
+            localStorage.removeItem(STORAGE_KEY)
+          } else {
+            setToken(parsed.token)
+            setUser(parsed.user)
+            api.setAuthToken(parsed.token)
+          }
         }
       } catch (error) {
         console.warn('Failed to parse auth storage', error)
@@ -32,7 +36,7 @@ export const AuthProvider = ({ children }) => {
     setToken(response.token)
     setUser(response.user)
     api.setAuthToken(response.token)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(response))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...response, apiBase: CURRENT_API_BASE }))
     return response.user
   }
 
@@ -44,7 +48,7 @@ export const AuthProvider = ({ children }) => {
     setToken(response.token)
     setUser(response.user)
     api.setAuthToken(response.token)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(response))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...response, apiBase: CURRENT_API_BASE }))
     return response.user
   }
 

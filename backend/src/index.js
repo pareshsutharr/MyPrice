@@ -11,6 +11,7 @@ import investmentRoutes from './routes/investmentRoutes.js'
 import statsRoutes from './routes/statsRoutes.js'
 import historyRoutes from './routes/historyRoutes.js'
 import authRoutes from './routes/authRoutes.js'
+import documentRoutes from './routes/documentRoutes.js'
 import { authMiddleware } from './middleware/auth.js'
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env') })
@@ -36,6 +37,7 @@ app.use('/api/expenses', expenseRoutes)
 app.use('/api/income', incomeRoutes)
 app.use('/api/loans', loanRoutes)
 app.use('/api/investments', investmentRoutes)
+app.use('/api/documents', documentRoutes)
 app.use('/api/stats', statsRoutes)
 app.use('/api/history', historyRoutes)
 

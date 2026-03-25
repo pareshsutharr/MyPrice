@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useFinance } from '@context/FinanceContext.jsx'
+import EmptyState from '@components/EmptyState.jsx'
 import ExpenseForm from '@components/forms/ExpenseForm.jsx'
 import ExpenseTable from '@components/ExpenseTable.jsx'
 import FilterToolbar from '@components/FilterToolbar.jsx'
+import { Receipt } from 'lucide-react'
 import './Expenses.css'
 
 const todayIso = () => new Date().toISOString().split('T')[0]
@@ -166,14 +168,24 @@ const Expenses = () => {
                 </div>
               </div>
             )}
-            <ExpenseTable
-              expenses={filteredExpenses}
-              onEdit={setEditing}
-              onDelete={handleDelete}
-              selectedIds={selectedExpenses}
-              onToggleSelect={handleToggleExpenseSelection}
-              onToggleSelectAll={handleToggleAllExpenses}
-            />
+            {filteredExpenses.length === 0 ? (
+              <EmptyState
+                icon={Receipt}
+                title="No expenses yet"
+                subtitle="Start tracking by adding your first expense."
+                actionLabel="Add Expense"
+                onAction={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              />
+            ) : (
+              <ExpenseTable
+                expenses={filteredExpenses}
+                onEdit={setEditing}
+                onDelete={handleDelete}
+                selectedIds={selectedExpenses}
+                onToggleSelect={handleToggleExpenseSelection}
+                onToggleSelectAll={handleToggleAllExpenses}
+              />
+            )}
           </div>
         </div>
       </div>

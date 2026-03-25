@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useFinance } from '@context/FinanceContext.jsx'
+import EmptyState from '@components/EmptyState.jsx'
 import IncomeForm from '@components/forms/IncomeForm.jsx'
 import IncomeTable from '@components/IncomeTable.jsx'
 import FilterToolbar from '@components/FilterToolbar.jsx'
+import { TrendingUp } from 'lucide-react'
 import './Income.css'
 
 const todayIso = () => new Date().toISOString().split('T')[0]
@@ -155,14 +157,24 @@ const Income = () => {
                 </div>
               </div>
             )}
-            <IncomeTable
-              incomes={filteredIncome}
-              onEdit={setEditing}
-              onDelete={handleDelete}
-              selectedIds={selectedIncome}
-              onToggleSelect={handleToggleIncomeSelection}
-              onToggleSelectAll={handleToggleAllIncome}
-            />
+            {filteredIncome.length === 0 ? (
+              <EmptyState
+                icon={TrendingUp}
+                title="No income recorded"
+                subtitle="Add your first salary, freelance payout, or other credit to start tracking income."
+                actionLabel="Add Income"
+                onAction={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              />
+            ) : (
+              <IncomeTable
+                incomes={filteredIncome}
+                onEdit={setEditing}
+                onDelete={handleDelete}
+                selectedIds={selectedIncome}
+                onToggleSelect={handleToggleIncomeSelection}
+                onToggleSelectAll={handleToggleAllIncome}
+              />
+            )}
           </div>
         </div>
       </div>

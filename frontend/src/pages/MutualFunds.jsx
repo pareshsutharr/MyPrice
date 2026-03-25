@@ -1,5 +1,6 @@
 ﻿import { useMemo, useState } from 'react'
 import { Wallet, TrendingUp, PiggyBank, Layers3 } from 'lucide-react'
+import EmptyState from '@components/EmptyState.jsx'
 import InvestmentForm from '@components/forms/InvestmentForm.jsx'
 import InvestmentCard from '@components/InvestmentCard.jsx'
 import StatementUploader from '@components/StatementUploader.jsx'
@@ -238,11 +239,20 @@ const MutualFunds = () => {
               />
             ))}
           </div>
-          {filteredInvestments.length === 0 && (
-            <p className="text-center py-8 text-slate-500 text-sm">
-              No investments logged yet. Add your Groww/Angel One SIP to view gains here.
-            </p>
-          )}
+          {filteredInvestments.length === 0 &&
+            (mutualFunds.length === 0 ? (
+              <EmptyState
+                icon={Layers3}
+                title="No investments tracked"
+                subtitle="Add your first mutual fund holding or import a statement to start tracking returns."
+                actionLabel="Add Investment"
+                onAction={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              />
+            ) : (
+              <p className="text-center py-8 text-slate-500 text-sm">
+                No holdings match the selected broker filter.
+              </p>
+            ))}
         </div>
       </div>
     </div>

@@ -1,10 +1,11 @@
 import multer from 'multer'
 
 const storage = multer.memoryStorage()
+export const MAX_VAULT_BYTES = 50 * 1024 * 1024
 
 export const upload = multer({
   storage,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB per file
+    fileSize: MAX_VAULT_BYTES,
   },
 })

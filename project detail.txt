@@ -1,0 +1,208 @@
+MyPrice Project Report
+
+Project name
+- MyPrice / MoneyXP
+
+High-level summary
+- This is a full-stack personal finance dashboard application.
+- Frontend is built with React 19 + Vite.
+- Backend is built with Express 5 + MongoDB/Mongoose.
+- The app supports authentication, expenses, income, loans/EMI tracking, investment tracking, statement import, history, reports, banks, goals, settings, and a document vault.
+- Data is partly server-backed and partly browser-local depending on feature area.
+
+Repository structure
+- frontend: React application, UI, routing, local settings, auth bootstrap, API client
+- backend: Express API, Mongo models, auth, CRUD controllers, statement parsing, document vault logic
+- shared: shared constants and seed data used by frontend/backend
+
+Frontend stack
+- React 19
+- React Router 7
+- Axios
+- Recharts
+- Lucide React
+- Tailwind + custom CSS
+- PWA plugin
+- Google OAuth integration
+
+Backend stack
+- Express 5
+- Mongoose 9
+- JWT auth
+- Google Auth Library
+- Multer
+- XLSX parser
+- Morgan
+- CORS
+
+App entry and flow
+- Frontend entry: src/main.jsx
+- App router: src/App.jsx
+- Main authenticated shell: src/layout/DashboardLayout.jsx
+- Auth state is managed in src/context/AuthContext.jsx
+- Finance data is aggregated through src/context/FinanceContext.jsx
+- Appearance/settings state is stored locally in src/context/SettingsContext.jsx
+- Backend entry: backend/src/index.js
+- API root path: /api/*
+- All routes except /api/auth/* are protected by auth middleware
+
+Frontend pages and menu coverage
+- Dashboard: overview cards, reminders, quick actions, charts, dashboard customization, locally stored goals/custom tiles
+- Expenses: filterable CRUD, bulk selection and deletion
+- Income: filterable CRUD, bulk selection and deletion
+- Loans & EMI: add loans, pay EMI, undo EMI, delete loans, active/completed split
+- Mutual Funds: manual entry, broker grouping, statement upload/import, top holdings, gains
+- Stocks: separate route exists in app shell; investment ecosystem is shared with mutual funds
+- Documents: folder/file vault with upload, preview popup, storage meter, context menu actions
+- History: merged timeline of income, expenses, EMI payments
+- Reports: monthly expenses and category distribution charts plus 50/30/20 split
+- Settings: theme, mode, currency, date format, categories, Digilocker config preview
+- Import Data: currently frontend-only queue UI, not fully connected to backend posting flow
+- ITR Filing: present as a route/page
+- Banks: present as a route/page
+- DocumentPage: not integrated with current documents vault; appears to be a standalone editorial/demo page
+
+Dashboard shell observations
+- Desktop left nav + mobile bottom nav
+- Floating action button exists globally
+- Header includes refresh and user profile/sign-out
+- FinanceContext error state is surfaced as a top banner
+- Mobile navigation has a secondary sheet for extra routes and utility links
+
+Authentication
+- Supports Google login via backend token exchange
+- Supports developer login when VITE_ENABLE_DEV_LOGIN=true and backend ENABLE_DEV_LOGIN=true
+- Auth token is stored in localStorage under myprice-auth
+- Auth storage now includes apiBase so tokens from another backend are invalidated
+- Logout is triggered on 401 in FinanceContext
+
+Data ownership model
+- Server-backed features:
+  expenses, income, loans, investments, history, stats, documents, auth
+- Browser-local or partially local features:
+  settings, dashboard customization, goals, some banks/settings-related state
+
+API client
+- Central API wrapper in frontend/src/services/api.js
+- Uses VITE_API_URL for primary backend
+- Has documents-specific fallback logic to localhost when configured backend returns 404
+- Auth token is applied to both main and documents fallback clients
+
+Backend route inventory
+- /api/auth
+  - POST /google
+  - POST /dev-login
+- /api/expenses
+  - GET /
+  - POST /
+  - PUT /:id
+  - DELETE /:id
+- /api/income
+  - similar CRUD pattern
+- /api/loans
+  - CRUD + pay + undo payment
+- /api/investments
+  - CRUD + import/upload flows
+- /api/documents
+  - GET /
+  - GET /folders
+  - POST /folders
+  - POST /upload
+  - POST /move
+  - GET /:id/content
+  - PATCH /:id
+  - DELETE /:id
+- /api/stats
+  - aggregated dashboard/report payload
+- /api/history
+  - merged transaction feed
+
+Backend model inventory
+- User: googleId, email, name, avatar, lastLogin
+- Expense: amount, category, date, note, type, currency, user
+- Income: similar server-side shape to expenses
+- Loan: lender, principal, interestRate, monthlyEmi, duration, amountPaid, status, user
+- LoanPayment: EMI payment history
+- Investment: schemeName, broker/platform, invested value, current value, folio/ISIN, metadata, user
+- StatementImport: import logs for uploaded investment statements
+- DocumentItem: folder/file tree with in-DB binary content buffer
+
+Documents vault implementation
+- Files are stored directly in MongoDB as Buffer in DocumentItem.content
+- Supports nested folders
+- Supports file download/preview via blob endpoint
+- Uploads use multer memory storage
+- Vault now enforces a 50 MB total storage limit per user
+- Frontend shows breadcrumbs, storage meter, upload progress, preview popup, and context menu
+- Upload errors are mapped to human-readable UI messages
+
+Investment import implementation
+- Statement parsing currently focuses on CSV/XLSX via XLSX package
+- Import pipeline deduplicates holdings using derived unique keys
+- Multi-broker support is partially represented using broker + brokers[]
+- Import logs are stored
+- UI copy mentions OCR/PDF-style flows, but actual parser in code is CSV/XLSX-centric
+
+Stats/reporting implementation
+- Stats controller loads expenses, income, loans, investments, loan payments and computes:
+  totals, thisMonth, spending trend, category split, income split, reminders, investment summary
+- Reporting page visualizes monthly expenses and category distribution
+- History page merges income, expenses, and EMI events into a single timeline
+
+Settings/experience system
+- Theme: light/dark
+- Mode: basic/advanced
+- Currency and date format are configurable
+- Categories are user-editable and stored locally
+- Digilocker settings UI exists but is only config-preview/local right now
+
+Notable strengths
+- Clear frontend/backend separation
+- Shared constants between layers
+- Broad feature coverage for a personal finance product
+- Good user-scoping in backend queries through req.user._id
+- Modern React/Vite setup
+- Investment import and document vault add real product differentiation
+- UI supports both desktop and mobile navigation patterns
+
+Notable gaps / risks
+- No automated tests detected in frontend or backend
+- Backend CORS is currently open to all origins
+- Documents are stored directly in MongoDB buffers; this is simple but will not scale well for large storage needs
+- Stats controller fetches full collections into memory and computes in Node instead of pushing more work into Mongo aggregations
+- ImportData page is mostly a UI queue and not a complete posting workflow
+- DocumentPage looks like an isolated design/demo page, not part of the actual document system
+- Several app features rely on localStorage, so data portability across devices is inconsistent
+- Dev login is currently enabled in local env; safe for local use but should not be enabled in production
+- Google Sign-In warnings in development are present due repeated initialize / popup policy noise
+
+Current project maturity assessment
+- Core finance CRUD and dashboard: functional
+- Loans/EMI: functional
+- Investments/manual + statement import: functional, but parser scope is narrower than UI marketing text
+- Documents vault: functional after recent fixes, with upload progress and preview
+- Settings/personalization: functional, mostly local-only persistence
+- Reports/history: functional
+- Import center / some extended product concepts: partially implemented
+
+Environment and ops notes
+- Frontend env currently points to local API in this workspace
+- Backend env contains MongoDB URI, JWT secret, Google client ID, and dev login toggle
+- To run locally:
+  - backend: npm run dev
+  - frontend: npm run dev
+
+Recommended next steps
+- Add automated tests for auth, expenses, income, loans, investments, and documents
+- Move document binary storage to object storage if vault usage is expected to grow
+- Tighten CORS and production env handling
+- Align UI copy with actual supported import formats
+- Finish wiring ImportData page to backend batch ingestion
+- Review DocumentPage route and either integrate or remove it
+- Add pagination or virtualization for large history/documents lists
+- Consider Mongo aggregation pipelines for stats instead of full collection fetches
+
+Short verdict
+- This is a serious multi-feature personal finance app with a solid working base and real product breadth.
+- The strongest implemented areas are finance CRUD, dashboard reporting, investment tracking, and the documents vault.
+- The main improvement areas are production hardening, test coverage, consistency of persistence, and completing a few partially implemented product surfaces.

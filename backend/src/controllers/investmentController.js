@@ -1,7 +1,10 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import { Investment } from '../models/Investment.js'
 import { StatementImport } from '../models/StatementImport.js'
 import { buildInvestmentKey } from '../utils/investmentKey.js'
 import { parseInvestmentStatement } from '../utils/statementParser.js'
+import XLSX from 'xlsx'
 
 const prepareInvestmentPayload = (payload = {}) => {
   if (!payload.schemeName) {
@@ -89,6 +92,62 @@ const formatInvestment = (investment) => {
     gainPercent:
       doc.gainPercent ?? (doc.amountInvested ? (gain / doc.amountInvested) * 100 : 0),
   }
+}
+
+const normalizeHeader = (value = '') => String(value).trim().toLowerCase()
+const pickColumn = (row, candidates = []) => {
+  const entries = Object.entries(row)
+  for (const candidate of candidates) {
+    const match = entries.find(([key]) => normalizeHeader(key) === normalizeHeader(candidate))
+    if (match && match[1] !== undefined && match[1] !== null && match[1] !== '') {
+      return match[1]
+    }
+  }
+  return undefined
+}
+
+const parseNumeric = (value, fallback = 0) => {
+  if (value === undefined || value === null || value === '') return fallback
+  const numeric = Number(String(value).replace(/,/g, '').replace(/₹/g, '').trim())
+  return Number.isFinite(numeric) ? numeric : fallback
+}
+
+const parseImportWorkbook = (file) => {
+  let workbook
+  try {
+    workbook = XLSX.read(file.buffer, { type: 'buffer', raw: false, cellDates: true })
+  } catch (error) {
+    throw new Error('Could not parse file')
+  }
+
+  const primarySheet = workbook.SheetNames[0]
+  const sheet = workbook.Sheets[primarySheet]
+  const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' })
+
+  if (!rows.length) {
+    throw new Error('Could not parse file')
+  }
+
+  return rows.map((row, index) => {
+    const schemeName = String(pickColumn(row, ['Scheme Name', 'schemeName']) || '').trim()
+    const isin = String(pickColumn(row, ['ISIN', 'isin']) || '').trim()
+    const broker = String(pickColumn(row, ['Broker', 'broker']) || 'Manual').trim()
+    const units = parseNumeric(pickColumn(row, ['Units', 'units']))
+    const buyPrice = parseNumeric(pickColumn(row, ['Buy Price', 'buyPrice']))
+    const currentPrice = parseNumeric(pickColumn(row, ['Current Price', 'currentPrice']))
+    const statementDate = pickColumn(row, ['Date', 'date'])
+
+    return {
+      rowNumber: index + 2,
+      schemeName,
+      isin,
+      broker,
+      units,
+      buyPrice,
+      currentPrice,
+      statementDate,
+    }
+  })
 }
 
 export const getInvestments = async (req, res) => {
@@ -307,4 +366,103 @@ export const importInvestmentStatementFile = async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: error.message })
   }
+}
+
+export const importInvestmentsFromFile = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, error: 'Please attach a CSV or XLSX file.' })
+  }
+
+  try {
+    const rows = parseImportWorkbook(req.file)
+    let imported = 0
+    let skipped = 0
+    const errors = []
+
+    for (const row of rows) {
+      try {
+        if (!row.schemeName || !row.isin) {
+          skipped += 1
+          errors.push({
+            row: row.rowNumber,
+            reason: 'Scheme Name and ISIN are required.',
+          })
+          continue
+        }
+
+        const amountInvested = row.units * row.buyPrice
+        const currentValue = row.units * row.currentPrice
+        const uniqueKey = `${row.schemeName.toLowerCase()}::${row.isin.toUpperCase()}`
+
+        await Investment.findOneAndUpdate(
+          {
+            user: req.user._id,
+            schemeName: row.schemeName,
+            isin: row.isin,
+          },
+          {
+            $set: {
+              user: req.user._id,
+              schemeName: row.schemeName,
+              isin: row.isin,
+              broker: row.broker || 'Manual',
+              platform: row.broker || 'Manual',
+              brokers: [row.broker || 'Manual'],
+              units: row.units,
+              amountInvested,
+              currentValue,
+              averageNav: row.buyPrice,
+              nav: row.currentPrice,
+              lastStatementDate: row.statementDate ? new Date(row.statementDate) : new Date(),
+              lastUpdated: new Date(),
+              uniqueKey,
+              source: 'import',
+              currency: '₹',
+            },
+          },
+          { upsert: true, new: true, setDefaultsOnInsert: true },
+        )
+        imported += 1
+      } catch (error) {
+        skipped += 1
+        errors.push({
+          row: row.rowNumber,
+          reason: error.message || 'Unknown row error.',
+        })
+      }
+    }
+
+    await StatementImport.create({
+      broker: req.body?.broker || 'Manual',
+      statementDate: req.body?.statementDate ? new Date(req.body.statementDate) : new Date(),
+      source: 'import',
+      rawFileName: req.file.originalname,
+      holdingsCount: imported,
+      summary: { totalImported: imported, totalSkipped: skipped },
+      user: req.user._id,
+    })
+
+    return res.status(201).json({
+      success: true,
+      data: {
+        imported,
+        skipped,
+        errors,
+      },
+    })
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      error: 'Could not parse file',
+      details: error.message,
+    })
+  }
+}
+
+export const downloadInvestmentTemplate = (_req, res) => {
+  const templatePath = path.resolve(process.cwd(), 'static', 'sample-import-template.xlsx')
+  if (!fs.existsSync(templatePath)) {
+    return res.status(404).json({ success: false, error: 'Template file not found.' })
+  }
+  return res.download(templatePath, 'sample-import-template.xlsx')
 }

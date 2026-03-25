@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { CreditCard } from 'lucide-react'
+import EmptyState from '@components/EmptyState.jsx'
 import LoanForm from '@components/forms/LoanForm.jsx'
 import LoanCard from '@components/LoanCard.jsx'
 import EmiPaymentModal from '@components/modals/EmiPaymentModal.jsx'
@@ -56,6 +58,8 @@ const Loans = () => {
     }
   }
 
+  const hasLoans = (loans.active?.length ?? 0) > 0 || (loans.completed?.length ?? 0) > 0
+
   return (
     <div className="page-stack">
       <div className="page-grid page-grid--sidebar">
@@ -75,23 +79,31 @@ const Loans = () => {
                 </p>
               )}
             </div>
-            <div className="page-grid md:grid-cols-2">
-              {loans.active?.map((loan) => (
-                <LoanCard
-                  key={loan._id ?? loan.lender}
-                  loan={loan}
-                  onPay={handlePayClick}
-                  onUndo={handleUndo}
-                  onDelete={handleDelete}
-                  undoing={undoingLoanId === loan._id}
-                />
-              ))}
-            </div>
-            {loans.active?.length === 0 && (
-              <p className="text-slate-500 text-sm">No active loans recorded.</p>
+            {!hasLoans ? (
+              <EmptyState
+                icon={CreditCard}
+                title="No loans or EMIs"
+                subtitle="Add your first loan on the left to track balances, EMI payments, and completion status."
+                actionLabel="Add Loan"
+                onAction={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              />
+            ) : (
+              <div className="page-grid md:grid-cols-2">
+                {loans.active?.map((loan) => (
+                  <LoanCard
+                    key={loan._id ?? loan.lender}
+                    loan={loan}
+                    onPay={handlePayClick}
+                    onUndo={handleUndo}
+                    onDelete={handleDelete}
+                    undoing={undoingLoanId === loan._id}
+                  />
+                ))}
+              </div>
             )}
           </section>
-          <section className="page-section">
+          {hasLoans && (
+            <section className="page-section">
             <h3 className="text-xl font-display mb-3">Completed</h3>
             <div className="page-grid md:grid-cols-2">
               {loans.completed?.map((loan) => (
@@ -101,7 +113,8 @@ const Loans = () => {
             {loans.completed?.length === 0 && (
               <p className="text-slate-500 text-sm">No completed loans yet.</p>
             )}
-          </section>
+            </section>
+          )}
         </div>
       </div>
       {selectedLoan && (

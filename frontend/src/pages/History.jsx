@@ -1,7 +1,9 @@
 ﻿import { useFinance } from '@context/FinanceContext.jsx'
+import EmptyState from '@components/EmptyState.jsx'
 import { useDateFormatter } from '@hooks/useDateFormatter.js'
 import { useCurrencyFormatter } from '@hooks/useCurrencyFormatter.js'
 import clsx from 'clsx'
+import { Clock } from 'lucide-react'
 
 const typeMeta = {
   income: { label: 'Income', color: 'text-emerald-600 bg-emerald-50' },
@@ -31,7 +33,17 @@ const History = () => {
   }
 
   if (history.length === 0) {
-    return <p className="text-center text-slate-500">No transactions recorded yet.</p>
+    return (
+      <div className="page-stack">
+        <div className="page-section">
+          <EmptyState
+            icon={Clock}
+            title="No transactions yet"
+            subtitle="Income, expenses, and EMI activity will appear here as soon as you start tracking them."
+          />
+        </div>
+      </div>
+    )
   }
 
   return (
