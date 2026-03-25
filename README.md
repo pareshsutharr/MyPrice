@@ -1,121 +1,329 @@
-# MyPrice Finance Tracker PWA
+# MyPrice / MoneyXP
 
-Modern finance tracking experience with a neon-dark UI, optimized for Android web installs with offline-ready PWA support. The project is split into a Vite + React frontend, an Express + MongoDB backend, and a shared module for constants/datasets.
+MyPrice is a full-stack personal finance dashboard for tracking expenses, income, loans, investments, reports, banking references, tax estimates, and a document vault from one place.
+
+The project uses a React 19 + Vite frontend and an Express 5 + MongoDB backend. It is designed for a split deployment model such as Vercel for the frontend and Railway or Render for the API.
+
+## Highlights
+
+- Expense and income tracking with filters, bulk selection, and history
+- Loan and EMI management with payment and undo flows
+- Mutual fund and investment tracking with CSV/XLSX import support
+- Documents vault with folders, upload progress, breadcrumbs, preview, inline rename, and drag/drop move
+- Local-only banks MVP for linked account references
+- ITR estimation workspace with year-based draft persistence
+- Dashboard analytics, reports, reminders, and transaction history
+- Google login plus optional developer login for local development
+- PWA-ready frontend built with Vite
 
 ## Tech Stack
 
-- React 19 + Vite + TailwindCSS (dark neon dashboard, responsive + floating action button)
-- Recharts for analytics (trend, bar, pie)
-- Node.js + Express API with MongoDB Atlas via Mongoose
-- Vite PWA plugin (manifest, icons, offline cache, install prompt)
-- Shared seed data + constants reused by both tiers
+### Frontend
 
-## Project Structure
+- React 19
+- Vite
+- React Router 7
+- Axios
+- Recharts
+- Lucide React
+- Tailwind CSS + custom CSS
+- react-hot-toast
 
+### Backend
+
+- Node.js
+- Express 5
+- MongoDB + Mongoose
+- JWT authentication
+- Google Auth Library
+- Multer
+- XLSX
+- Morgan
+- CORS
+
+## Repository Structure
+
+```text
+MyPrice/
+├── frontend/   # React app
+├── backend/    # Express API
+├── shared/     # Shared constants / seed data
+└── README.md
 ```
-frontend/   # React PWA codebase
-backend/    # Express API + MongoDB seed scripts
-shared/     # Categories, defaults, and Mongo-ready seed data
-```
 
-## Getting Started
+## Core Features
 
-### 1. Shared module (no install required)
+### Finance
 
-`shared/` contains `constants.js` and `data/seedData.js` that both the API and UI import. No build step is required.
+- Expenses: create, edit, delete, filter, bulk delete
+- Income: create, edit, delete, filter, bulk delete
+- Loans: add loan, record EMI, undo EMI, delete loan, active/completed sections
+- History: merged feed of expenses, income, and EMI activity
+- Reports: monthly expenses, category split, 50/30/20 view
 
-### 2. Backend (Express API)
+### Investments
+
+- Manual mutual fund / investment entry
+- Broker grouping and top holdings
+- CSV/XLSX import flow
+- Import queue with real upload progress and retry handling
+- Import template download
+
+### Documents Vault
+
+- Folder-based vault
+- File uploads with progress bar
+- 50 MB per-user storage cap
+- Breadcrumb navigation
+- Right-click context menu
+- Inline rename
+- Multi-select + bulk delete
+- Drag and drop move into folders
+- Preview support for images, PDFs, and CSV files
+
+### Local Productivity Surfaces
+
+- Banks page with local-only linked account storage
+- ITR estimation page with draft persistence in localStorage
+- Settings for theme, mode, currency, date format, and categories
+
+## Application Flow
+
+- Frontend entry: `frontend/src/main.jsx`
+- App routes: `frontend/src/App.jsx`
+- Main shell: `frontend/src/layout/DashboardLayout.jsx`
+- Auth context: `frontend/src/context/AuthContext.jsx`
+- Finance context: `frontend/src/context/FinanceContext.jsx`
+- Backend entry: `backend/src/index.js`
+- API base: `/api/*`
+
+All non-auth backend routes are protected by JWT middleware.
+
+## Local Development
+
+## 1. Backend
 
 ```bash
 cd backend
 npm install
-cp .env.example .env
-# update .env with:
-# MONGODB_URI=...
-# PORT=4000
-# GOOGLE_CLIENT_ID=your-web-oauth-client-id
-# JWT_SECRET=some-long-random-string
-# ENABLE_DEV_LOGIN=true   # optional, enables /api/auth/dev-login for teammates
-
-# Seed historical data once (requires SEED_USER_EMAIL in .env)
-npm run seed
-
-# Start the API
 npm run dev
 ```
 
-Available routes:
+The backend runs on:
 
-- `GET/POST/PUT/DELETE /api/expenses`
-- `GET/POST /api/income`
-- `GET/POST/PUT /api/loans`
-- `GET/POST/PUT/DELETE /api/investments`
-- `POST /api/investments/import/statement`
-- `POST /api/investments/import/upload` (multipart CSV/XLSX statement ingestion)
-- `GET /api/stats`
+```text
+http://localhost:4000
+```
 
-The stats route powers the dashboard with balance calculations, category distribution, EMI reminders, and monthly aggregates.
+### Backend environment
 
-### 3. Frontend (React PWA)
+Create `backend/.env` with values like:
+
+```env
+PORT=4000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_long_random_secret
+GOOGLE_CLIENT_ID=your_google_web_client_id
+ENABLE_DEV_LOGIN=true
+```
+
+## 2. Frontend
 
 ```bash
 cd frontend
 npm install
-cp .env.example .env   # set VITE_API_URL, VITE_GOOGLE_CLIENT_ID, VITE_ENABLE_DEV_LOGIN
-npm run dev            # starts Vite dev server
-npm run build          # creates the optimized PWA build (validated in this task)
+npm run dev
 ```
 
-Key UI features:
+The frontend runs on:
 
-- Dashboard: total balance, monthly credit/debit/savings, trend chart, EMI reminder popup, quick actions, floating add button.
-- Daily Expenses: form + category icons/colors, filters (search/date range), responsive table.
-- Loans & EMI: loan form with automatic remaining/interest/progress calculations, separate active/completed lists.
-- Investments: manual Groww/Angel One SIP tracker with broker filters plus CSV/XLSX statement uploads (auto dedupe + progress feedback).
-- Google login: secure Google OAuth with token-based API access so every user only sees their own data.
-- Reports: bar chart for monthly expenses, pie chart for category distribution, salary 50/30/20 split cards.
-- Settings: editable default currency and custom categories stored locally.
+```text
+http://localhost:5173
+```
 
-PWA details:
+### Frontend environment
 
-- Manifest (`frontend/public/manifest.json`) with neon icons.
-- `vite-plugin-pwa` auto-generates the service worker; `registerSW()` is wired in `src/main.jsx`.
-- Add-to-home-screen ready with offline caching for shell assets and Google Fonts.
+Create `frontend/.env` with values like:
 
-## MongoDB Seed Data
+```env
+VITE_API_URL=http://localhost:4000/api
+VITE_GOOGLE_CLIENT_ID=your_google_web_client_id
+VITE_ENABLE_DEV_LOGIN=true
+```
 
-The seed script automatically loads:
+## 3. Shared data
 
-- Day-wise expenses from 13–18 Dec (multiple categories)
-- MPokket (5 entries), FDPL, Phone, True Balance, and Divesh personal loans
-- Salary + freelance inflows with 50/30/20 tracking
+`shared/` contains constants and seed data used across the app. No separate install step is required.
 
-Run it anytime via:
+## Available Scripts
+
+### Frontend
 
 ```bash
-cd backend
-npm run seed
+npm run dev
+npm run build
+npm run preview
+npm run lint
 ```
 
-The script is idempotent (skips collections that already contain documents).
+### Backend
 
-## Deployment Notes
+```bash
+npm run dev
+npm start
+npm run seed
+npm run reset
+```
 
-1. Deploy backend (e.g., Render, Railway, Vercel functions) with `NODE_ENV=production`.
-2. Configure `frontend/.env` `VITE_API_URL` to the deployed API URL, rebuild (`npm run build`), and host the `dist/` output on a static host.
-3. Ensure HTTPS for both tiers so that the PWA install prompt is available.
+## Main API Areas
 
-## Google Sign-In Configuration
+### Auth
 
-- Create a Web OAuth client in Google Cloud Console and add every dev origin you use (e.g. `http://localhost:5173`, `https://mypricefrontend.onrender.com`) under **Authorized JavaScript origins**. If the current origin is missing you will see the `The given origin is not allowed for the given client ID` 403 error coming from the Google button iframe.
-- Copy the generated client ID to both `backend/.env` (`GOOGLE_CLIENT_ID`) and `frontend/.env` (`VITE_GOOGLE_CLIENT_ID`). The backend uses it to verify ID tokens, the frontend uses it to render the Google button.
-- Chrome’s FedCM / one-tap flows require third-party sign-in permission. If a tester blocks it they will see `FedCM was disabled...`. Either re-enable the permission from the site settings or use the standard button-only login (no one-tap) provided in this repo.
-- When onboarding teammates who do not have a Google OAuth client, set `ENABLE_DEV_LOGIN=true` (backend) and `VITE_ENABLE_DEV_LOGIN=true` (frontend). This exposes `/api/auth/dev-login`, a local-only entry point that accepts an email and issues a JWT so the rest of the app can be exercised without Google. Never enable it in production.
+- `POST /api/auth/google`
+- `POST /api/auth/dev-login`
+
+### Expenses
+
+- `GET /api/expenses`
+- `POST /api/expenses`
+- `PUT /api/expenses/:id`
+- `DELETE /api/expenses/:id`
+
+### Income
+
+- `GET /api/income`
+- `POST /api/income`
+- `PUT /api/income/:id`
+- `DELETE /api/income/:id`
+
+### Loans
+
+- `GET /api/loans`
+- `POST /api/loans`
+- `PUT /api/loans/:id`
+- payment and undo-payment routes
+
+### Investments
+
+- `GET /api/investments`
+- `POST /api/investments`
+- `PUT /api/investments/:id`
+- `DELETE /api/investments/:id`
+- `POST /api/investments/import`
+- `GET /api/investments/import/template`
+
+### Documents
+
+- `GET /api/documents`
+- `POST /api/documents/folders`
+- `POST /api/documents/upload`
+- `POST /api/documents/move`
+- `PATCH /api/documents/:id`
+- `DELETE /api/documents/:id`
+- `GET /api/documents/:id/content`
+
+### Aggregates
+
+- `GET /api/stats`
+- `GET /api/history`
+
+## Import Template
+
+Investment import supports:
+
+- `.csv`
+- `.xlsx`
+- `.xls`
+
+The sample import template is available at:
+
+- Frontend static file: `frontend/public/sample-import-template.xlsx`
+- Backend route: `GET /api/investments/import/template`
+
+Expected columns:
+
+- `Scheme Name`
+- `ISIN`
+- `Broker`
+- `Units`
+- `Buy Price`
+- `Current Price`
+- `Date`
+
+## Authentication Notes
+
+- JWT auth is stored in localStorage under `myprice-auth`
+- Google Sign-In is supported through backend token verification
+- Developer login can be enabled locally with:
+  - `ENABLE_DEV_LOGIN=true` in backend
+  - `VITE_ENABLE_DEV_LOGIN=true` in frontend
+- Dev login should not be enabled in production
+
+## Deployment
+
+### Frontend
+
+Recommended: Vercel
+
+Required environment variables:
+
+```env
+VITE_API_URL=https://your-backend-url/api
+VITE_GOOGLE_CLIENT_ID=your_google_web_client_id
+VITE_ENABLE_DEV_LOGIN=false
+```
+
+### Backend
+
+Recommended: Railway or Render
+
+Required environment variables:
+
+```env
+PORT=4000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_long_random_secret
+GOOGLE_CLIENT_ID=your_google_web_client_id
+ENABLE_DEV_LOGIN=false
+NODE_ENV=production
+```
+
+## Current State
+
+Implemented and working:
+
+- Core finance CRUD
+- Dashboard + reporting
+- Investment manual tracking
+- CSV/XLSX investment import
+- Document vault
+- Local banks MVP
+- ITR estimation MVP
+
+Still worth improving:
+
+- Automated tests
+- Production hardening
+- CORS tightening
+- Pagination for large lists
+- Document storage abstraction for future object storage migration
 
 ## Verification
 
-- `frontend`: `npm run build` (passes, generates PWA bundle + service worker).
-- Backend endpoints exercised locally via context provider; Mongo connection/seed script are ready with `.env`.
+Frontend production build:
 
-With these pieces in place, you can track expenses, loans, and reports, seed historical MPokket + EMI data, and install the progressive web app on Android or desktop. Enjoy the neon cockpit!
-# MyPrice
+```bash
+cd frontend
+npm run build
+```
+
+## Contributing
+
+1. Create a branch
+2. Make your changes
+3. Run the relevant local checks
+4. Open a pull request
+
+## License
+
+Private project unless the repository owner specifies otherwise.
